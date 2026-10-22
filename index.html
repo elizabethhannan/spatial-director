@@ -247,6 +247,8 @@ dialog.media .dhead { display: flex; justify-content: flex-end; }
 .firms { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); gap: 10px; }
 .firm { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface-2); min-width: 0; }
 .firm.rec { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+h4.agroup { margin: 14px 0 8px; font-size: 1rem; }
+h4.agroup:first-child { margin-top: 0; }
 .firm .findthumb img { aspect-ratio: 16 / 10; }
 .firm h4 { margin: 6px 0 4px; font-size: 1rem; }
 .firm p { margin: 0 0 6px; font-size: .875rem; }
@@ -821,8 +823,8 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     </section>
 
     <section class="bcard wide">
-      <div class="head"><h3>Artists for this room</h3><span class="empty">Artists who make work that fits the room you chose. Images are credited photos of their work from Wikimedia Commons; their website and Instagram have the full portfolio.</span></div>
-      <div class="firms" id="artists"></div>
+      <div class="head"><h3>Artists for this room</h3><span class="empty">Studios, makers, art advisors and artists whose work fits the room you chose, highlighted first. Photos are credited examples from Wikimedia Commons; each website and Instagram has the full portfolio.</span></div>
+      <div id="artists"></div>
     </section>
 
     <section class="bcard wide">
@@ -3581,13 +3583,47 @@ const ARTISTS = [
   { name: "Matthias Pliessnig", medium: "Steam-bent wood sculptural benches", fits: ["lobby", "social", "lunch"], site: "https://en.wikipedia.org/wiki/Matthias_Pliessnig", siteLabel: "About", commons: "Matthias Pliessnig" },
   { name: "James Turrell", medium: "Light and space installations", fits: ["lobby", "auditorium"], site: "https://kaynegriffin.com/artists/james-turrell/bio", siteLabel: "Gallery (Kayne Griffin)", commons: "James Turrell skyspace" },
 ];
+const IG = h => "https://www.instagram.com/" + h + "/";
+const GROUPS = [
+  ["studios", "Installation and sculpture studios"],
+  ["furniture", "Luxury executive furniture and collectible design"],
+  ["consult", "Corporate art consultants and sourcing firms"],
+  ["artists", "Individual artists"],
+];
+for (const a of ARTISTS) a.group = "artists";
+ARTISTS.unshift(
+  { group: "studios", name: "Studio DRIFT", medium: "Kinetic sculpture, immersive installations", fits: ["lobby", "auditorium", "social"], site: "https://studiodrift.com", ig: IG("studiodrift") },
+  { group: "studios", name: "Snarkitecture", medium: "Sculptural environments, architectural installations", fits: ["lobby", "social", "lunch"], site: "https://snarkitecture.com", ig: IG("snarkitecture") },
+  { group: "studios", name: "HUSH", medium: "Interactive digital art, experiential technology", fits: ["lobby", "meeting", "auditorium"], site: "https://www.heyhush.com" },
+  { group: "studios", name: "Bocci", medium: "Sculptural glass lighting and installations", fits: ["lobby", "dining", "meeting", "csuite", "execoffice"], site: "https://www.bocci.com", ig: IG("bocci") },
+  { group: "studios", name: "Amuneal", medium: "Custom desks, architectural metalwork, shelving", fits: ["csuite", "execoffice", "meeting"], site: "https://www.amuneal.com" },
+  { group: "studios", name: "Patten Studio", medium: "Responsive art, technology-driven installations", fits: ["lobby", "meeting", "social"], site: "https://www.pattenstudio.com" },
+  { group: "studios", name: "Digital Ambiance", medium: "Programmable architectural lighting", fits: ["lobby", "auditorium", "social"], site: "https://digitalambiance.com" },
+  { group: "studios", name: "StandardVision", medium: "Digital media walls and interactive environments", fits: ["lobby", "auditorium"], site: "https://standardvision.com" },
+  { group: "studios", name: "Fernando Casasempere", medium: "Architectural ceramic sculpture", fits: ["lobby", "csuite", "execoffice"], site: "https://www.fernandocasasempere.art" },
+  { group: "studios", name: "SOLARO Art Collection", medium: "Monumental sculpture and custom art", fits: ["lobby"], site: "https://solaroart.com" },
+  { group: "furniture", name: "Monolith NYC", medium: "Sculptural stone desks and furnishings", fits: ["csuite", "execoffice", "meeting"], site: "https://monolith.nyc" },
+  { group: "furniture", name: "Moooi", medium: "Designer seating, lighting and sculptural furniture", fits: ["social", "lobby", "lunch", "csuite"], site: "https://www.moooi.com", ig: IG("moooi") },
+  { group: "furniture", name: "Carpenters Workshop Gallery", medium: "Collectible furniture and functional sculpture", fits: ["csuite", "execoffice", "lobby"], site: "https://carpentersworkshopgallery.com", ig: IG("carpentersworkshopgallery") },
+  { group: "furniture", name: "Lasvit", medium: "Bespoke glass installations, lighting and art walls", fits: ["lobby", "dining", "meeting"], site: "https://www.lasvit.com", ig: IG("lasvit") },
+  { group: "furniture", name: "David Weeks Studio", medium: "Sculptural lighting and designer furniture", fits: ["csuite", "execoffice", "dining", "social"], site: "https://davidweeksstudio.com", ig: IG("davidweeksstudio") },
+  { group: "consult", name: "Kevin Barry Art Advisory", medium: "Corporate art collections, large-scale installations", fits: ["studio", "csuite", "execoffice", "lobby", "dining", "social", "lunch", "meeting", "auditorium", "restrooms"], site: "https://kevinbarry.com", ig: IG("kevinbarryartadvisory") },
+  { group: "consult", name: "Danielle Wohl Art Advisory", medium: "Technology companies, commissioned contemporary art", fits: ["studio", "csuite", "execoffice", "lobby", "dining", "social", "lunch", "meeting", "auditorium", "restrooms"], site: "https://www.daniellewohlartadvisory.com" },
+  { group: "consult", name: "Artelier", medium: "International corporate art commissions and sculpture", fits: ["studio", "csuite", "execoffice", "lobby", "dining", "social", "lunch", "meeting", "auditorium", "restrooms"], site: "https://www.artelier.com", ig: IG("artelier_artconsultancy") },
+  { group: "consult", name: "TKOart", medium: "Corporate art procurement and workplace art installations", fits: ["studio", "csuite", "execoffice", "lobby", "dining", "social", "lunch", "meeting", "auditorium", "restrooms"], site: "https://www.tkoart.com" },
+  { group: "consult", name: "Studio Art Direct", medium: "Custom corporate art and architectural installations", fits: ["studio", "csuite", "execoffice", "lobby", "dining", "social", "lunch", "meeting", "auditorium", "restrooms"], site: "https://www.studioartdirect.com" },
+);
 function renderArtists() {
-  const sp = S.space, list = ARTISTS.map(a => ({ ...a, fit: a.fits.includes(sp) })).sort((a, b) => (b.fit ? 1 : 0) - (a.fit ? 1 : 0));
-  $("#artists").innerHTML = list.map(a => `<div class="firm${a.fit ? " rec" : ""}">${a.fit ? `<span class="pill">Fits your ${esc(SPACES[sp].label.toLowerCase())}</span>` : ""}
-    <div class="findthumb" data-thumbq="${esc(a.commons)}" style="max-width:none;margin:6px 0"><span class="credit">Finding a photo of their work…</span></div>
+  const sp = S.space;
+  const card = a => { const fit = a.fits.includes(sp);
+    return `<div class="firm${fit ? " rec" : ""}">${fit ? `<span class="pill">Fits your ${esc(SPACES[sp].label.toLowerCase())}</span>` : ""}
+    <div class="findthumb" data-thumbq="${esc(a.commons || a.name)}" style="max-width:none;margin:6px 0"><span class="credit">Finding a photo of their work…</span></div>
     <h4>${esc(a.name)}</h4><p>${esc(a.medium)}</p>
     <div class="btnrow"><a class="btn small primary" href="${esc(a.site)}" target="_blank" rel="noopener">${esc(a.siteLabel || "Website")}</a>
-      <a class="btn small" href="${esc(gq("site:instagram.com " + a.name.replace(/ \(.*\)/, "")))}" target="_blank" rel="noopener">Find on Instagram</a></div></div>`).join("");
+      ${a.ig ? `<a class="btn small" href="${esc(a.ig)}" target="_blank" rel="noopener">Instagram</a>` : `<a class="btn small" href="${esc(gq("site:instagram.com " + a.name.replace(/ \(.*\)/, "")))}" target="_blank" rel="noopener">Find on Instagram</a>`}</div></div>`; };
+  $("#artists").innerHTML = GROUPS.map(([g, title]) => { const list = ARTISTS.filter(a => a.group === g).sort((x, y) => (y.fits.includes(sp) ? 1 : 0) - (x.fits.includes(sp) ? 1 : 0));
+    const n = list.filter(a => a.fits.includes(sp)).length;
+    return `<h4 class="agroup">${esc(title)} <span class="credit">${n} of ${list.length} fit this room</span></h4><div class="firms">${list.map(card).join("")}</div>`; }).join("");
   setTimeout(() => fillThumbs($("#artists")), 0);
 }
 const _runBudget2 = runBudget;

@@ -58,7 +58,7 @@ Text opens at 150% for readability. The A− / A+ control beside the tabs sets i
 - **High-res renders.** Four views rendered at 3840 × 2160 with 4096-pixel soft shadows, downloadable in 4K or HD.
 - **Search in the room.** Type what you want, such as "wall painting": jump to it if it's there, add it if it isn't, shop for it, or find an artist or maker.
 - **Thumbnails.** Find It and the matched pieces show a credited example photo from Wikimedia Commons.
-- **Artists for this room.** Eleven artists, from Janet Echelman's net sculptures to Erin Hanson's landscapes and BREAKFAST's kinetic flip-disc work, sorted by fit for the chosen room, each with a website and an Instagram search.
+- **Artists for this room.** 31 studios, makers, art advisors and artists in four groups: installation and sculpture studios (Studio DRIFT, Snarkitecture, HUSH, Bocci and others), luxury executive furniture and collectible design (Monolith NYC, Moooi, Carpenters Workshop Gallery, Lasvit, David Weeks Studio), corporate art consultants (Kevin Barry Art Advisory, Danielle Wohl Art Advisory, Artelier, TKOart, Studio Art Direct), and individual artists. Sorted by fit for the chosen room, each with its website and Instagram.
 - **How it works** now lists all 22 agents, their jobs and what each may not do.
 
 ## Version 2.3: Final look and the Find It agent
