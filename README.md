@@ -51,6 +51,16 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.4: every room of a headquarters
+
+- **Room types.** Executive office with a private bath (standing desk, ergonomic chair, doors, window wall, vanity, toilet and shower), meeting room and boardroom (board table, screen, carved wood coffered ceiling), auditorium-style meeting hall (stage, lectern, screen, rows of seats), social hall and hangout, lunch room with a kitchen (counter, island, refrigerator), and women's and men's restrooms (stalls, urinals, vanities), alongside the C-suite office, lobby and corporate dining.
+- **Ceilings.** Room default, open, carved wood coffers, or wood slats. Ceilings show at eye level, in the walkthrough and in renders, and lift away in the overhead views.
+- **High-res renders.** Four views rendered at 3840 × 2160 with 4096-pixel soft shadows, downloadable in 4K or HD.
+- **Search in the room.** Type what you want, such as "wall painting": jump to it if it's there, add it if it isn't, shop for it, or find an artist or maker.
+- **Thumbnails.** Find It and the matched pieces show a credited example photo from Wikimedia Commons.
+- **Artists for this room.** Eleven artists, from Janet Echelman's net sculptures to Erin Hanson's landscapes and BREAKFAST's kinetic flip-disc work, sorted by fit for the chosen room, each with a website and an Instagram search.
+- **How it works** now lists all 22 agents, their jobs and what each may not do.
+
 ## Version 2.3: Final look and the Find It agent
 
 - **Final look.** The first card in Build & Budget restyles the room after any tech company's design (13 looks), with Apply and Undo, final renders, and links to matching real rooms on Houzz.

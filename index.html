@@ -214,6 +214,17 @@ ul.finds { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 ul.finds li { padding: 10px 0; border-bottom: 1px solid var(--line); }
 .findrow { font-size: .875rem; margin-top: 4px; overflow-wrap: anywhere; }
 .findrow a { white-space: nowrap; }
+.roomsearch { display: flex; gap: 6px; margin: 6px 0 8px; }
+.roomsearch input { flex: 1; min-width: 0; min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; font-size: .9375rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+#rqresults .rq { padding: 8px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); margin-bottom: 8px; font-size: .875rem; }
+#rqresults .rq p { margin: 0 0 6px; }
+li.findli { display: grid; grid-template-columns: minmax(0, 1fr) 9rem; gap: 12px; align-items: start; }
+li.findli > div:last-child { grid-column: 1; grid-row: 1; }
+.findthumb { grid-column: 2; grid-row: 1; font-size: .75rem; }
+.findthumb img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
+ul.matchlist .findthumb { max-width: 9rem; margin-top: 6px; }
+@media (max-width: 600px) { li.findli { grid-template-columns: 1fr; } li.findli > div:last-child, .findthumb { grid-column: 1; grid-row: auto; } }
 ul.looks { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 8px; }
 ul.looks li { display: grid; gap: 4px; justify-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .hqchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
@@ -236,6 +247,7 @@ dialog.media .dhead { display: flex; justify-content: flex-end; }
 .firms { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); gap: 10px; }
 .firm { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface-2); min-width: 0; }
 .firm.rec { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.firm .findthumb img { aspect-ratio: 16 / 10; }
 .firm h4 { margin: 6px 0 4px; font-size: 1rem; }
 .firm p { margin: 0 0 6px; font-size: .875rem; }
 .sw-inline { display: inline-block; width: 1em; height: 1em; border-radius: 4px; vertical-align: -2px; border: 1px solid var(--line); margin-right: 4px; }
@@ -248,7 +260,7 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 .affform input, .bb-region select { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; font-size: .9375rem; }
 .bb-region { min-width: 0; max-width: 100%; display: grid; gap: 4px; font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
 .bbapprove { min-width: min(14rem, 100%); }
-#style, #space, #floor, #finalpick, #region { max-width: 100%; min-width: 0; }
+#style, #space, #floor, #ceiling, #finalpick, #region { max-width: 100%; min-width: 0; }
 .studio-selects label { min-width: 0; max-width: 100%; }
 .affform label { min-width: 0; max-width: 100%; }
 .affform input { width: 100%; max-width: 18rem; box-sizing: border-box; }
@@ -549,7 +561,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.3</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.4</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -581,6 +593,12 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           <select id="space">
             <option value="studio">Studio office (original)</option>
             <option value="csuite">C-suite office</option>
+            <option value="execoffice">Executive office with private bath</option>
+            <option value="meeting">Meeting room and boardroom</option>
+            <option value="auditorium">Meeting hall, auditorium style</option>
+            <option value="social">Social hall and hangout</option>
+            <option value="lunch">Lunch room with kitchen</option>
+            <option value="restrooms">Women's and men's restrooms</option>
             <option value="lobby">Front door lobby and reception</option>
             <option value="dining">Corporate dining</option>
           </select>
@@ -597,6 +615,9 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
             <optgroup label="Looks like a tech company"><option value="x_linkedin">Looks like LinkedIn New York (Alabaster and bronze)</option><option value="x_nvidia">Looks like Nvidia (Faceted daylight)</option><option value="x_dropbox">Looks like Dropbox (Village earth)</option><option value="x_salesforce">Looks like Salesforce (Sky-lounge hospitality)</option><option value="x_microsoft">Looks like Microsoft briefing center (Wood-and-light welcome)</option><option value="x_slack">Looks like Slack (Trail wilderness)</option><option value="x_google">Looks like Google Bay View (Canopy biophilic)</option><option value="x_qualcomm">Looks like Qualcomm executive suite (Ocean-view executive suite)</option><option value="x_intuit">Looks like Intuit (Glass and pale wood)</option><option value="x_apple">Looks like Apple Park (Precision minimal)</option><option value="x_meta">Looks like Meta (Rooftop-park industrial)</option><option value="x_amazon">Looks like Amazon Spheres (Conservatory green)</option><option value="x_airbnb">Looks like Airbnb (Residential warmth)</option></optgroup>
           </select>
         </label>
+        <label>Ceiling
+          <select id="ceiling"><option value="auto">Room default</option><option value="none">Open</option><option value="coffers">Carved wood coffers</option><option value="slats">Wood slat ceiling</option></select>
+        </label>
         <label>Floor
           <select id="floor"><option value="style">Style default</option><option value="wood">Wood plank</option><option value="herringbone">Herringbone wood (classic)</option><option value="concrete">Polished concrete</option><option value="carpet">Corporate carpet tile</option><option value="cork">Natural cork (sustainable)</option><option value="walnut">Dark walnut plank</option><option value="deco">Black-and-white marble (Art Deco)</option><option value="greencarpet">Library-green wool carpet</option></select>
         </label>
@@ -605,7 +626,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           <button class="btn small" type="button" data-view="dollhouse" aria-pressed="true">Dollhouse</button>
           <button class="btn small" type="button" data-view="walk" aria-pressed="false">Walkthrough</button>
           <button class="btn small" type="button" id="snapshot">Snapshot</button>
-          <button class="btn small" type="button" id="finalrenders">Final renders</button>
+          <button class="btn small" type="button" id="finalrenders">High-res renders</button>
           <button class="btn small" type="button" id="walkvid">Share a video walkthrough</button>
         </div>
       </div>
@@ -663,6 +684,8 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     </section>
     <section class="block">
       <h2>In the room</h2>
+      <form class="roomsearch" id="roomsearch" role="search" autocomplete="off"><label for="rq" class="sr-only">Search the room</label><input id="rq" placeholder="Search, for example wall painting" list="rq-list"><datalist id="rq-list"></datalist><button class="btn small" type="submit">Search</button></form>
+      <div id="rqresults" aria-live="polite"></div>
       <ul class="scene" id="scenelist"></ul>
     </section>
     <section class="block">
@@ -798,6 +821,11 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     </section>
 
     <section class="bcard wide">
+      <div class="head"><h3>Artists for this room</h3><span class="empty">Artists who make work that fits the room you chose. Images are credited photos of their work from Wikimedia Commons; their website and Instagram have the full portfolio.</span></div>
+      <div class="firms" id="artists"></div>
+    </section>
+
+    <section class="bcard wide">
       <div class="head"><h3>Subcontractors and vendors</h3>
         <label class="bb-region">Project location<select id="region"><option value="ca">Silicon Valley, California</option><option value="az">Phoenix, Arizona</option></select></label></div>
       <div id="trades"></div>
@@ -816,14 +844,36 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <p>Spatial AI lets people change a 3D space by speaking and pointing, as in Bolt's "put that there" (1980). The hard part isn't understanding the words. It's making sure the person knows what the system thinks "that" and "there" mean before it acts, and that they can stop it or take it back. Guidelines for human-AI interaction ask systems to make clear what they can do, to support efficient correction, and to narrow the scope of what they do when in doubt (Amershi et al., 2019). Mixed-initiative design adds that an agent should weigh the cost of acting against the cost of asking (Horvitz, 1999). This room puts those rules into practice.</p>
   </section>
   <section>
-    <h2>Three agents, one contract</h2>
-    <p>Each request passes through three agents. You can open their messages under "Agent trace" on every preview.</p>
+    <h2>Twenty-two agents, one contract</h2>
+    <p>Every agent works in the open: its messages appear under "Agent trace" on each preview and in the Agent team feed, and lines light up on the agent network map when one hands work to another. Anything that changes the room, the shopping list or money waits for you.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Agent</th><th>Its job</th><th>What it may not do</th></tr></thead>
       <tbody>
+        <tr><th colspan="3">Directing the room</th></tr>
         <tr><td>Language agent</td><td>Turns what you said into an action, an object and a place</td><td>Guess which object you mean when there's more than one; it asks a numbered question</td></tr>
         <tr><td>Spatial agent</td><td>Works out where "there", "next to the sofa" or "the corner" is, in meters</td><td>Use a spot you haven't marked; if you say "there" with nothing marked, it asks you to point</td></tr>
         <tr><td>Layout checker</td><td>Checks for overlaps and walls, and nudges a placement when needed</td><td>Nudge anything without saying how far and why</td></tr>
+        <tr><td>Director</td><td>Runs the three agents above for every spoken or typed request</td><td>Skip the preview or the undo</td></tr>
+        <tr><th colspan="3">Designing the space</th></tr>
+        <tr><td>Inspiration</td><td>Finds the headquarters you name, its sources and credited photos</td><td>Change the room; it suggests, you install</td></tr>
+        <tr><td>Art and Style</td><td>Labels each interior's movement, materials, mood and art, with sources</td><td>Present its own reading of a photo as a fact; those labels are marked</td></tr>
+        <tr><td>Style</td><td>Turns a style or a company look into materials, colors and finishes</td><td>Apply a style you haven't chosen</td></tr>
+        <tr><td>Layout</td><td>Lays out the room type: offices, lobby, meeting rooms, auditorium, dining, lunch room, restrooms</td><td>Replace your room without an Undo</td></tr>
+        <tr><td>Scene check</td><td>Checks a 36-inch accessible route and overlaps before you see a layout</td><td>Hide a blocked route</td></tr>
+        <tr><td>Image</td><td>Pulls credited reference photos that match the style</td><td>Show a photo without its photographer and license</td></tr>
+        <tr><td>Paint</td><td>Specifies named paint colors from Benjamin Moore and Sherwin-Williams</td><td>Invent a color code</td></tr>
+        <tr><td>Render</td><td>Floor plan, dollhouse and walkthrough views, 4K renders and a shareable video</td><td>Call a render a photograph</td></tr>
+        <tr><td>Review</td><td>Keeps client and team comments pinned to the room</td><td>Show team-only comments to the client</td></tr>
+        <tr><th colspan="3">Building it for real</th></tr>
+        <tr><td>Sourcing</td><td>Matches every item to a real product from an approved vendor</td><td>Buy anything</td></tr>
+        <tr><td>Sustainability</td><td>Proposes a sustainable alternative for every part</td><td>Swap a part without your OK</td></tr>
+        <tr><td>Parts</td><td>Finds each part at an online retailer, with its price</td><td>Invent a price; unpriced parts say "at retailer"</td></tr>
+        <tr><td>Warranty</td><td>Reads each maker's warranty and flags the gaps</td><td>Promise terms the maker hasn't published</td></tr>
+        <tr><td>Find It</td><td>Finds custom couches, artwork and paneling for sale, or the artist or maker who can create them</td><td>Buy or commission anything</td></tr>
+        <tr><td>Estimate</td><td>Measures floor and wall areas and counts items</td><td>Present a planning figure as a quote</td></tr>
+        <tr><td>Invoice</td><td>Totals the approved parts with buy links</td><td>Add an affiliate tag you haven't set</td></tr>
+        <tr><td>Project manager</td><td>Finds designers, artists, trades and license checks for the project</td><td>Contact anyone for you; the contact buttons open their own pages</td></tr>
+        <tr><td>Build readiness</td><td>Tracks the project from idea to concept to build-ready</td><td>Mark a step done that isn't</td></tr>
       </tbody>
     </table></div>
     <div class="tablewrap"><table>
@@ -880,7 +930,7 @@ const CAT = {
   sofa:      { w: 2.0, d: 0.9, label: "sofa", syn: ["lounge sofa", "sofa", "couch", "settee"], color: "ivory" },
   chair:     { w: 0.6, d: 0.6, label: "chair", syn: ["lounge chair", "armchair", "chair", "seat"], color: "chocolate" },
   table:     { w: 1.1, d: 0.6, label: "coffee table", syn: ["coffee table", "marble table", "table"], color: "marble" },
-  desk:      { w: 1.4, d: 0.7, label: "desk", syn: ["standing desk", "desk", "workstation"], color: "walnut" },
+  desk:      { w: 1.4, d: 0.7, label: "desk", syn: ["desk", "workstation"], color: "walnut" },
   lamp:      { w: 0.4, d: 0.4, label: "lamp", syn: ["arc lamp", "floor lamp", "lamp", "light"], color: "charcoal" },
   plant:     { w: 0.5, d: 0.5, label: "plant", syn: ["olive tree", "plant", "fern", "ficus", "tree"], color: "leaf" },
   bookshelf: { w: 1.0, d: 0.35, label: "bookshelf", syn: ["bookshelf", "bookcase", "shelving", "shelves", "shelf"], color: "walnut" },
@@ -888,6 +938,25 @@ const CAT = {
   reception: { w: 2.6, d: 0.8, label: "reception desk", syn: ["reception desk", "front desk", "reception"], color: "walnut" },
   dining:    { w: 2.4, d: 1.0, label: "dining table", syn: ["dining table", "conference table", "long table"], color: "oak" },
   bench:     { w: 1.6, d: 0.45, label: "bench", syn: ["bench", "banquette"], color: "ivory" },
+  door:       { w: 1.0, d: 0.12, label: "door", syn: ["door", "doorway", "entry door"], color: "walnut", wall: true },
+  window:     { w: 1.8, d: 0.12, label: "window wall", syn: ["window wall", "front window", "window", "windows"], color: "white", wall: true },
+  partition:  { w: 2.0, d: 0.1, label: "partition wall", syn: ["partition wall", "partition", "divider wall"], color: "white" },
+  standing:   { w: 1.5, d: 0.75, label: "standing desk", syn: ["standing desk", "sit-stand desk", "height adjustable desk"], color: "oak" },
+  taskchair:  { w: 0.65, d: 0.65, label: "ergonomic chair", syn: ["ergonomic chair", "health chair", "task chair", "office chair", "desk chair"], color: "charcoal" },
+  toilet:     { w: 0.42, d: 0.7, label: "toilet", syn: ["toilet", "wc"], color: "white" },
+  vanity:     { w: 1.2, d: 0.55, label: "vanity", syn: ["vanity", "bathroom sink", "sink", "basin"], color: "walnut" },
+  shower:     { w: 1.0, d: 1.0, label: "shower", syn: ["shower", "walk-in shower"], color: "stone" },
+  urinal:     { w: 0.45, d: 0.4, label: "urinal", syn: ["urinal"], color: "white" },
+  stall:      { w: 0.95, d: 1.6, label: "restroom stall", syn: ["restroom stall", "toilet stall", "stall"], color: "gray" },
+  counter:    { w: 3.0, d: 0.65, label: "kitchen counter", syn: ["kitchen counter", "kitchenette", "kitchen", "counter"], color: "walnut" },
+  island:     { w: 2.2, d: 1.0, label: "kitchen island", syn: ["kitchen island", "island"], color: "walnut" },
+  fridge:     { w: 0.9, d: 0.75, label: "refrigerator", syn: ["refrigerator", "fridge"], color: "gray" },
+  boardtable: { w: 4.0, d: 1.4, label: "board table", syn: ["board table", "boardroom table", "meeting table"], color: "walnut" },
+  screen:     { w: 3.2, d: 0.08, label: "presentation screen", syn: ["presentation screen", "video wall", "screen", "tv", "display"], color: "black", wall: true },
+  stage:      { w: 4.0, d: 1.4, label: "stage", syn: ["stage", "podium", "platform"], color: "walnut" },
+  seatrow:    { w: 3.6, d: 0.6, label: "row of auditorium seats", syn: ["auditorium seats", "seat row", "row of seats", "theater seats"], color: "navy" },
+  highbar:    { w: 1.8, d: 0.6, label: "high table with stools", syn: ["high table", "bar table", "bar"], color: "oak" },
+  painting:   { w: 1.1, d: 0.06, label: "wall painting", syn: ["wall painting", "painting", "artwork", "wall art", "picture", "art"], color: "oak", wall: true },
 };
 const COLORS = { ivory: "#e7e2d6", stone: "#c9c5bd", marble: "#f3f1ed", leaf: "#3f6b45", oak: "#b08a5e", navy: "#22406e", blue: "#2a63c4", "light blue": "#8fb8e8", teal: "#0b6b66", green: "#2f7d4a", sage: "#8aa58a", purple: "#5b47b8", lavender: "#a99ad8",
   brown: "#6b4430", chocolate: "#4a2e1f", walnut: "#7a5236", gray: "#7a7f84", grey: "#7a7f84", charcoal: "#3a3d40", white: "#efeee9", black: "#1d1f21", red: "#b42a22", orange: "#d9772b", yellow: "#d8b23a", pink: "#d58aa6",
@@ -1782,6 +1851,116 @@ function build(type, colorName, ghostHex) {
     box(c.w, 0.12, c.d, 0, 0.4, 0, main);
     box(c.w, 0.04, c.d - 0.04, 0, 0.32, 0, wood);
     for (const s of [-1, 1]) box(0.05, 0.32, c.d - 0.08, s * (c.w / 2 - 0.1), 0.16, 0, steel);
+  } else if (type === "door") {
+    const fr = M(0x2a2b2d, { roughness: 0.4, metalness: 0.4 });
+    box(0.06, 2.25, c.d, -c.w / 2 + 0.03, 1.125, 0, fr); box(0.06, 2.25, c.d, c.w / 2 - 0.03, 1.125, 0, fr); box(c.w, 0.06, c.d, 0, 2.22, 0, fr);
+    box(c.w - 0.12, 2.16, 0.045, 0, 1.08, 0, M(col, { roughness: 0.45 }));
+    box(0.03, 0.03, 0.3, c.w / 2 - 0.16, 1.05, 0.05, steel); box(0.03, 0.03, 0.3, c.w / 2 - 0.16, 1.05, -0.05, steel);
+  } else if (type === "window") {
+    const wallM = M(col, { roughness: 0.9 });
+    box(c.w, 0.9, c.d, 0, 0.45, 0, wallM); box(c.w, 0.4, c.d, 0, 2.7, 0, wallM);
+    const fr = M(0x17191c, { roughness: 0.35, metalness: 0.6 });
+    for (const x of [-c.w / 2, 0, c.w / 2]) box(0.05, 1.6, c.d + 0.02, x, 1.7, 0, fr);
+    box(c.w, 0.05, c.d + 0.02, 0, 0.92, 0, fr); box(c.w, 0.05, c.d + 0.02, 0, 2.48, 0, fr);
+    const gl = gh ? main : new THREE.MeshStandardMaterial({ color: 0xbfd8ee, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.3, depthWrite: false });
+    box(c.w - 0.05, 1.55, 0.01, 0, 1.7, 0, gl).castShadow = false;
+  } else if (type === "partition") {
+    box(c.w, 2.4, c.d, 0, 1.2, 0, M(col, { roughness: 0.85 }));
+  } else if (type === "standing") {
+    box(c.w, 0.035, c.d, 0, 1.05, 0, M(col, { roughness: 0.5 }));
+    for (const s of [-1, 1]) { box(0.08, 1.0, 0.06, s * (c.w / 2 - 0.22), 0.52, 0, steel); box(0.08, 0.03, c.d - 0.05, s * (c.w / 2 - 0.22), 0.015, 0, steel); }
+    box(c.w - 0.5, 0.05, 0.05, 0, 0.95, 0, steel);
+    cyl(0.02, 0.02, 0.2, 0, 1.17, -0.22, steel, 10); box(0.66, 0.38, 0.025, 0, 1.42, -0.24, steel);
+    const scr = gh ? main : glow(new THREE.MeshStandardMaterial({ color: 0x0d1a2e, emissive: 0x2a5aa8, emissiveIntensity: 0.55, roughness: 0.2 }));
+    box(0.62, 0.34, 0.004, 0, 1.42, -0.226, scr).castShadow = false;
+  } else if (type === "taskchair") {
+    const mesh = M(col, { roughness: 0.7 });
+    for (let i = 0; i < 5; i++) { const a = i * Math.PI * 2 / 5, leg = box(0.32, 0.03, 0.05, Math.cos(a) * 0.16, 0.06, Math.sin(a) * 0.16, steel); leg.rotation.y = -a; }
+    cyl(0.025, 0.025, 0.38, 0, 0.26, 0, steel, 10);
+    box(0.5, 0.07, 0.48, 0, 0.48, 0.02, mesh);
+    box(0.46, 0.62, 0.05, 0, 0.86, -0.24, mesh, -0.1);
+    box(0.24, 0.12, 0.05, 0, 1.22, -0.27, mesh, -0.1);
+    for (const s of [-1, 1]) { box(0.04, 0.2, 0.04, s * 0.27, 0.6, 0.0, steel); box(0.06, 0.03, 0.26, s * 0.27, 0.7, 0.03, steel); }
+  } else if (type === "toilet") {
+    const wh = M(0xf4f4f2, { roughness: 0.15 });
+    box(0.36, 0.38, 0.18, 0, 0.62, -c.d / 2 + 0.09, wh);
+    cyl(0.17, 0.13, 0.4, 0, 0.2, 0.08, wh, 24);
+    cyl(0.18, 0.18, 0.03, 0, 0.415, 0.08, M(0xe9e9e6, { roughness: 0.3 }), 24);
+  } else if (type === "vanity") {
+    box(c.w, 0.75, c.d - 0.05, 0, 0.375, 0.02, M(col, { roughness: 0.5 }));
+    box(c.w + 0.02, 0.04, c.d, 0, 0.77, 0, gh ? main : mat(0xf1efeb, false, { map: G && G.TX ? G.TX.marble : null, roughness: 0.2 }));
+    for (const x of c.w > 1 ? [-c.w / 4, c.w / 4] : [0]) { cyl(0.17, 0.15, 0.05, x, 0.8, 0.04, M(0xf8f8f6, { roughness: 0.15 }), 24); cyl(0.012, 0.012, 0.2, x, 0.9, -0.15, steel, 8); box(0.02, 0.02, 0.12, x, 0.99, -0.1, steel); }
+    const mir = gh ? main : new THREE.MeshStandardMaterial({ color: 0xd4dde3, roughness: 0.12, metalness: 0.35 });
+    box(c.w - 0.1, 0.8, 0.02, 0, 1.45, -c.d / 2 + 0.01, mir);
+    if (!gh) { const lt = glow(new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff3e2, emissiveIntensity: 1.2 })); box(c.w - 0.1, 0.03, 0.04, 0, 1.9, -c.d / 2 + 0.03, lt).castShadow = false; }
+  } else if (type === "shower") {
+    box(c.w, 0.06, c.d, 0, 0.03, 0, M(0xe6e4df, { roughness: 0.4 }));
+    const gl = gh ? main : new THREE.MeshStandardMaterial({ color: 0xcfe3f0, roughness: 0.05, transparent: true, opacity: 0.22, depthWrite: false });
+    box(c.w, 2.0, 0.015, 0, 1.03, c.d / 2, gl).castShadow = false; box(0.015, 2.0, c.d, -c.w / 2, 1.03, 0, gl).castShadow = false;
+    box(c.w, 2.0, 0.04, 0, 1.03, -c.d / 2, M(col, { roughness: 0.6 })); box(0.04, 2.0, c.d, c.w / 2, 1.03, 0, M(col, { roughness: 0.6 }));
+    cyl(0.09, 0.09, 0.02, 0, 2.0, -c.d / 2 + 0.2, steel, 20); box(0.02, 0.02, 0.2, 0, 2.02, -c.d / 2 + 0.1, steel);
+  } else if (type === "urinal") {
+    const wh = M(0xf4f4f2, { roughness: 0.15 });
+    box(0.36, 0.62, 0.3, 0, 0.82, -c.d / 2 + 0.15, wh);
+    box(0.04, 1.2, 0.45, -0.3, 0.95, -c.d / 2 + 0.22, M(0x7a7f84, { roughness: 0.6 }));
+  } else if (type === "stall") {
+    const pm = M(col, { roughness: 0.6 }), legM = steel;
+    for (const s of [-1, 1]) box(0.025, 1.6, c.d, s * (c.w / 2), 1.0, 0, pm);
+    box(c.w * 0.32, 1.6, 0.025, -c.w * 0.34, 1.0, c.d / 2, pm);
+    const dr = box(c.w * 0.66, 1.6, 0.025, c.w * 0.17, 1.0, c.d / 2 + 0.012, M(new THREE.Color(col).offsetHSL(0, 0, -0.06).getHex(), { roughness: 0.55 }));
+    box(0.03, 0.06, 0.05, -0.05, 1.0, c.d / 2 + 0.04, legM);
+    const wh = M(0xf4f4f2, { roughness: 0.15 });
+    box(0.36, 0.38, 0.18, 0, 0.62, -c.d / 2 + 0.12, wh); cyl(0.17, 0.13, 0.4, 0, 0.2, -c.d / 2 + 0.38, wh, 24);
+  } else if (type === "counter") {
+    const cab = M(col, { roughness: 0.5 });
+    box(c.w, 0.86, c.d - 0.05, 0, 0.43, 0.02, cab);
+    box(c.w + 0.02, 0.04, c.d, 0, 0.88, 0, gh ? main : mat(0xf1efeb, false, { map: G && G.TX ? G.TX.marble : null, roughness: 0.2 }));
+    box(0.55, 0.02, 0.4, -c.w / 4, 0.905, 0.02, steel); cyl(0.012, 0.012, 0.3, -c.w / 4, 1.04, -0.2, steel, 8);
+    box(0.6, 0.015, 0.5, c.w / 4, 0.905, 0.02, M(0x111214, { roughness: 0.15 }));
+    box(c.w, 0.7, 0.35, 0, 1.95, -c.d / 2 + 0.175, cab);
+    for (let x = -c.w / 2 + 0.3; x < c.w / 2; x += 0.6) box(0.02, 0.15, 0.02, x, 1.7, -c.d / 2 + 0.36, steel);
+  } else if (type === "island") {
+    box(c.w, 0.9, c.d - 0.3, 0, 0.45, -0.15, M(col, { roughness: 0.5 }));
+    box(c.w + 0.05, 0.05, c.d, 0, 0.925, 0, gh ? main : mat(0xf1efeb, false, { map: G && G.TX ? G.TX.marble : null, roughness: 0.2 }));
+    for (const x of [-c.w / 3, 0, c.w / 3]) { cyl(0.18, 0.18, 0.06, x, 0.68, c.d / 2 + 0.25, M(0x3a3d40, { roughness: 0.6 }), 20); cyl(0.02, 0.02, 0.66, x, 0.33, c.d / 2 + 0.25, steel, 8); cyl(0.16, 0.16, 0.02, x, 0.01, c.d / 2 + 0.25, steel, 16); }
+  } else if (type === "fridge") {
+    const ss = M(0xc9ccce, { roughness: 0.25, metalness: 0.7 });
+    box(c.w, 2.0, c.d, 0, 1.0, 0, ss); box(0.005, 1.95, 0.01, 0, 1.0, c.d / 2 + 0.002, M(0x5d6266));
+    for (const s of [-1, 1]) box(0.02, 0.9, 0.04, s * 0.06, 1.15, c.d / 2 + 0.03, steel);
+  } else if (type === "boardtable") {
+    box(c.w, 0.06, c.d, 0, 0.74, 0, M(col, { roughness: 0.4 }));
+    box(c.w - 0.04, 0.02, c.d - 0.04, 0, 0.705, 0, wood);
+    for (const s of [-1, 1]) box(0.5, 0.7, c.d - 0.6, s * (c.w / 4), 0.35, 0, M(new THREE.Color(col).offsetHSL(0, 0, -0.08).getHex(), { roughness: 0.5 }));
+    for (const x of [-c.w / 4, c.w / 4]) box(0.3, 0.012, 0.08, x, 0.776, 0, steel);
+  } else if (type === "screen") {
+    box(c.w, 1.8, 0.05, 0, 1.75, 0, steel);
+    const scr = gh ? main : glow(new THREE.MeshStandardMaterial({ color: 0x0d1a2e, emissive: 0x3a6ab8, emissiveIntensity: 0.6, roughness: 0.2 }));
+    box(c.w - 0.08, 1.72, 0.005, 0, 1.75, 0.028, scr).castShadow = false;
+  } else if (type === "stage") {
+    box(c.w, 0.45, c.d, 0, 0.225, 0, M(col, { roughness: 0.5 }));
+    box(c.w, 0.02, 0.06, 0, 0.44, c.d / 2 - 0.03, M(0x111214));
+    box(0.5, 1.05, 0.4, c.w / 2 - 0.6, 0.45 + 0.525, 0.2, M(new THREE.Color(col).offsetHSL(0, 0, -0.1).getHex(), { roughness: 0.5 }), 0);
+    for (const s of [-1, 1]) box(0.5, 0.45, 0.35, s * (c.w / 2 + 0.25), 0.225, c.d / 2 - 0.25, M(0x3a3d40));
+  } else if (type === "seatrow") {
+    const n = 6, sw = c.w / n, back = M(col, { roughness: 0.8 }), dk = M(new THREE.Color(col).offsetHSL(0, 0, -0.1).getHex(), { roughness: 0.8 });
+    box(c.w + 0.1, 0.18, c.d + 0.15, 0, 0.09, -0.05, M(0x5a5f63, { roughness: 0.9 }));
+    for (let i = 0; i < n; i++) { const x = -c.w / 2 + sw * (i + 0.5);
+      box(sw - 0.06, 0.08, 0.42, x, 0.6, 0.04, back); box(sw - 0.06, 0.55, 0.08, x, 0.9, -0.2, dk, -0.12); }
+    for (let i = 0; i <= n; i++) box(0.04, 0.5, 0.45, -c.w / 2 + sw * i, 0.45, 0.0, steel);
+  } else if (type === "highbar") {
+    box(c.w, 0.05, c.d, 0, 1.05, 0, M(col, { roughness: 0.4 }));
+    for (const s of [-1, 1]) { box(0.06, 1.02, 0.06, s * (c.w / 2 - 0.2), 0.51, 0, steel); box(0.06, 0.03, c.d - 0.1, s * (c.w / 2 - 0.2), 0.015, 0, steel); }
+    for (const x of [-c.w / 3, 0, c.w / 3]) for (const z of [-1, 1]) { cyl(0.16, 0.16, 0.06, x, 0.76, z * (c.d / 2 + 0.22), M(0x3a3d40, { roughness: 0.6 }), 20); cyl(0.02, 0.02, 0.74, x, 0.37, z * (c.d / 2 + 0.22), steel, 8); }
+  } else if (type === "painting") {
+    const fr = M(col, { roughness: 0.5 });
+    box(c.w + 0.1, 0.82, c.d, 0, 1.6, 0, fr);
+    let tex = null;
+    if (!gh) { const cv = document.createElement("canvas"); cv.width = 384; cv.height = 288; const x = cv.getContext("2d");
+      const gr = x.createLinearGradient(0, 0, 0, 288); gr.addColorStop(0, "#d8c7a2"); gr.addColorStop(1, "#8a6a44"); x.fillStyle = gr; x.fillRect(0, 0, 384, 288);
+      const pal = ["#4f6b45", "#6b4430", "#2f3a35", "#a8875a"]; let s = 5; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+      for (let i = 0; i < 5; i++) { x.fillStyle = pal[i % 4]; x.globalAlpha = 0.6; x.beginPath(); x.moveTo(0, 170 + i * 22); for (let k = 0; k <= 384; k += 32) x.lineTo(k, 150 + i * 24 - r() * 40); x.lineTo(384, 288); x.lineTo(0, 288); x.fill(); }
+      tex = new THREE.CanvasTexture(cv); tex.encoding = THREE.sRGBEncoding; }
+    const p = new THREE.Mesh(new THREE.PlaneGeometry(c.w - 0.04, 0.72), gh ? main : new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 })); p.position.set(0, 1.6, c.d / 2 + 0.002); g.add(p);
   } else if (type === "rug") {
     box(c.w, 0.012, c.d, 0, 0.006, 0, M(col, { roughness: 1 }));
     if (!gh) { const inner = mat(new THREE.Color(col).offsetHSL(0, 0, 0.05).getHex(), false, { roughness: 1 }); box(c.w - 0.22, 0.013, c.d - 0.22, 0, 0.0065, 0, inner); }
@@ -2167,6 +2346,33 @@ const SPACES = {
     ["reception", 0.6, -1.25, 0], ["chair", 0.6, -2.25, 0],
     ["rug", -2.2, 1.3, 0], ["sofa", -2.2, 2.45, 180], ["table", -2.2, 1.3, 0], ["chair", -3.4, 1.1, 90], ["chair", -1.0, 1.1, -90],
     ["bench", 3.55, 0.6, -90], ["plant", -3.5, -2.5, 0], ["plant", 3.5, -2.5, 0], ["plant", 3.5, 2.5, 0], ["lamp", -3.4, 2.4, 0] ] },
+  execoffice: { label: "Executive office with private bath", items: () => [
+    ["standing", 1.0, -1.9, 0], ["taskchair", 1.0, -2.6, 0], ["chair", 0.5, -0.85, 180], ["chair", 1.5, -0.85, 180],
+    ["rug", -1.9, 0.9, 0], ["sofa", -1.9, 2.1, 180], ["table", -1.9, 0.9, 0], ["chair", -3.35, 0.9, 90], ["lamp", -3.3, 2.3, 0],
+    ["bookshelf", -0.6, -2.8, 0], ["plant", -3.5, -2.5, 0], ["painting", -2.9, -2.95, 0], ["door", 3.2, -2.93, 0], ["window", 3.94, -1.5, 90],
+    ["partition", 3.0, 0.45, 0], ["partition", 2.0, 1.45, 90], ["vanity", 3.35, 0.8, 0], ["toilet", 3.65, 1.75, -90], ["shower", 3.45, 2.5, 0], ["door", 2.0, 2.75, 90] ] },
+  social: { label: "Social hall and hangout", items: () => [
+    ["rug", -1.8, 0.9, 0], ["sofa", -1.8, 2.15, 180], ["sofa", -1.8, -0.35, 0], ["table", -1.8, 0.9, 0], ["chair", -3.35, 0.9, 90], ["chair", -0.25, 0.9, -90],
+    ["highbar", 2.0, -1.5, 0], ["highbar", 2.0, 0.6, 0], ["bench", 3.6, 2.2, -90], ["screen", 2.2, -2.93, 0, { scale: 0.6 }], ["painting", -2.9, -2.95, 0],
+    ["plant", -3.5, -2.5, 0], ["plant", 0.6, 2.7, 0], ["lamp", -3.4, 2.4, 0], ["door", 3.4, 2.93, 180] ] },
+  lunch: { label: "Lunch room with kitchen", items: () => {
+    const o = [["counter", 1.4, -2.65, 0], ["fridge", 3.45, -2.6, 0], ["island", 1.4, -1.0, 0], ["dining", -2.4, 0.7, 0], ["dining", 1.4, 1.65, 0], ["door", -2.8, -2.93, 0], ["plant", -3.5, -2.4, 0], ["plant", -3.5, 2.6, 0]];
+    for (const x of [-3.2, -2.4, -1.6]) o.push(["chair", x, -0.05, 0], ["chair", x, 1.45, 180]);
+    for (const x of [0.6, 1.4, 2.2]) o.push(["chair", x, 0.9, 0], ["chair", x, 2.4, 180]);
+    return o; }, ceiling: "slats" },
+  meeting: { label: "Meeting room and boardroom", items: () => {
+    const o = [["boardtable", 0, 0.2, 0], ["screen", 0, -2.93, 0], ["bookshelf", -3.0, -2.8, 0], ["plant", -3.5, 2.6, 0], ["plant", 3.5, 2.6, 0], ["door", 3.1, -2.93, 0], ["window", 3.94, 0.2, 90], ["painting", -2.9, 1.0, 0, { rot: 90, x: -3.95 }]];
+    for (const x of [-1.5, -0.5, 0.5, 1.5]) o.push(["taskchair", x, -0.85, 0], ["taskchair", x, 1.25, 180]);
+    o.push(["taskchair", -2.45, 0.2, 90], ["taskchair", 2.45, 0.2, -90]);
+    return o; }, ceiling: "coffers" },
+  auditorium: { label: "Meeting hall, auditorium style", items: () => {
+    const o = [["stage", 0, -2.2, 0], ["screen", 0, -2.93, 0], ["plant", -3.6, 2.7, 0], ["plant", 3.6, 2.7, 0], ["door", -3.3, -2.93, 0], ["door", 3.45, 2.93, 180]];
+    for (const [i, z] of [-0.55, 0.35, 1.25, 2.15].entries()) o.push(["seatrow", -1.95, z, 180], ["seatrow", 1.95, z, 180]);
+    return o; }, ceiling: "coffers" },
+  restrooms: { label: "Women's and men's restrooms", items: () => [
+    ["partition", 0, -2.0, 90], ["partition", 0, 0.0, 90], ["partition", 0, 2.0, 90],
+    ["stall", -3.45, -2.2, 0], ["stall", -2.45, -2.2, 0], ["stall", -1.45, -2.2, 0], ["vanity", -3.0, 0.4, 0], ["vanity", -1.2, 0.4, 0], ["door", -2.0, 2.93, 180], ["plant", -3.6, 2.5, 0],
+    ["stall", 0.6, -2.2, 0], ["stall", 1.6, -2.2, 0], ["urinal", 2.6, -2.78, 0], ["urinal", 3.2, -2.78, 0], ["urinal", 3.75, -2.78, 0], ["vanity", 1.2, 0.4, 0], ["vanity", 3.0, 0.4, 0], ["door", 2.0, 2.93, 180] ] },
   dining: { label: "Corporate dining", items: () => {
     const out = [["dining", -2.5, -0.6, 0], ["dining", 0.0, -0.6, 0]];
     for (const x of [-3.3, -2.5, -1.7, -0.8, 0, 0.8]) { out.push(["chair", x, -1.42, 0]); out.push(["chair", x, 0.22, 180]); }
@@ -2196,7 +2402,9 @@ function layoutFor(space, style) {
     let added = 0;
     for (const [x, z] of [[-3.5, 0.4], [3.55, -0.2], [0.9, -2.7], [-0.9, 2.7], [3.55, 1.8], [-3.5, -1.6]]) { if (added >= 3) break; if (near(x, z)) continue; items.push(["lamp", x, z, 0]); added++; }
   }
-  return items.map(([type, x, z, rot]) => { const o = SD.mk(type, x, z, rot); o.color = st.pal[type] || CAT[type].color; return o; });
+  const ALIAS = { standing: "desk", boardtable: "dining", counter: "reception", island: "reception", vanity: "reception", door: "bookshelf", stage: "desk", highbar: "table", seatrow: "sofa", taskchair: "chair", painting: "desk" };
+  return items.map(([type, x, z, rot, ex]) => { const o = SD.mk(type, ex && ex.x != null ? ex.x : x, z, ex && ex.rot != null ? ex.rot : rot); if (ex && ex.scale) o.scale = ex.scale;
+    o.color = ["window", "partition", "stall", "shower"].includes(type) ? st.walls : st.pal[type] || st.pal[ALIAS[type]] || CAT[type].color; return o; });
 }
 
 /* ---------------- Floor choice (Style agent) and framed art ---------------- */
@@ -2212,7 +2420,25 @@ const FLOORS = {
   greencarpet: { label: "Library-green wool carpet", tint: "#4f6b4a", kind: "carpet" },
 };
 let floorPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:floor")); return FLOORS[v] ? v : "style"; } catch (e) { return "style"; } })();
-let artGroup = null;
+let artGroup = null, ceilGroups = {};
+let ceilPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:ceiling")); return ["auto", "none", "coffers", "slats"].includes(v) ? v : "auto"; } catch (e) { return "auto"; } })();
+function drawCeiling(G, kind, st) {
+  if (!window.THREE) return;
+  for (const [k, g] of Object.entries(ceilGroups)) { g.userData.want = k === kind; g.visible = false; }
+  if (kind === "none" || ceilGroups[kind]) { if (ceilGroups[kind]) ceilGroups[kind].userData.m.color.setHex(st.slat); return; }
+  const g = new THREE.Group(), m = new THREE.MeshStandardMaterial({ color: st.slat, roughness: 0.55 }), m2 = new THREE.MeshStandardMaterial({ color: 0x2a1d14, roughness: 0.6 });
+  g.userData.m = m; const Y = 2.86;
+  const B = (w, h, d, x, y, z, mm) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mm || m); b.position.set(x, y, z); b.castShadow = true; g.add(b); };
+  if (kind === "coffers") {
+    for (let x = -4; x <= 4.001; x += 1.0) { B(0.14, 0.16, 6, x, Y, 0); B(0.06, 0.04, 6, x, Y - 0.1, 0, m2); }
+    for (let z = -3; z <= 3.001; z += 1.0) { B(8, 0.16, 0.14, 0, Y, z); B(8, 0.04, 0.06, 0, Y - 0.1, z, m2); }
+    for (let x = -3.5; x < 4; x += 1) for (let z = -2.5; z < 3; z += 1) { B(0.6, 0.03, 0.03, x, Y + 0.02, z - 0.3); B(0.6, 0.03, 0.03, x, Y + 0.02, z + 0.3); B(0.03, 0.03, 0.6, x - 0.3, Y + 0.02, z); B(0.03, 0.03, 0.6, x + 0.3, Y + 0.02, z); }
+  } else if (kind === "slats") {
+    for (let x = -3.95; x <= 3.95; x += 0.16) B(0.07, 0.07, 6, x, Y, 0);
+  }
+  g.userData.want = true; ceilGroups[kind] = g; G.scene.add(g);
+  if (!drawCeiling.loop) { drawCeiling.loop = true; const tick = () => { const GG = SD.G; if (GG) { const low = GG.pitch < 0.5; for (const [k, gg] of Object.entries(ceilGroups)) gg.userData.low = low; for (const gg of Object.values(ceilGroups)) if (gg.userData.want) gg.visible = !!(low || gg.userData.force); } requestAnimationFrame(tick); }; tick(); }
+}
 function drawArt(G, on) {
   if (!window.THREE) return;
   if (!artGroup) {
@@ -2290,6 +2516,7 @@ function applyShell() {
   const fk = floorPick === "style" ? st.floor : (FLOORS[floorPick].kind || floorPick);
   texFloor(fk, floorPick === "style" ? st.floorTint : FLOORS[floorPick].tint);
   drawArt(G, !!st.art || floorPick === "__never");
+  drawCeiling(G, ceilPick === "auto" ? (SPACES[S.space] && SPACES[S.space].ceiling) || "none" : ceilPick, st);
   if (G.slatM) G.slatM.color.setHex(st.slat);
   if (G.backingM) G.backingM.color.setHex(st.backing);
 }
@@ -2738,8 +2965,8 @@ function walkVideo() {
   };
   requestAnimationFrame(step);
 }
-$("#finalrenders").addEventListener("click", finalRenders);
-$("#bbrenders").addEventListener("click", finalRenders);
+$("#finalrenders").addEventListener("click", () => finalRenders4k());
+$("#bbrenders").addEventListener("click", () => finalRenders4k());
 $("#walkvid").addEventListener("click", walkVideo);
 $("#mediaclose").addEventListener("click", () => { const d = $("#mediadlg"); if (d.close) d.close(); else d.removeAttribute("open"); });
 
@@ -2910,6 +3137,12 @@ function parts() {
   if (n("bookshelf")) out.push(part("shelving", "Shelving", n("bookshelf"), "each", "bookshelf"));
   if (n("bench")) out.push(part("bench", "Bench", n("bench"), "each", "bench"));
   if (n("plant")) out.push(part("plant", "Plants and planters", n("plant"), "each", "plant"));
+  for (const [t, label] of Object.entries(NEWTYPES)) { const k = n(t); if (!k) continue;
+    const p = part(RESEARCH_KEY[t] || "_" + t, label, k, "each", t); if (t === "taskchair") p.match = ["chair", "Frame and seat in"]; out.push(p); }
+  { const ck = ceilPick === "auto" ? (SPACES[S.space] && SPACES[S.space].ceiling) || "none" : ceilPick; const sq = Math.round(tk.floor * SQFT);
+    const G2 = (name, q, claim) => ({ name, maker: "Millwork or ceiling contractor", url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
+    if (ck === "coffers") out.push({ key: "bb:ceil-coffers", label: "Carved wood coffered ceiling", qty: sq, unit: "sq ft", base: G2("Carved wood coffered ceiling, stained", "wood coffered ceiling system"), sus: G2("Coffered ceiling in FSC-certified or reclaimed wood", "reclaimed wood coffered ceiling", "FSC certification traces wood to responsibly managed forests.") });
+    if (ck === "slats") out.push({ key: "bb:ceil-slats", label: "Wood slat ceiling", qty: sq, unit: "sq ft", base: G2("Linear wood slat ceiling panels", "wood slat ceiling panels"), sus: G2("Wood slat ceiling, FSC-certified, with acoustic backing", "FSC wood slat acoustic ceiling", "FSC certification traces wood to responsibly managed forests.") }); }
   // Finishes. Feature wall is the plaster on the back wall (the takeoff's paintable area).
   const wallSqft = tk.wall * SQFT, w = PR.wallpaper || {};
   const wpUnits = p => { if (!p || !p.coverage_sqft) return 1; let q = Math.ceil(wallSqft * 1.15 / p.coverage_sqft); if (p.increment) q = Math.ceil(q / p.increment) * p.increment; return Math.max(q, p.min_qty || 1); };
@@ -2964,10 +3197,12 @@ function renderMatched(P) {
   const st = STYLES[S.style], sw = c => `<span class="sw-inline" style="background:${COLORS[c] || "#ccc"}"></span>${esc(c)}`;
   const find = k => P.find(p => p.key === "bb:" + k);
   const rows = [];
-  const couch = find("couch"); if (couch) { const x = couch.custom || pick(couch); rows.push(`<li><b>Custom couch:</b> ${esc(x.name)} (${esc(x.maker)}), upholstered in ${sw(st.pal.sofa)} to match the approved room.${x.price_usd != null ? ` From ${money(x.price_usd)}.` : ""} <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Configure it</a></li>`); }
-  const dc = find("desk_chair"); if (dc) { const x = pick(dc); rows.push(`<li><b>Desk chair:</b> ${esc(x.name)} (${esc(x.maker)}), frame and seat in ${sw(st.pal.chair)}. <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Choose finish</a></li>`); }
-  const wp = find("wallpaper"); if (wp) { const x = pick(wp); rows.push(`<li><b>Wallpaper:</b> <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">${esc(x.name)}</a> (${esc(x.maker)}), live product page. Order a sample to check it against ${esc(st.paint[0][1])} ${esc(st.paint[0][2])} on the other walls.</li>`); }
-  $("#matched").innerHTML = rows.length ? `<ul class="plain">${rows.join("")}</ul>` : `<p class="empty">This room has no couch or desk chair. Add one in the Room tab, or pick the C-suite office.</p>`;
+  const couch = find("couch"); if (couch) { const x = couch.custom || pick(couch); rows.push(`<li><b>Custom couch:</b> ${esc(x.name)} (${esc(x.maker)}), upholstered in ${sw(st.pal.sofa)} to match the approved room.<div class="findthumb" data-thumbq="${esc(st.pal.sofa + " sofa")}"></div>${x.price_usd != null ? ` From ${money(x.price_usd)}.` : ""} <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Configure it</a></li>`); }
+  const dc = find("desk_chair") || find("desk_chair"); if (dc) { const x = pick(dc); rows.push(`<li><b>Desk chair:</b> ${esc(x.name)} (${esc(x.maker)}), frame and seat in ${sw(st.pal.chair)}.<div class="findthumb" data-thumbq="ergonomic office chair"></div> <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Choose finish</a></li>`); }
+  const wp = find("wallpaper"); if (wp) { const x = pick(wp); rows.push(`<li><b>Wallpaper:</b> <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">${esc(x.name)}</a> (${esc(x.maker)}), live product page. Order a sample to check it against ${esc(st.paint[0][1])} ${esc(st.paint[0][2])} on the other walls.<div class="findthumb" data-thumbq="wallpaper interior wall"></div></li>`); }
+  const tq = { couch: `${st.pal.sofa} sofa`, chair: "ergonomic office chair", wp: "wallpaper pattern wall" };
+  setTimeout(() => fillThumbs($("#matched")), 0);
+  $("#matched").innerHTML = rows.length ? `<ul class="plain matchlist">${rows.join("")}</ul>` : `<p class="empty">This room has no couch or desk chair. Add one in the Room tab, or pick the C-suite office.</p>`;
 }
 function renderWarranty(P) {
   const picked = P.map(p => ({ p, x: pick(p) }));
@@ -3040,6 +3275,12 @@ function renderTrades(P) {
     ["Tile setter", "Pantry wall tile", has("tile")],
     ["Flooring installer", "Rug, carpet tile or wood floor", has("rug")],
     ["Furniture installer and movers", "Receiving, assembly and placement", true],
+    ["Toilet partition installer", "Restroom stalls and urinal screens", has("_stall")],
+    ["Kitchen cabinet installer", "Kitchen run and island", has("_counter") || has("_island")],
+    ["AV integrator", "Screens, sound and controls", has("_screen")],
+    ["Glazier", "Window walls and shower glass", has("_window") || has("_shower")],
+    ["Finish carpenter", "Carved wood or slat ceiling", P.some(p => p.key.startsWith("bb:ceil-"))],
+    ["Seating installer", "Fixed auditorium seating and stage", has("_seatrow") || has("_stage")],
   ].filter(t => t[2]);
   $("#trades").innerHTML = `<div class="tablewrap"><table class="inv"><thead><tr><th>Trade or vendor</th><th>What they do here</th><th>Find and contact</th></tr></thead><tbody>
     ${T.map(([role, what]) => `<tr><td><b>${esc(role)}</b></td><td>${esc(what)}</td><td class="links">${lic ? `<a class="btn small" href="${esc(lic.url)}" target="_blank" rel="noopener">Check a license (${region === "ca" ? "CA" : "AZ"})</a>` : ""}${houzz ? `<a class="btn small primary" href="${esc(houzz.url)}" target="_blank" rel="noopener">Contact pros on Houzz</a>` : ""}</td></tr>`).join("")}
@@ -3071,6 +3312,112 @@ function runBudget() {
   }
 }
 
+/* ---------------- New rooms: parts, trades, search, ceiling, thumbnails ---------------- */
+Object.assign(CATALOG, {
+  standing:   { base: P("Height-adjustable standing desk", "Office furniture maker", "", "height adjustable standing desk executive"), sus: CATALOG.desk.sus },
+  taskchair:  { base: P("Ergonomic task chair", "Office furniture maker", "", "ergonomic office chair"), sus: P("Ergonomic chair with a published sustainability label", "Humanscale or Steelcase", "", "Humanscale Freedom chair", "Look for a Declare or Cradle to Cradle label.") },
+  door:       { base: P("Solid-core wood veneer door with lever hardware", "Door maker", "", "solid core wood veneer interior door"), sus: P("FSC-certified solid-core door", "Door maker", "", "FSC certified wood interior door", "FSC certification traces wood to responsibly managed forests.") },
+  window:     { base: P("Interior window wall, aluminum frame", "Glazing contractor", "", "aluminum frame glass window wall office"), sus: P("Window wall with low-e insulated glass", "Glazing contractor", "", "low-e insulated glass window office", "Low-e glass cuts heat gain and loss.") },
+  partition:  { base: P("Drywall partition, painted", "Drywall contractor", "", "office drywall partition"), sus: P("Demountable partition wall", "Office interiors maker", "", "demountable partition wall office", "Demountable walls are moved and reused instead of demolished.") },
+  toilet:     { base: P("Wall-hung toilet", "Kohler", "https://www.kohler.com", "Kohler wall hung toilet"), sus: P("WaterSense-labeled toilet", "Kohler", "https://www.kohler.com", "WaterSense toilet 1.28 gpf", "WaterSense toilets use 1.28 gallons per flush or less (EPA).") },
+  vanity:     { base: P("Vanity with stone top and undermount sinks", "Millwork shop", "", "commercial bathroom vanity stone top"), sus: P("Vanity in FSC-certified wood with WaterSense faucets", "Millwork shop", "", "FSC certified bathroom vanity", "WaterSense faucets use at least 20% less water (EPA).") },
+  shower:     { base: P("Frameless glass walk-in shower", "Glazing contractor", "", "frameless glass walk in shower"), sus: P("WaterSense-labeled showerhead with the same enclosure", "Kohler", "https://www.kohler.com", "WaterSense showerhead", "WaterSense showerheads use no more than 2.0 gallons per minute (EPA).") },
+  urinal:     { base: P("Wall-hung urinal", "Kohler", "https://www.kohler.com", "Kohler wall hung urinal"), sus: P("Waterless or ultra-low-flow urinal", "Fixture maker", "", "waterless urinal commercial", "Uses little or no water per flush.") },
+  stall:      { base: P("Powder-coated steel toilet partitions", "Partition maker", "", "powder coated steel toilet partition"), sus: P("HDPE toilet partitions with recycled content", "Partition maker", "", "recycled HDPE toilet partitions", "Solid plastic partitions resist moisture and can contain recycled plastic.") },
+  counter:    { base: P("Kitchen run: base and wall cabinets with stone top", "Millwork shop", "", "commercial kitchen cabinets quartz countertop"), sus: P("Cabinets on formaldehyde-free board with a recycled-content top", "Millwork shop", "", "NAUF cabinet recycled glass countertop", "Ask for NAUF (no added urea-formaldehyde) panels.") },
+  island:     { base: P("Kitchen island with seating", "Millwork shop", "", "kitchen island with seating commercial"), sus: P("Island in FSC-certified wood", "Millwork shop", "", "FSC certified kitchen island") },
+  fridge:     { base: P("Commercial refrigerator", "Appliance maker", "", "commercial refrigerator office"), sus: P("ENERGY STAR refrigerator", "Appliance maker", "", "ENERGY STAR refrigerator", "ENERGY STAR models use less energy than standard ones.") },
+  boardtable: { base: P("Boardroom table, wood veneer, with power", "Office furniture maker", "", "boardroom conference table 13 ft wood"), sus: P("Boardroom table in FSC-certified or reclaimed wood", "Millwork shop", "", "reclaimed wood boardroom table", "Reclaimed wood keeps existing timber in use.") },
+  screen:     { base: P("Large-format display or video wall", "AV integrator", "", "conference room large display 98 inch"), sus: P("ENERGY STAR display", "Display maker", "", "ENERGY STAR commercial display") },
+  stage:      { base: P("Stage platform with lectern", "Staging maker", "", "portable stage platform lectern"), sus: P("Modular stage in FSC-certified plywood", "Staging maker", "", "modular stage platform plywood") },
+  seatrow:    { base: P("Auditorium seating, upholstered, per row of 6", "Seating maker", "", "auditorium seating upholstered"), sus: P("Auditorium seating with recycled-content fabric", "Seating maker", "", "auditorium seating recycled fabric") },
+  highbar:    { base: P("Bar-height table with stools", "Office furniture maker", "", "bar height table with stools office"), sus: P("Bar table in reclaimed wood", "Millwork shop", "", "reclaimed wood bar height table") },
+  painting:   { base: P("Original painting from an artist", "Artist of your choice", "", "original landscape painting large"), sus: P("Original painting on a reused or FSC frame", "Local artist", "", "original painting local artist", "Buying from a local artist keeps shipping short.") },
+});
+const NEWTYPES = { standing: "Standing desk", taskchair: "Ergonomic chairs", door: "Doors", window: "Window walls", partition: "Partition walls", toilet: "Toilets", vanity: "Vanities",
+  shower: "Shower", urinal: "Urinals", stall: "Restroom stalls", counter: "Kitchen run", island: "Kitchen island", fridge: "Refrigerator", boardtable: "Board table",
+  screen: "Presentation screen", stage: "Stage and lectern", seatrow: "Auditorium seat rows", highbar: "High tables", painting: "Wall paintings" };
+const RESEARCH_KEY = { taskchair: "desk_chair" };
+
+/* High-res realistic renders: 4K with supersampling and finer shadows */
+function finalRenders4k() {
+  const G = SD.G; if (!G) { dlg(`<p>The 3D view isn't running in this browser, so there is nothing to render.</p>`); return; }
+  dlg(`<p class="eyebrow">Rendering</p><p>Rendering four 4K views…</p>`);
+  setTimeout(() => {
+    const r = G.renderer, cam = G.camera, pr = r.getPixelRatio(), save = camSave(G), restore = hideOverlays(G), exp = r.toneMappingExposure;
+    const cg = Object.values(ceilGroups); for (const g of cg) { g.userData.force = true; if (g.userData.want) g.visible = true; }
+    const lights = []; G.scene.traverse(o => { if (o.isDirectionalLight && o.castShadow) { lights.push([o, o.shadow.mapSize.x]); o.shadow.mapSize.set(4096, 4096); if (o.shadow.map) { o.shadow.map.dispose(); o.shadow.map = null; } } });
+    const W = 3840, H = 2160; r.setPixelRatio(1); r.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); r.toneMappingExposure = exp * 1.06;
+    const out = [];
+    for (const [name, v] of SHOTS) { aim(G, v); for (const g of cg) g.visible = !!g.userData.want && v.pitch < 0.5; r.render(G.scene, cam);
+      const big = r.domElement.toDataURL("image/jpeg", 0.92);
+      const sm = document.createElement("canvas"); sm.width = 1920; sm.height = 1080; const x = sm.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(r.domElement, 0, 0, 1920, 1080);
+      out.push({ name, big, hd: sm.toDataURL("image/jpeg", 0.9) }); }
+    for (const [o, s] of lights) { o.shadow.mapSize.set(s, s); if (o.shadow.map) { o.shadow.map.dispose(); o.shadow.map = null; } }
+    for (const g of cg) g.userData.force = false;
+    r.toneMappingExposure = exp; r.setPixelRatio(pr); camRestore(G, save); restore(); SD.resize();
+    const title = `${SPACES[S.space].label} · ${STYLES[S.style].short}`;
+    dlg(`<p class="eyebrow">High-res renders</p><h2>${esc(title)}</h2>
+      <p class="credit">Rendered at 3840 × 2160 with 4096-pixel soft shadows and filmic light, then smoothed for HD. A simulated room for planning; not a photograph.</p>
+      <div class="renders">${out.map((o, i) => `<figure><img src="${o.hd}" alt="${esc(title)}, ${esc(o.name)} view"><figcaption>${esc(o.name)} · <a href="${o.big}" download="spatial-director-${S.space}-${S.style}-${i + 1}-4k.jpg">Download 4K</a> · <a href="${o.hd}" download="spatial-director-${S.space}-${S.style}-${i + 1}-hd.jpg">HD</a></figcaption></figure>`).join("")}</div>`);
+    post("render", "you", `Rendered ${out.length} 4K views of the ${title}.`, "good");
+  }, 60);
+}
+
+/* In the room: search, then show it, add it, or shop for it */
+function addType(type) {
+  const c = CAT[type], solid = S.objs.filter(o => o.type !== "rug").map(footprint);
+  const fits = (x, z, rot) => { const f = footprint({ type, x, z, rot, scale: 1 }); return x - f.hx > ROOM.minX - 0.01 && x + f.hx < ROOM.maxX + 0.01 && z - f.hz > ROOM.minZ - 0.01 && z + f.hz < ROOM.maxZ + 0.01 &&
+    !solid.some(o => Math.abs(o.x - x) < o.hx + f.hx + 0.05 && Math.abs(o.z - z) < o.hz + f.hz + 0.05); };
+  let spot = null;
+  if (c.wall) { for (const x of [-2.9, 2.9, -3.4, 3.4, 2.2, -2.2, 0]) if (fits(x, -2.95, 0)) { spot = [x, -2.95, 0]; break; } }
+  else outer: for (let z = -2.2; z <= 2.4; z += 0.4) for (let x = -3.2; x <= 3.4; x += 0.4) if (fits(x, z, 0)) { spot = [x, z, 0]; break outer; }
+  if (!spot) { SD.showCard("err", `<p>There's no free space for a ${esc(c.label)}. Remove or move something first.</p>`); return; }
+  S.undo.push(SD.snap());
+  const o = SD.mk(type, spot[0], spot[1], spot[2]); o.color = STYLES[S.style].pal[type] || c.color; S.objs.push(o); S.selected = o.id;
+  S.history.push({ t: SD.clockStr(), text: `Added a ${c.label}`, undone: false });
+  SD.sync(); SD.renderHistory(); SD.renderScene();
+  SD.showCard("done", `<p class="eyebrow">Added</p><p>A ${esc(c.label)}, ${esc(SD.whereOf(o))}. Say "move the ${esc(c.label)} there" to place it, or Undo.</p>`);
+  post("director", "layout", `The person added a ${c.label} from search.`);
+}
+function roomSearch(q) {
+  const s = q.trim().toLowerCase(); if (!s) { $("#rqresults").innerHTML = ""; return; }
+  const types = Object.entries(CAT).filter(([k, c]) => [c.label, ...c.syn].some(w => w.includes(s) || s.includes(w)));
+  const here = S.objs.filter(o => types.some(([k]) => k === o.type));
+  const art = /paint|art|picture|sculpt|print/.test(s);
+  const a = (l, u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`;
+  $("#rqresults").innerHTML = `<div class="rq">
+    ${here.length ? `<p><b>In the room:</b> ${here.map(o => `<button type="button" class="chip" data-rqsel="${o.id}">${esc(cap(CAT[o.type].label))}, ${esc(SD.whereOf(o))}</button>`).join(" ")}</p>` : `<p>No ${esc(q)} in this room yet.</p>`}
+    ${types.length ? `<p>${types.map(([k, c]) => `<button type="button" class="btn small" data-rqadd="${k}">Add a ${esc(c.label)}</button>`).join(" ")}</p>` : ""}
+    <p><b>Shop for it:</b> ${a("Google Shopping", gshop(q))} · ${a("Amazon", withTag(amazon(q)))} · ${a("Etsy", "https://www.etsy.com/search?q=" + encodeURIComponent(q))} · ${a("Houzz", houzzPhotos(q))}</p>
+    <p><b>${art ? "Find an artist" : "Have it made"}:</b> ${art ? `${a("Saatchi Art", site("saatchiart.com", q))} · ${a("Artsy", site("artsy.net", q + " artist"))}` : `${a("Makers on Houzz", site("houzz.com/professionals", "custom " + q))} · ${a("Etsy makers", "https://www.etsy.com/search?q=" + encodeURIComponent("custom made " + q))}`}</p></div>`;
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+$("#rq-list").innerHTML = [...new Set(Object.values(CAT).map(c => c.label))].map(l => `<option value="${esc(l)}">`).join("");
+$("#roomsearch").addEventListener("submit", e => { e.preventDefault(); roomSearch($("#rq").value); });
+$("#rqresults").addEventListener("click", e => { const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.rqadd) addType(t.dataset.rqadd);
+  if (t.dataset.rqsel) { const b = document.querySelector(`[data-sel="${t.dataset.rqsel}"]`); if (b) b.click(); } });
+
+/* Ceiling choice */
+$("#ceiling").value = ceilPick;
+$("#ceiling").addEventListener("change", e => { ceilPick = e.target.value; store.set("ceiling", ceilPick); applyShell(); post("style", "parts", ceilPick === "coffers" ? "Carved wood coffered ceiling on." : ceilPick === "slats" ? "Wood slat ceiling on." : ceilPick === "none" ? "Ceiling open." : "Ceiling follows the room."); runBudget(); });
+
+/* Thumbnails from Wikimedia Commons for Find It and matched pieces */
+const thumbCache = {};
+async function thumbFor(q) {
+  if (thumbCache[q] !== undefined) return thumbCache[q];
+  try { const r = await commonsSearch(q, 3); thumbCache[q] = r[0] || null; } catch (e) { thumbCache[q] = null; }
+  return thumbCache[q];
+}
+function fillThumbs(root) {
+  root.querySelectorAll("[data-thumbq]").forEach(async el => {
+    const t = await thumbFor(el.dataset.thumbq);
+    el.innerHTML = t ? `<a href="${esc(t.page)}" target="_blank" rel="noopener"><img src="${esc(t.src)}" alt="Example: ${esc(el.dataset.thumbq)}" loading="lazy"></a><span class="credit">Example photo: ${esc(t.artist || "Unknown")} · ${esc(t.license || "")} · Wikimedia Commons</span>`
+      : `<span class="credit">No free photo found. The links open live examples.</span>`;
+  });
+}
+
 /* ---------------- Find It agent: identify custom pieces, find them for sale, or find who can make them ---------------- */
 AGENTS.find = { name: "Find It", job: "Identifies custom couches, artwork, paneling and installations, finds them for sale anywhere, or finds the artist or similar makers" };
 const gq = q => "https://www.google.com/search?q=" + encodeURIComponent(q);
@@ -3095,18 +3442,19 @@ function pieceHTML(p) {
     ? [["Similar artists on Saatchi Art", site("saatchiart.com", p.q)], ["Similar artists on Artsy", site("artsy.net", p.q + " artist")], ["Commission on Etsy", "https://www.etsy.com/search?q=" + encodeURIComponent("custom commission " + p.q)]]
     : [["Custom makers on Houzz", site("houzz.com/professionals", "custom " + p.q)], ["Makers on Etsy", "https://www.etsy.com/search?q=" + encodeURIComponent("custom made " + p.q)], ["Local makers", gq(`custom ${p.q} maker ${region}`)]];
   const a = (l, u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`;
-  return `<li><span class="pill">${esc(KIND[p.kind] || p.kind)}</span> <b>${esc(p.name)}</b> <span class="credit">seen in ${esc(p.from)}</span>
+  return `<li class="findli"><div class="findthumb" data-thumbq="${esc(p.q)}"><span class="credit">Finding an example…</span></div><div><span class="pill">${esc(KIND[p.kind] || p.kind)}</span> <b>${esc(p.name)}</b> <span class="credit">seen in ${esc(p.from)}</span>
     <div class="findrow"><span class="credit">For sale anywhere:</span> ${shop.map(([l, u]) => a(l, u)).join(" · ")}</div>
     <div class="findrow"><span class="credit">${art ? "Artist" : "Have it made"}:</span> ${p.artist ? `${a(p.artist + (p.artist_url ? " (artist page)" : ""), p.artist_url || gq(p.artist))} · ` : ""}${make.map(([l, u]) => a(l, u)).join(" · ")}</div>
-    <div class="findrow"><span class="credit">Sustainable version:</span> ${a("Reclaimed or vintage", gshop("reclaimed vintage " + p.q))} · ${a("FSC or recycled materials", gq(p.q + " FSC certified OR recycled materials"))}</div></li>`;
+    <div class="findrow"><span class="credit">Sustainable version:</span> ${a("Reclaimed or vintage", gshop("reclaimed vintage " + p.q))} · ${a("FSC or recycled materials", gq(p.q + " FSC certified OR recycled materials"))}</div></div></li>`;
 }
 function regionLabel() { return region === "ca" ? "San Francisco Bay Area" : "Phoenix Arizona"; }
 let lastFind = "";
 function renderFindIt() {
+  setTimeout(() => fillThumbs($("#findit")), 0);
   const ins = (insp && insp.pieces || []).map(p => ({ ...p, from: insp.name }));
   const all = ins.concat(roomPieces());
   $("#findit").innerHTML = `<ul class="finds">${all.map(pieceHTML).join("")}</ul>
-    <p class="credit">Links open live searches; nothing is bought from here. Named artists come from the inspiration's sources. Commissioned art is priced by the artist.</p>`;
+    <p class="credit">Thumbnails are similar real examples from Wikimedia Commons, credited to their photographers. Links open live searches; nothing is bought from here. Named artists come from the inspiration's sources. Commissioned art is priced by the artist.</p>`;
   const key = (insp ? insp.name : "") + S.style;
   if (key !== lastFind) { lastFind = key;
     const named = ins.filter(p => p.artist).map(p => p.artist);
@@ -3128,7 +3476,7 @@ $("#view-budget").addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
   if (t.id === "finalapply") { const k = $("#finalpick").value; post("style", "layout", `Final look: ${STYLES[k].label}.`); applyDesign(S.space === "studio" ? "csuite" : S.space, k, "final look"); lookApplied = { style: k, name: STYLES[k].label }; }
   if (t.id === "finalundo") { window.SpatialDirector.undo(); }
-  if (t.id === "finalrender") finalRenders();
+  if (t.id === "finalrender") finalRenders4k();
 });
 const _runBudget = runBudget;
 runBudget = function () { _runBudget(); renderFindIt(); renderFinalLook(); };
@@ -3182,6 +3530,32 @@ function renderFloorPicks() {
 }
 document.addEventListener("click", e => { const t = e.target.closest("[data-floor]"); if (!t) return; $("#floor").value = t.dataset.floor; $("#floor").dispatchEvent(new Event("change")); renderFloorPicks(); });
 window.addEventListener("sd:synced", renderFloorPicks); $("#floor").addEventListener("change", renderFloorPicks); renderFloorPicks();
+
+/* ---------------- Project manager agent: artists who fit the chosen room ---------------- */
+const ARTISTS = [
+  { name: "Janet Echelman", medium: "Suspended net sculptures", fits: ["lobby", "auditorium", "social", "lunch"], site: "https://echelman.com/about", commons: "Janet Echelman sculpture" },
+  { name: "Leo Villareal", medium: "LED light art", fits: ["lobby", "meeting", "auditorium", "social"], site: "https://ocula.com/artists/leo-villareal/", siteLabel: "Profile (Ocula)", commons: "Leo Villareal" },
+  { name: "Jim Campbell", medium: "LED light art", fits: ["lobby", "auditorium"], site: "https://jimcampbell.tv/cv", commons: "Jim Campbell artist LED" },
+  { name: "BREAKFAST", medium: "Kinetic flip-disc sculptures", fits: ["lobby", "meeting", "social", "csuite", "execoffice"], site: "https://theartistbreakfast.com/commissions", siteLabel: "Commissions", commons: "flip-disc display art" },
+  { name: "Gabriel Dawe", medium: "Thread installations", fits: ["lobby", "auditorium", "social"], site: "https://mymodernmet.com/gabriel-dawe-thread-art/", siteLabel: "Interview (My Modern Met)", commons: "Gabriel Dawe Plexus" },
+  { name: "Morag Myerscough", medium: "Color-filled murals and installations", fits: ["social", "lunch", "dining", "restrooms", "lobby"], site: "https://elephant.art/studio-visit-morag-myerscough", siteLabel: "Studio visit (Elephant)", commons: "Morag Myerscough" },
+  { name: "Erin Hanson", medium: "Oil landscape paintings", fits: ["csuite", "execoffice", "meeting", "studio", "dining"], site: "https://www.erinhanson.com/commissions", siteLabel: "Commissions", commons: "Erin Hanson painting" },
+  { name: "Ed Mell", medium: "Arizona landscape paintings", fits: ["csuite", "execoffice", "meeting", "lobby"], site: "https://altamiraart.com/pages/ed-mell", siteLabel: "Gallery (Altamira)", commons: "Ed Mell" },
+  { name: "Ansel Adams (estate prints)", medium: "Black-and-white landscape photography", fits: ["csuite", "execoffice", "meeting", "studio"], site: "https://www.anseladams.com/pages/shop", siteLabel: "Prints (Ansel Adams Gallery)", commons: "Ansel Adams photograph" },
+  { name: "Matthias Pliessnig", medium: "Steam-bent wood sculptural benches", fits: ["lobby", "social", "lunch"], site: "https://en.wikipedia.org/wiki/Matthias_Pliessnig", siteLabel: "About", commons: "Matthias Pliessnig" },
+  { name: "James Turrell", medium: "Light and space installations", fits: ["lobby", "auditorium"], site: "https://kaynegriffin.com/artists/james-turrell/bio", siteLabel: "Gallery (Kayne Griffin)", commons: "James Turrell skyspace" },
+];
+function renderArtists() {
+  const sp = S.space, list = ARTISTS.map(a => ({ ...a, fit: a.fits.includes(sp) })).sort((a, b) => (b.fit ? 1 : 0) - (a.fit ? 1 : 0));
+  $("#artists").innerHTML = list.map(a => `<div class="firm${a.fit ? " rec" : ""}">${a.fit ? `<span class="pill">Fits your ${esc(SPACES[sp].label.toLowerCase())}</span>` : ""}
+    <div class="findthumb" data-thumbq="${esc(a.commons)}" style="max-width:none;margin:6px 0"><span class="credit">Finding a photo of their work…</span></div>
+    <h4>${esc(a.name)}</h4><p>${esc(a.medium)}</p>
+    <div class="btnrow"><a class="btn small primary" href="${esc(a.site)}" target="_blank" rel="noopener">${esc(a.siteLabel || "Website")}</a>
+      <a class="btn small" href="${esc(gq("site:instagram.com " + a.name.replace(/ \(.*\)/, "")))}" target="_blank" rel="noopener">Find on Instagram</a></div></div>`).join("");
+  setTimeout(() => fillThumbs($("#artists")), 0);
+}
+const _runBudget2 = runBudget;
+runBudget = function () { _runBudget2(); renderArtists(); };
 
 /* ---------------- Wiring ---------------- */
 $("#space").addEventListener("change", e => applyDesign(e.target.value, S.style));
