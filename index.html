@@ -194,6 +194,60 @@ footer p { max-width: 90ch; margin-bottom: 6px; }
 }
 
 .planrow input[type=file] { max-width: 100%; min-width: 0; }
+
+.thumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.thumb { padding: 0; border: 2px solid transparent; border-radius: 8px; width: 3.6rem; height: 2.7rem; overflow: hidden; background: none; cursor: pointer; }
+.thumb.on { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.traits { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 6px 0; list-style: none; }
+.traits li { font-size: .8125rem; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+.named { margin: 8px 0 4px; }
+.srcs { font-size: .8125rem; margin: 8px 0 0; }
+.srcs a { margin-right: 12px; overflow-wrap: anywhere; }
+.srcs summary { cursor: pointer; font-weight: 700; }
+.hqchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+.hqchips .eyebrow { margin-right: 4px; }
+.chip.on { background: var(--accent-soft); color: var(--ink); border-color: var(--accent); }
+dialog.media { width: min(1100px, 96vw); max-height: 92vh; overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); padding: 16px 18px; }
+dialog.media::backdrop { background: rgba(10, 15, 25, .6); }
+dialog.media .dhead { display: flex; justify-content: flex-end; }
+.renders { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.renders figure { margin: 0; }
+.renders img { width: 100%; border-radius: 10px; display: block; }
+.renders figcaption { font-size: .8125rem; margin-top: 4px; }
+.inv { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.inv th, .inv td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+.inv th.n, .inv td.n, table.src td.n { text-align: right; white-space: nowrap; }
+.inv tfoot td { font-weight: 700; }
+.inv td.links { display: flex; flex-wrap: wrap; gap: 6px; }
+.invhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.invhead > div:last-child { max-width: 26rem; }
+.firms { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); gap: 10px; }
+.firm { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface-2); min-width: 0; }
+.firm.rec { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.firm h4 { margin: 6px 0 4px; font-size: 1rem; }
+.firm p { margin: 0 0 6px; font-size: .875rem; }
+.sw-inline { display: inline-block; width: 1em; height: 1em; border-radius: 4px; vertical-align: -2px; border: 1px solid var(--line); margin-right: 4px; }
+.flag { color: var(--bad, #b42a22); font-weight: 700; }
+.wty { font-size: .8125rem; }
+ul.plain { margin: 0; padding-left: 18px; }
+ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
+.affform { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin-top: 10px; }
+.affform label { display: grid; gap: 4px; font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
+.affform input, .bb-region select { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; font-size: .9375rem; }
+.bb-region { display: grid; gap: 4px; font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
+.bbapprove { min-width: min(14rem, 100%); }
+#style, #space { max-width: 100%; min-width: 0; }
+.studio-selects label { min-width: 0; max-width: 100%; }
+.affform label { min-width: 0; max-width: 100%; }
+.affform input { width: 100%; max-width: 18rem; box-sizing: border-box; }
+@media (max-width: 700px) { .renders { grid-template-columns: 1fr; } }
+@media print {
+  body.print-invoice header.top, body.print-invoice nav.tabbar, body.print-invoice footer, body.print-invoice main:not(#view-budget),
+  body.print-invoice #view-budget .build-head, body.print-invoice #view-budget .bcard:not(#invoicecard), body.print-invoice .noprint { display: none !important; }
+  body.print-invoice #view-budget { display: block !important; }
+  body.print-invoice .bcard { border: 0; padding: 0; }
+}
 .textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
 .textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
 .textsize .btn { min-width: 40px; }
@@ -484,7 +538,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.0</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.1</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -492,6 +546,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <button class="tab" role="tab" id="tab-room" aria-selected="true" aria-controls="view-room">Room</button>
     <button class="tab" role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build it for real</button>
     <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
+    <button class="tab" role="tab" id="tab-budget" aria-selected="false" aria-controls="view-budget">Build &amp; Budget</button>
     <span class="spacer"></span>
     <div class="textsize" role="group" aria-label="Text size"><button class="btn small" id="ts-down" aria-label="Smaller text">A−</button><span id="ts-val" aria-live="polite">150%</span><button class="btn small" id="ts-up" aria-label="Larger text">A+</button></div>
     <button class="btn small" id="starttest">Run the usability test</button>
@@ -528,6 +583,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
             <option value="scandinavian">Scandinavian</option>
             <option value="industrial">Industrial</option>
             <option value="japandi">Japandi</option>
+            <optgroup label="Executive inspiration styles"><option value="x_apple">Precision minimal (Apple Park)</option><option value="x_salesforce">Sky-lounge hospitality (Salesforce)</option><option value="x_nvidia">Faceted daylight (Nvidia)</option><option value="x_google">Canopy biophilic (Google Bay View)</option><option value="x_meta">Rooftop-park industrial (Meta)</option><option value="x_amazon">Conservatory green (Amazon Spheres)</option><option value="x_microsoft">Campus commons (Microsoft)</option><option value="x_airbnb">Residential warmth (Airbnb)</option></optgroup>
           </select>
         </label>
         <div class="viewmode" role="group" aria-label="View">
@@ -535,6 +591,8 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           <button class="btn small" type="button" data-view="dollhouse" aria-pressed="true">Dollhouse</button>
           <button class="btn small" type="button" data-view="walk" aria-pressed="false">Walkthrough</button>
           <button class="btn small" type="button" id="snapshot">Snapshot</button>
+          <button class="btn small" type="button" id="finalrenders">Final renders</button>
+          <button class="btn small" type="button" id="walkvid">Share a video walkthrough</button>
         </div>
       </div>
     </div>
@@ -667,6 +725,65 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     </section>
   </div>
 </main>
+
+<main id="view-budget" class="view wrap build" role="tabpanel" aria-labelledby="tab-budget" hidden>
+  <div class="build-head">
+    <div>
+      <p class="eyebrow">Build &amp; Budget</p>
+      <h2 id="bb-title">Studio office · Modern</h2>
+      <p class="empty">Four more agents turn the approved room into parts you can buy and a team you can hire. The Parts agent finds each piece at an online retailer, the Warranty agent reads its warranty, the Invoice agent totals it, and the Project manager agent finds the people to build it. Every part shows a sustainable option.</p>
+      <div class="btnrow"><button class="btn small" type="button" id="bbrenders">See final renders</button><button class="btn small" type="button" id="bbsusall">Use sustainable options for everything</button></div>
+    </div>
+    <div class="bbapprove" id="bbapprove" aria-live="polite"></div>
+  </div>
+
+  <div class="build-grid">
+    <section class="bcard wide">
+      <div class="head"><h3>Parts</h3><span class="empty">Found by the Parts agent. Green is the sustainable option.</span></div>
+      <div class="tablewrap"><table class="src"><thead><tr><th>Part</th><th>Product, price and warranty</th><th>Sustainable option</th><th>Use</th><th class="n">Line total</th></tr></thead><tbody id="parts"></tbody></table></div>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Matched to the approved room</h3></div>
+      <div id="matched"></div>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Warranty review</h3></div>
+      <div id="warranty"></div>
+    </section>
+
+    <section class="bcard wide" id="invoicecard">
+      <div class="head"><h3>Invoice</h3><div class="btnrow noprint"><button class="btn small" type="button" id="printinv">Print or save as PDF</button><button class="btn small" type="button" id="csvinv">Download CSV</button></div></div>
+      <div id="invoice"></div>
+      <form class="affform noprint" id="affform" autocomplete="off">
+        <label for="afftag">Amazon Associates tracking ID<input id="afftag" placeholder="yourname-20" maxlength="40"></label>
+        <button class="btn small" type="submit">Save tag</button>
+        <span class="credit">Stays in this browser. Leave empty for plain links.</span>
+      </form>
+    </section>
+
+    <section class="bcard wide">
+      <div class="head"><h3>Budget</h3></div>
+      <div id="budget"></div>
+    </section>
+
+    <section class="bcard wide">
+      <div class="head"><h3>Designer and project manager</h3><span class="empty">Firms that design and manage executive interiors. Contact opens the firm's own contact page.</span></div>
+      <div class="firms" id="firms"></div>
+    </section>
+
+    <section class="bcard wide">
+      <div class="head"><h3>Subcontractors and vendors</h3>
+        <label class="bb-region">Project location<select id="region"><option value="ca">Silicon Valley, California</option><option value="az">Phoenix, Arizona</option></select></label></div>
+      <div id="trades"></div>
+    </section>
+  </div>
+</main>
+<dialog class="media" id="mediadlg" aria-label="Renders and video">
+  <div class="dhead"><button class="btn small" type="button" id="mediaclose">Close</button></div>
+  <div id="mediabody"></div>
+</dialog>
 
 <main id="view-about" class="view wrap about" role="tabpanel" aria-labelledby="tab-about" hidden>
   <section>
@@ -1846,12 +1963,13 @@ document.addEventListener("keydown", e => {
   else if (e.key === "Enter" && S.pending && !S.pending.timer && document.activeElement !== $("#cmd") && !(document.activeElement && document.activeElement.tagName === "BUTTON")) { confirm(); e.preventDefault(); }
 });
 function showTab(name) {
-  for (const [t, v] of [["room", "#view-room"], ["build", "#view-build"], ["about", "#view-about"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
+  for (const [t, v] of [["room", "#view-room"], ["build", "#view-build"], ["about", "#view-about"], ["budget", "#view-budget"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
   if (name === "room") resize();
 }
 $("#tab-room").addEventListener("click", () => showTab("room"));
 $("#tab-about").addEventListener("click", () => showTab("about"));
 $("#tab-build").addEventListener("click", () => showTab("build"));
+$("#tab-budget").addEventListener("click", () => showTab("budget"));
 
 /* ---------------- For agents ---------------- */
 window.SpatialDirector = {
@@ -1872,6 +1990,7 @@ renderHistory(); renderScene(); updatePointer();
 initGL();
 })();
 </script>
+<script id="research-data">window.__RESEARCH = {"hq": [{"key": "apple", "company": "Apple", "name": "Apple Park", "where": "Cupertino, California", "architect": "Foster + Partners with Jony Ive", "interior_designer": null, "year": 2017, "cost": "about $5 billion (reported)", "cost_source_url": "https://www.cnbc.com/2017/10/09/how-much-every-inch-of-apples-new-5-billion-campus-cost-to-build.html", "traits": ["Curved glass exterior panels, described as the world's largest", "Pre-cast polished concrete floor slabs", "Maple wood furnishings selected specifically for the project, with light-colored stone", "Solid Spessart white oak tables, 18 ft by 4 ft", "Glass railings with no visible metal supports"], "executive_note": null, "sources": [{"title": "Apple Park by Foster + Partners (Dezeen, 2025)", "url": "https://www.dezeen.com/2025/01/23/apple-park-foster-partners-21st-century-architecture/"}, {"title": "Apple Park (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Apple_Park"}, {"title": "How much every inch of Apple's new $5 billion campus cost to build (CNBC)", "url": "https://www.cnbc.com/2017/10/09/how-much-every-inch-of-apples-new-5-billion-campus-cost-to-build.html"}], "commons_query": "Apple Park Cupertino", "style": null}, {"key": "salesforce", "company": "Salesforce", "name": "Salesforce Tower and Ohana Floor (61st floor)", "where": "San Francisco, California", "architect": "Pelli Clarke Pelli Architects", "interior_designer": "IA Interior Architects with Mark Cavagnero Associates", "year": 2018, "cost": "about $1.1 billion construction cost (reported)", "cost_source_url": "https://en.wikipedia.org/wiki/Salesforce_Tower", "traits": ["Wood flooring, plush upholstery, stone countertops and a wood-and-leather palette on the Ohana Floor", "Plant-covered columns and heavy greenery", "Interior stairs linking three floors at a time", "Lounges on each floor overlooking Salesforce Park; a meditation room on every floor", "Movable glass partitions, a pop-up desk and a demonstration kitchen on the roughly 18,000 sq ft Ohana Floor"], "executive_note": "The 61st-floor Ohana Floor is a lounge for employees, customers, partners and guests, and Salesforce describes it as 'an inviting living room'. No dedicated executive suite is described.", "sources": [{"title": "Salesforce Tower (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Salesforce_Tower"}, {"title": "Salesforce Tower Ohana Floor (Salesforce blog)", "url": "https://www.salesforce.com/blog/salesforce-tower-ohana-floor/"}, {"title": "Salesforce's New Offices At Salesforce Tower Have Employee Health, Wellness In Mind (Bisnow)", "url": "https://www.bisnow.com/news/san-francisco/office/salesforces-new-offices-at-salesforce-tower-have-employee-health-wellness-in-mind-88735"}], "commons_query": "Salesforce Tower San Francisco", "style": null}, {"key": "nvidia", "company": "Nvidia", "name": "Endeavor and Voyager", "where": "Santa Clara, California", "architect": "Gensler", "interior_designer": null, "year": "Endeavor 2017; Voyager 2022", "cost": "about $920 million for the latest headquarters (reported, citing Forbes)", "cost_source_url": "https://www.aol.com/finance/nvidia-headquarters-ode-space-3d-123900356.html", "traits": ["Exposed triangular-grid structural steel", "Roofs patterned with interconnected triangles", "High, cavernous ceilings creating large open spaces that evoke the outdoors (Voyager)", "Combined 1.25 million sq ft: Endeavor 500,000 sq ft, Voyager 750,000 sq ft", "More than 200 conference and phone rooms and an 800-seat cafeteria (Endeavor)"], "executive_note": "Endeavor includes a 30,000 sq ft executive briefing center.", "sources": [{"title": "Nvidia's headquarters: An ode to space and 3D rendering (AOL/Yahoo Finance)", "url": "https://www.aol.com/finance/nvidia-headquarters-ode-space-3d-123900356.html"}], "commons_query": "Nvidia headquarters Santa Clara", "style": null}, {"key": "google", "company": "Google", "name": "Bay View campus", "where": "Mountain View, California (on NASA Ames land)", "architect": "BIG and Heatherwick Studio", "interior_designer": null, "year": 2022, "cost": null, "cost_source_url": null, "traits": ["Upper office floors under a tent-like canopy roof on slim white columns, lit by clerestory windows with automated shades", "Social spaces on the ground floor and work floors above", "Planters, curtains and transparent walls on a grid that creates 'neighbourhoods'", "Themed districts such as 'Campfire Corner' with tent-style meeting rooms", "No corner offices; movable furniture, group desks and enclosed booths"], "executive_note": "The Almanac reports the work floor has no defined walls, cubicles or corner offices.", "sources": [{"title": "BIG and Heatherwick complete Google campus topped with 'dragonscale' roofs (Dezeen)", "url": "https://www.dezeen.com/2022/05/18/google-bay-view-campus-big-heatherwick-studio/"}, {"title": "Google opens the doors on its massive Bay View campus next to NASA Ames (Almanac)", "url": "https://www.almanacnews.com/news/2022/05/18/google-opens-the-doors-on-its-massive-bay-view-campus-next-to-nasa-ames/"}], "commons_query": "Google Bay View campus", "style": null}, {"key": "meta", "company": "Meta", "name": "MPK 20 and MPK 21", "where": "Menlo Park, California", "architect": "Gehry Partners", "interior_designer": null, "year": "MPK 20 about 2015; MPK 21 2018", "cost": null, "cost_source_url": null, "traits": ["Open workspace for teams plus quiet areas for focused work", "Town Square: a sheltered interior green space with 40-ft redwoods", "3.6-acre rooftop garden with more than 200 trees and a half-mile path", "15 commissioned art installations from the Artist in Residence program", "A 2,000-person event space and The Bowl, an amphitheater courtyard linking MPK 21 to MPK 20"], "executive_note": null, "sources": [{"title": "Expanding Our Home in Menlo Park (Meta Newsroom, 2018)", "url": "https://about.fb.com/news/2018/09/expanding-our-home-in-menlo-park/amp/"}, {"title": "Facebook Reveals Frank Gehry-Designed HQ Expansion (Architect Magazine)", "url": "https://www.architectmagazine.com/design/facebook-reveals-frank-gehry-designed-hq-expansion_o"}], "commons_query": "Facebook MPK 20 Menlo Park", "style": null}, {"key": "amazon", "company": "Amazon", "name": "The Spheres", "where": "Seattle, Washington", "architect": "NBBJ", "interior_designer": null, "year": 2018, "cost": "about $4 billion for the whole Seattle HQ campus including the Spheres (reported; not the Spheres alone)", "cost_source_url": "https://www.inc.com/business-insider/amazon-sphere-campus-downtown-seattle-tropical-plants-forest-4-billion.html", "traits": ["More than 40,000 plants from about 400 species, mostly cloud-forest species", "A four-story living wall, plus waterfalls and paludariums", "Treehouse-style meeting room reached by a bouncy bridge", "Five levels of unconventional, unenclosed workspaces with deck-chair recliners", "Three glass domes, the largest 90 ft high and 130 ft wide"], "executive_note": null, "sources": [{"title": "Amazon Spheres by NBBJ open in Seattle (Architectural Record)", "url": "https://www.architecturalrecord.com/articles/13227-amazon-spheres-by-nbbj-open-in-seattle"}, {"title": "Amazon's Spheres campus (Inc. / Business Insider)", "url": "https://www.inc.com/business-insider/amazon-sphere-campus-downtown-seattle-tropical-plants-forest-4-billion.html"}], "commons_query": "Amazon Spheres Seattle", "style": null}, {"key": "microsoft", "company": "Microsoft", "name": "Redmond East Campus modernization", "where": "Redmond, Washington", "architect": "Skidmore, Owings & Merrill", "interior_designer": null, "year": "Announced 2017; ongoing (as of Feb 2026 the final five buildings were on hold)", "cost": "multibillion-dollar (reported)", "cost_source_url": "https://en.wikipedia.org/wiki/Microsoft_campus", "traits": ["Buildings arranged as five 'villages' like an urban neighborhood", "A 2-acre open space with sports fields, including a cricket pitch", "Geothermal heating and cooling from 875 wells", "A 1,100-ft pedestrian bridge to the light rail station"], "executive_note": null, "sources": [{"title": "Microsoft campus (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Microsoft_campus"}], "commons_query": "Microsoft Redmond campus", "style": null}, {"key": "airbnb", "company": "Airbnb", "name": "888 Brannan headquarters", "where": "San Francisco, California", "architect": "Gensler", "interior_designer": "Gensler with IDF Studio", "year": 2013, "cost": null, "cost_source_url": null, "traits": ["Meeting rooms modeled on real Airbnb listings", "A monochrome base palette that makes the colorful themed rooms stand out", "Reception inspired by a Danish houseboat", "A movie-themed boardroom with non-hierarchical seating", "A five-story atrium and a family-style dining hall"], "executive_note": "The boardroom is movie-themed and uses non-hierarchical seating.", "sources": [{"title": "Inside Airbnb's New San Francisco Headquarters (Office Snapshots)", "url": "https://officesnapshots.com/2014/04/02/inside-airbnbs-new-san-francisco-headquarters/"}], "commons_query": "Airbnb headquarters 888 Brannan", "style": null}, {"key": "adobe", "company": "Adobe", "name": "Founders Tower", "where": "San Jose, California", "architect": "Gensler", "interior_designer": null, "year": 2023, "cost": null, "cost_source_url": null, "traits": ["Color-coded zones: orange for social, green for collaboration, blue for focus", "Double-height social hubs linked by stairs", "Raised floors and flexible neighborhood layouts", "Rounded corners and lowered counters for accessibility", "Biophilic design with a library, a meditation room and a terrace"], "executive_note": "Includes a private dining area and an Adobe Experience Museum for visitors. Gensler does not mention an executive briefing center.", "sources": [{"title": "Adobe's Founders Tower Provides a Glimpse Into the Future of Work (Gensler)", "url": "https://gensler.com/blog/adobes-founders-tower-a-glimpse-into-the-future-of-work"}], "commons_query": "Adobe World Headquarters San Jose", "style": "modern"}, {"key": "uber", "company": "Uber", "name": "Uber headquarters, Mission Bay", "where": "San Francisco, California", "architect": "SHoP Architects", "interior_designer": "Studio O+A", "year": "Design unveiled 2015", "cost": null, "cost_source_url": null, "traits": ["'The Commons', a multi-storey circulation and gathering spine", "Three double-level angled glass-and-steel bridges between the buildings", "Workstations in small 'neighbourhoods' rather than one open floor", "Ground-floor retail"], "executive_note": null, "sources": [{"title": "SHoP Architects unveils designs for Uber's San Francisco headquarters (Dezeen)", "url": "https://www.dezeen.com/2015/05/29/shop-architects-studio-oa-uber-san-francisco-headquarters/amp/"}], "commons_query": "Uber headquarters Mission Bay", "style": "industrial"}, {"key": "linkedin", "company": "LinkedIn", "name": "Sunnyvale campus", "where": "Sunnyvale, California", "architect": null, "interior_designer": "AP+I Design", "year": 2014, "cost": null, "cost_source_url": null, "traits": ["Natural materials, with wood flooring marking the main circulation paths", "A 'sophisticated yet playful' atmosphere", "A cafe, fitness center and game room", "Stocked break rooms on every floor"], "executive_note": null, "sources": [{"title": "LinkedIn - Sunnyvale Campus (Office Snapshots)", "url": "https://officesnapshots.com/2015/03/03/linkedin-sunnyvale-headquarters/"}], "commons_query": "LinkedIn Sunnyvale", "style": "scandinavian"}], "billion": [{"title": "The Bay Area's 10 most valuable buildings (San Francisco Chronicle, 2019): Apple Park $3.55B and Salesforce Tower $1.69B assessed", "url": "https://projects.sfchronicle.com/2019/most-valuable-buildings"}, {"title": "How much every inch of Apple's new $5 billion campus cost to build (CNBC, 2017)", "url": "https://www.cnbc.com/2017/10/09/how-much-every-inch-of-apples-new-5-billion-campus-cost-to-build.html"}, {"title": "Apple Park opens with cautionary note: glitzy corporate digs don't always pan out (CNBC, 2017)", "url": "https://www.cnbc.com/2017/05/23/apple-park-opens-with-cautionary-note-glitzy-corporate-digs-dont-always-pan-out.html"}, {"title": "The Most Breathtaking and Expensive Corporate Headquarters in the World (AOL syndication; publisher not named on page)", "url": "https://www.aol.com/articles/most-breathtaking-expensive-corporate-headquarters-180620503.html"}], "firms": [{"name": "Gensler", "specialty": "Global architecture and interiors; workplace design and fit-outs", "offices": "San Francisco, San Jose, Oakland, Phoenix (among 33 US offices)", "projects": "Nvidia Endeavor and Voyager, Santa Clara (AOL/Yahoo Finance); Adobe Founders Tower, San Jose (Gensler blog); Airbnb 888 Brannan (Office Snapshots)", "contact_url": "https://www.gensler.com/contact", "match": "gensler"}, {"name": "Foster + Partners", "specialty": "Architecture, engineering, urban and landscape design", "offices": "London HQ; New York City (per Wikipedia). No San Francisco or Phoenix office was confirmed.", "projects": "Apple Park, Cupertino (Dezeen)", "contact_url": null, "match": "foster"}, {"name": "Studio O+A", "specialty": "Interior design, branding and graphics for office, hospitality and retail", "offices": "San Francisco", "projects": "Uber HQ interiors with SHoP (Dezeen); Slack HQ and the Microsoft Envisioning Center (Architect Magazine profile)", "contact_url": "https://o-plus-a.com/get-in-touch/", "match": "o+a"}, {"name": "NBBJ", "specialty": "Architecture, interiors, workplace consulting; Wired called it the 'architecture firm of choice for tech companies'", "offices": "San Francisco, Seattle, Los Angeles, San Diego and others (Wikipedia). No Phoenix office is listed.", "projects": "Amazon Spheres, Seattle (Architectural Record)", "contact_url": "https://www.nbbj.com/contact", "match": "nbbj"}, {"name": "Rapt Studio", "specialty": "Workplace and brand-driven interiors", "offices": "San Francisco (201 Post St, Fl 7); Culver City; Brooklyn. Phone +1.415.788.4400", "projects": "Dropbox HQ, San Francisco, 2016 (Office Snapshots)", "contact_url": "https://www.raptstudio.com/contact", "match": "rapt"}, {"name": "IA Interior Architects", "specialty": "Corporate interior architecture", "offices": "San Francisco studio (ia.design)", "projects": "Salesforce office floors in Salesforce Tower, with Mark Cavagnero Associates (Bisnow)", "contact_url": "https://ia.design/contact", "match": "ia interior"}, {"name": "HOK", "specialty": "Architecture, interiors, sustainable design, ESG consulting", "offices": "San Francisco studio listed. No Phoenix studio.", "projects": "The Trade Desk San Francisco office, 23,000 sq ft, including a social hub for employees and clients (hok.com)", "contact_url": "https://www.hok.com/contact/", "match": "hok"}, {"name": "Pelli Clarke & Partners", "specialty": "Architecture, including towers", "offices": null, "projects": "Salesforce Tower, San Francisco (Wikipedia)", "contact_url": "https://pcparch.com/contact", "match": "pelli"}, {"name": "Gehry Partners", "specialty": "Architecture", "offices": null, "projects": "Meta MPK 20 and MPK 21, Menlo Park (Meta Newsroom)", "contact_url": null, "match": "gehry"}, {"name": "BIG (Bjarke Ingels Group)", "specialty": "Architecture, landscape, interiors", "offices": "New York (Brooklyn/Dumbo), Los Angeles since 2023 (Wikipedia)", "projects": "Google Bay View with Heatherwick Studio (Dezeen)", "contact_url": null, "match": "big "}, {"name": "SHoP Architects", "specialty": "Architecture", "offices": "New York", "projects": "Uber HQ, San Francisco (Dezeen)", "contact_url": null, "match": "shop"}], "directories": [{"name": "Design Finder by ASID", "for": "Interior designers and design firms", "url": "https://designfinder.asid.org"}, {"name": "Houzz: interior designers and decorators", "for": "Designers and contractors with portfolios and reviews", "url": "https://www.houzz.com/professionals/interior-designers-and-decorators"}, {"name": "California CSLB: Check a License", "for": "Verify a California contractor's license", "url": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx"}, {"name": "Arizona Registrar of Contractors (ROC)", "for": "Verify an Arizona contractor's license", "url": "https://azroc.gov/"}, {"name": "CIDQ: find an NCIDQ-certified interior designer", "for": "Verify a designer's NCIDQ certification", "url": "https://cidq.org/certified-designer-search-page"}, {"name": "AIA San Francisco: find an architect", "for": "Architects in the San Francisco Bay Area", "url": "https://aiasf.org/find-an-architect"}], "fitout": {"americas": 149, "sanjose": 224, "sf": 228, "title": "Cushman & Wakefield Americas Office Fit Out Cost Guide 2026, as reported by Fit Out Awards", "url": "https://www.fitoutawards.ie/news/cushman-and-wakefield-report-finds-americas-office-fit-out-costs-rise-55-as-contractor-outlook-remains-upward", "year": 2026, "corenet": "https://www.corenetglobal.org/about-corenet-global/the-pulse/the-pulse-article/the-pulse/2026/03/26/office-fit-out-cost-guides"}, "products": {"checked": "2026-10-22", "items": {"desk_chair": {"base": {"name": "Aeron Chair", "maker": "Herman Miller", "url": "https://store.hermanmiller.com/office-chairs-aeron/aeron-chair/2195348.html?lang=en_US", "price_usd": 2305, "price_note": "starting price", "warranty": "12 years, parts and labor (product page: 12-year warranty; HM warranty page: 12 years parts and labor, 3-shift/24-hour coverage graphic)", "warranty_url": "https://www.hermanmiller.com/customer-service/warranty-and-service/", "retailer": "Herman Miller Store", "amazon_query": "Herman Miller Aeron chair"}, "sus": {"name": "Freedom Task Chair", "maker": "Humanscale", "url": "https://nileon.com/freedom-task-chair-humanscale/", "price_usd": 1205, "price_note": "listed price at authorized reseller Nileon (CDW lists $1,112.99 sale)", "warranty": "15 years, 24/7 use", "warranty_url": null, "retailer": "Nileon (reseller); CDW", "amazon_query": "Humanscale Freedom task chair", "sus_claim": "'Living Product Certified ... climate, water and energy positive'; Net Positive certification (reseller copy)", "sus_source_url": "https://nileon.com/freedom-task-chair-humanscale/", "alt": {"name": "Steelcase Series 2", "url": "https://www.upliftdesk.com/steelcase-series-2-chair", "price_usd": 710, "warranty": "12 years, multi-shift, 24/7, parts and labor", "warranty_url": "https://www.steelcase.com/products/steelcase-series-2/", "sus_claim": "26% recycled materials, 94% recyclable; 46% decrease in carbon footprint (2024 EPD); CarbonNeutral option", "sus_source_url": "https://www.steelcase.com/products/steelcase-series-2/"}, "note": "humanscale.com product pages did not show price, warranty or certification text; warranty and claim come from reseller pages (Nileon, CDW). Humanscale warranty page not fetched, so warranty_url is null. Alternative verified: Steelcase Series 2 ($710 at upliftdesk.com; Steelcase product page: 'Limited Lifetime warranty - 12 years, multi-shift, 24/7 parts and labor'; 26% recycled, 94% recyclable per Uplift; 46% lower carbon footprint per 2024 EPD per steelcase.com/products/steelcase-series-2/)."}}, "couch": {"base": {"name": "Metro Sofa", "maker": "Room & Board", "url": "https://www.roomandboard.com/catalog/living/sofas-and-loveseats/metro-sofas", "price_usd": 1599, "price_note": "starting price ($1,599 to $3,799), seen on R&B custom sofas listing", "warranty": null, "warranty_url": null, "retailer": "Room & Board", "amazon_query": "mid century modern track arm sofa", "note": "Metro product page itself failed to fetch; price from https://www.roomandboard.com/catalog/custom/sofas-and-loveseats listing. Warranty not stated on page fetched."}, "custom": {"name": "Pastille Sofa (Fabric)", "maker": "Design Within Reach (design Hlynur Atlason)", "url": "https://www.dwr.com/living-sofas/pastille-sofa-fabric/100633676.html?lang=en_US", "price_usd": 9995, "price_note": "starting price, 80 in size; about 85 fabric and 40 leather options", "warranty": "1 year, terms apply", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "modern upholstered sofa custom fabric", "note": "Interior Define site blocks fetching (robots). Also verified: Florence Knoll Sofa two-seater $20,673, 13 upholstery groups, 9-week lead time, 5-year warranty: https://www.knoll.com/shop/en_us/living-sofas-sectionals/florence-knoll-sofa/4034.html. DWR warranty page not fetched."}, "sus": {"name": "Lala Sofa", "maker": "Medley", "url": "https://medleyhome.com/products/lala-sofa", "price_usd": 2066, "price_note": "starting sale price (regular $2,295); 120+ fabrics and leathers", "warranty": "Lifetime on frames; fabric 5 years; cushion cores 10 years (original owner)", "warranty_url": "https://medleyhome.com/pages/warranty", "retailer": "Medley", "amazon_query": "FSC certified wood sofa organic", "sus_claim": "'Wood is certified by the Forest Stewardship Council (FSC)'; fabrics certified by OEKO-TEX Standard 100, GREENGUARD Gold or Declare (Red List Free)", "sus_source_url": "https://medleyhome.com/products/lala-sofa", "note": "Sabai also verified on its sofa listing (Essential Sofa $1,745; FSC-certified plywood frames, recycled velvet, B Corp) but product page failed to fetch."}}, "lounge_chair": {"base": {"name": "Eames Lounge Chair and Ottoman", "maker": "Herman Miller", "url": "https://store.hermanmiller.com/living-room-furniture-lounge-chairs-ottomans/eames-lounge-chair-and-ottoman/5667.html?lang=en_US", "price_usd": 9395, "price_note": "starting price", "warranty": "5 years, terms apply", "warranty_url": "https://www.hermanmiller.com/customer-service/warranty-and-service/", "retailer": "Herman Miller Store", "amazon_query": "Eames style lounge chair and ottoman", "note": "Also verified: Knoll Barcelona Chair (Fabric) from $6,828, 5-year warranty: https://www.knoll.com/shop/en_us/living-lounge-chairs/barcelona-chair/1318.html"}, "sus": {"name": "111 Navy Chair", "maker": "Emeco", "url": "https://www.dwr.com/in-stock/111-navy-chair/100128423.html?lang=en_US", "price_usd": 580, "price_note": "price at DWR (Finnish Design Shop lists $828)", "warranty": "Up to 5 years (Finnish Design Shop: 5 years indoor, 3 years outdoor)", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "Emeco 111 Navy chair recycled", "sus_claim": "'Each chair is made from 111 recycled plastic Coke bottles'; 65% recycled PET, 35% fiberglass", "sus_source_url": "https://www.finnishdesignshop.com/en-us/product/111-navy-chair-charcoal", "note": "This is a side chair, not a lounge chair. emeco.net failed to fetch, so no maker warranty URL."}}, "desk": {"base": {"name": "Eames 2500 Series Executive Desk", "maker": "Herman Miller", "url": "https://store.hermanmiller.com/office-furniture-desks/eames-2500-series-executive-desk/2541522.html?lang=en_US", "price_usd": 3745, "price_note": "starting price", "warranty": "5 years, terms apply", "warranty_url": "https://www.hermanmiller.com/customer-service/warranty-and-service/", "retailer": "Herman Miller Store", "amazon_query": "walnut executive desk mid century", "note": "Also verified: Florence Knoll Executive Desk $13,795 at DWR, 5-year warranty: https://www.dwr.com/office-desks/florence-knoll-executive-desk/8578.html"}, "sus": {"name": "Hank Monitor Desk", "maker": "Medley", "url": "https://medleyhome.com/products/hank-desk", "price_usd": 2786, "price_note": "starting sale price (regular $3,095); 46 x 22 x 30 in", "warranty": "Lifetime structural on exposed-wood case goods and hardware (not finish)", "warranty_url": "https://medleyhome.com/pages/warranty", "retailer": "Medley", "amazon_query": "FSC certified solid walnut desk", "sus_claim": "'Always FSC-certified'", "sus_source_url": "https://medleyhome.com/products/hank-desk", "note": "Smaller than a full executive desk. Avocado Mid-Century Modern Desk ($2,464, GREENGUARD Gold, 10-year warranty) has no FSC claim on its page."}}, "coffee_table": {"base": {"name": "Noguchi Table", "maker": "Herman Miller", "url": "https://store.hermanmiller.com/living-room-furniture-coffee-side-tables/noguchi-table/103695.html?lang=en_US", "price_usd": 3495, "price_note": "starting price", "warranty": "5 years, terms apply", "warranty_url": "https://www.hermanmiller.com/customer-service/warranty-and-service/", "retailer": "Herman Miller Store", "amazon_query": "Noguchi style glass coffee table"}, "sus": {"name": "Voya Coffee Table", "maker": "Medley", "url": "https://medleyhome.com/products/voya-coffee-table", "price_usd": 1436, "price_note": "starting sale price (regular $1,595)", "warranty": "Lifetime structural on exposed-wood case goods and hardware (not finish)", "warranty_url": "https://medleyhome.com/pages/warranty", "retailer": "Medley", "amazon_query": "FSC certified walnut coffee table", "sus_claim": "'Always FSC-certified' domestic walnut and maple; low-VOC finish", "sus_source_url": "https://medleyhome.com/products/voya-coffee-table"}}, "floor_lamp": {"base": {"name": "Arco Floor Lamp", "maker": "Flos", "url": "https://www.dwr.com/lighting-floor/arco-floor-lamp/158343.html?lang=en_US", "price_usd": 4095, "price_note": "starting price; incandescent 100W E26 bulb sold separately", "warranty": "1 year, terms apply", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "arc floor lamp marble base", "note": "LED version seen only at Canadian retailer hutk.ca ($6,225, currency likely CAD); US Finnish Design Shop LED page blocked."}, "sus": {"name": "Tolomeo Floor Lamp, Standard", "maker": "Artemide", "url": "https://www.dwr.com/lighting-floor/tolomeo-floor-lamp-maxi/157-2.html?lang=en_US", "price_usd": 1110, "price_note": "starting price; includes 10W LED bulb", "warranty": "1 year, terms apply", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "Tolomeo style LED floor lamp", "sus_claim": "LED lamping (10W LED bulb included, standard replaceable bulb)", "sus_source_url": "https://www.dwr.com/lighting-floor/tolomeo-floor-lamp-maxi/157-2.html?lang=en_US", "note": "No repairability claim found on any page; 'replaceable bulb' inferred from bulb-based design (2Modern lists E26 bulb options, $1,080)."}}, "rug": {"base": {"name": "Sienna Handknotted Wool Rug", "maker": "Design Within Reach", "url": "https://www.dwr.com/rug-style-patterned/sienna-handknotted-wool-rug/100690406.html", "price_usd": 3245, "price_note": "starting price; sizes 6x9 to 10x14", "warranty": "1 year (DWR all products)", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "hand knotted wool area rug 8x10"}, "sus": {"name": "Paver Carpet Tile (Shale 8337202)", "maker": "Interface", "url": "https://www.flooringhut.co.uk/interface-paver-carpet-tile-shale-8337202", "price_usd": null, "price_note": "GBP 37.60 per m2 / GBP 150.38 per box of 16 tiles (4 m2); UK retailer, no USD price", "warranty": "15-year commercial warranty", "warranty_url": null, "retailer": "Flooring Hut (UK)", "amazon_query": "Interface carpet tile recycled nylon", "sus_claim": "'100% Recycled Solution Dyed Nylon' pile; CQuest Bio backing", "sus_source_url": "https://www.flooringhut.co.uk/interface-paver-carpet-tile-shale-8337202", "note": "No US retail price found for Interface; Interface sells through dealers. Interface Composure is listed in the Blue Angel database: https://www.blauer-engel.de/en/products/interface-composure-cqbtm"}}, "shelving": {"base": {"name": "USM Haller Open Bookshelf", "maker": "USM", "url": "https://www.dwr.com/storage-shelving-bookcases/usm-haller-bookshelf/100269750.html?lang=en_US", "price_usd": 3189, "price_note": "starting price", "warranty": "1 year from DWR; brand warranty may be longer", "warranty_url": null, "retailer": "Design Within Reach", "amazon_query": "modular metal shelving chrome", "note": "us.usm.com permission request not answered; maker warranty not verified."}, "sus": {"name": "606 Universal Shelving System", "maker": "Vitsoe", "url": "https://www.vitsoe.com/us/606", "price_usd": 840, "price_note": "lowest example configuration (Entrance, $840 to $990); priced by configuration", "warranty": null, "warranty_url": null, "retailer": "Vitsoe (direct)", "amazon_query": "wall mounted aluminum shelving system", "sus_claim": "'genuinely built to last - and to be repaired'; products 'will never become obsolete'; much furniture ever made 'still in use today'", "sus_source_url": "https://www.vitsoe.com/606", "note": "Page states no guarantee term and no recyclability claim."}}, "wallpaper": {"base": {"name": "Coastline Grass, Green Sea 9975", "maker": "Phillip Jeffries", "url": "https://theworkroom.llc/products/coastline-grass-green-sea-phillip-jeffries-9975", "price_usd": 58, "price_note": "per yard; 12-yard minimum in 4-yard increments; swatch available (fee credited)", "warranty": null, "warranty_url": null, "retailer": "The WorkRoom (authorized dealer)", "amazon_query": "raffia grasscloth wallpaper", "unit": "yard", "coverage_sqft": 3, "note": "Coverage not published; 3 sq ft per yard derived from stated 36 in pre-trimmed width x 1 yd (12-yd bolt = 108 sq ft). Page metadata showed a conflicting $5.00. Hygge & West and Graham & Brown pages could not be fetched (permission not answered).", "min_qty": 12, "increment": 4}, "sus": {"name": "Classic Cream/White Thin Stripe Eco-FSC Non-Woven Wallpaper SS21230", "maker": "Style Sisters collection (listed unbranded)", "url": "https://www.homedepot.com/p/Style-Sisters-Classic-Cream-White-Thin-Stripe-Design-Matte-Finish-Eco-FSC-Certified-Non-Woven-Non-Pasted-Wallpaper-Roll-SS21230/334562052", "price_usd": 244.2, "price_note": "per roll ($4.28 per sq ft)", "warranty": null, "warranty_url": null, "retailer": "The Home Depot", "amazon_query": "FSC certified PVC free non-woven wallpaper", "unit": "roll", "coverage_sqft": 57, "sus_claim": "'Non-woven ECO-FSC certified substrate'; '100% free of any PVC, solvents and softeners'", "sus_source_url": "https://www.homedepot.com/p/Style-Sisters-Classic-Cream-White-Thin-Stripe-Design-Matte-Finish-Eco-FSC-Certified-Non-Woven-Non-Pasted-Wallpaper-Roll-SS21230/334562052", "note": "Alternative: House of Hackney Plantasia (Prism), from $270 per roll, 58 sq ft per 9'10\" roll, FSC-standard wood fibre, PVC-free factory, A3 sample $4.80: https://us.houseofhackney.com/products/plantasia-wallpaper-prism"}}, "faucet": {"base": {"name": "Purist Widespread Bathroom Sink Faucet, lever handles, 1.2 gpm (K-14410-4)", "maker": "Kohler", "url": "https://shopkohlernj.com/products/kohler-purist-widespread-bathroom-sink-faucet-lever-handles-1-2-gpm", "price_usd": 761.73, "price_note": "Polished Chrome; up to $1,218.78 for other finishes", "warranty": "Lifetime limited warranty", "warranty_url": null, "retailer": "Shop Kohler NJ (retailer)", "amazon_query": "Kohler Purist widespread bathroom faucet K-14410-4", "note": "kohler.com not fetched (permission not answered), so no maker warranty URL. This Purist model is itself WaterSense certified per the retailer page."}, "sus": {"name": "Parallel Widespread Bathroom Sink Faucet, 1.0 gpm (K-23484-4K)", "maker": "Kohler", "url": "https://shopkohlernj.com/products/kohler-parallel-widespread-bathroom-sink-faucet-1-0-gpm", "price_usd": 521.7, "price_note": "Polished Chrome; up to $834.75", "warranty": "One-year limited warranty (as stated on retailer page)", "warranty_url": null, "retailer": "Shop Kohler NJ (retailer)", "amazon_query": "Kohler Parallel widespread faucet 1.0 gpm", "sus_claim": "'WaterSense certified'; 1.0 gpm max at 60 psi", "sus_source_url": "https://shopkohlernj.com/products/kohler-parallel-widespread-bathroom-sink-faucet-1-0-gpm", "note": "EPA WaterSense pages (epa.gov, lookforwatersense.epa.gov) could not be fetched; WaterSense status is from the retailer page only. Verify in the EPA product search before relying on it."}}, "tile": {"base": {"name": "Classic Field tile (Ready-to-Ship)", "maker": "Heath Ceramics", "url": "https://www.heathceramics.com/pages/heath-tile-faq", "price_usd": 36, "price_note": "per sq ft, Ready-to-Ship starting price; made-to-order varies", "warranty": null, "warranty_url": null, "retailer": "Heath Ceramics (direct)", "amazon_query": "handmade glazed ceramic wall tile", "unit": "sq ft", "note": "From Heath tile FAQ, not a single product page. No warranty published. Most Heath tiles Declare-labeled; Heath has an EPD."}, "sus": {"name": "Sandstone Matte 2x4 ceramic tile", "maker": "Fireclay Tile", "url": "https://www.designshop.com/sample/300029325-100123532/fireclay-tile-sandstone-matte-ceramic-tile-2-in-x-4-in", "price_usd": 44, "price_note": "per sq ft retail; $3 per sample", "warranty": null, "warranty_url": null, "retailer": "DesignShop", "amazon_query": "recycled ceramic tile 2x4", "unit": "sq ft", "sus_claim": "'Applied to our durable Recycled Tile Body, LEED eligible'; Debris line 70% post-consumer recycled since 2012 (Wikipedia)", "sus_source_url": "https://en.wikipedia.org/wiki/Fireclay_Tile", "note": "fireclaytile.com could not be fetched (permission not answered); recycled percentage from Wikipedia, citing 2009-2013 sources."}}, "paint": {"base": {"name": "Aura Interior Paint - Satin", "maker": "Benjamin Moore", "url": "https://www.benjaminmoore.com/en-ca/product/aura-interior-paint-satin-3-78-l/F526", "price_usd": null, "price_note": "C$118.99 per 3.78 L gallon on Canadian site; no USD price verified", "warranty": null, "warranty_url": null, "retailer": "Benjamin Moore (CA site)", "amazon_query": "Benjamin Moore Aura interior paint", "unit": "gallon", "note": "US Aura page could not be fetched; Regal Select not verified. No warranty on page."}, "sus": {"name": "Eco Spec Interior Paint", "maker": "Benjamin Moore", "url": "https://www.benjaminmoore.com/en-us/product/eco-spec-wb-interior-paint/W376", "price_usd": null, "price_note": "no price; page says item currently unavailable", "warranty": null, "warranty_url": null, "retailer": "Benjamin Moore", "amazon_query": "zero VOC interior paint", "unit": "gallon", "sus_claim": "'Zero VOCs and zero emissions, even after tinting'; Asthma & Allergy Friendly, Green Seal, MPI Extreme Green certified", "sus_source_url": "https://www.benjaminmoore.com/en-us/product/eco-spec-wb-interior-paint/W376", "note": "Natura was discontinued March 1, 2021 and replaced by Eco Spec (compositepaint.com). Sherwin-Williams Harmony: 'Zero VOC formula' per contrib.sherwin-williams.com, no price or warranty shown."}}, "reception_desk": {"base": {"name": "Custom reception desks (39 models, made to order)", "maker": "ArcGrove", "url": "https://www.arcgrove.com/collections/custom-reception-desks", "price_usd": 1330, "price_note": "lowest listed model (Isla greeter station); listed range $1,330 to $2,550; customizable dimensions, finish, features", "warranty": null, "warranty_url": null, "retailer": "ArcGrove (direct)", "amazon_query": "modern reception desk counter", "note": "Warranty ('Office for Life') page linked but not read; lead time not stated."}, "custom": {"name": "Made-to-order reception desk", "maker": "ArcGrove", "url": "https://www.arcgrove.com/collections/custom-reception-desks", "price_usd": null, "price_note": "quote based on floor plan", "warranty": null, "warranty_url": null, "retailer": "ArcGrove (direct)", "amazon_query": "custom reception desk"}}, "dining_table": {"base": {"name": "Saarinen Dining Table, Oval", "maker": "Knoll", "url": "https://www.dwr.com/kitchen-dining-tables/saarinen-dining-table-oval/100301181.html?lang=en_US", "price_usd": 17650, "price_note": "price shown for this configuration; round 35-60 in and oval 72-96 in sizes", "warranty": "5 years, terms apply", "warranty_url": "https://knoll.com/warranty", "retailer": "Design Within Reach", "amazon_query": "Saarinen style oval tulip dining table"}, "sus": {"name": "Danu Square Dining Table", "maker": "Medley", "url": "https://medleyhome.com/products/danu-square-dining-table", "price_usd": 2516, "price_note": "starting sale price (regular $2,795); 40 x 40 in", "warranty": "Lifetime structural on exposed-wood case goods and hardware (not finish)", "warranty_url": "https://medleyhome.com/pages/warranty", "retailer": "Medley", "amazon_query": "FSC certified walnut dining table", "sus_claim": "'Always FSC-certified'", "sus_source_url": "https://medleyhome.com/products/danu-square-dining-table", "note": "Only 40 in square; no larger size or custom dimensions listed. For corporate dining scale, a made-to-order maker is needed."}, "custom": {"name": "Made-to-order dining or conference table", "maker": null, "url": null, "price_usd": null, "price_note": null, "warranty": null, "warranty_url": null, "retailer": null, "amazon_query": "custom walnut conference dining table", "note": "No made-to-order dining table source verified today."}}}}};</script>
 <script id="studio-js">
 /* Spatial Director 2.0: studio agents that take a room from idea to a buildable plan.
    Each agent is a small function with one job. Agents talk to each other through post(); anything
@@ -1952,6 +2071,45 @@ const STYLES = {
                   paint: [["Walls", "Benjamin Moore", "White Dove", "OC-17", "#efeee5"], ["Accent", "Sherwin-Williams", "Accessible Beige", "SW 7036", "#d1c7b8"]],
                   refs: "japanese minimalist interior wood", houzz: "japandi", deco: "Japanese restraint meets Scandinavian warmth: low furniture, light oak, few objects.", fewer: true },
 };
+/* ---------------- Executive inspiration styles (Style agent's reading of each headquarters) ----------------
+   These are the Style agent's own names for the look of each building, not names the companies use.
+   Paint colors are real named colors from Benjamin Moore and Sherwin-Williams. */
+const EXEC_STYLES = {
+  x_apple:      { label: "Precision minimal (after Apple Park)", short: "Precision minimal", exec: true, walls: "#f3f3ee", floor: "concrete", floorTint: "#f2efe8", slat: 0xd9c9a8, backing: 0xe9e6df,
+                  pal: { sofa: "white", chair: "light gray", desk: "birch", rug: "stone", table: "white", lamp: "white", bookshelf: "birch", reception: "birch", dining: "birch", bench: "light gray", plant: "leaf" },
+                  paint: [["Walls", "Benjamin Moore", "Chantilly Lace", "OC-65", "#f3f3ee"], ["Accent", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"]],
+                  refs: "minimalist office interior glass oak", houzz: "minimalist-office", deco: "Polished concrete, pale maple and white oak, light stone and curved glass, with almost nothing on show.", fewer: true },
+  x_salesforce: { label: "Sky-lounge hospitality (after Salesforce)", short: "Sky-lounge hospitality", exec: true, walls: "#eeefea", floor: "wood", floorTint: "#b9925f", slat: 0xa98557, backing: 0x22406e,
+                  pal: { sofa: "light blue", chair: "navy", desk: "oak", rug: "cream", table: "oak", lamp: "white", bookshelf: "oak", reception: "oak", dining: "oak", bench: "light blue", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"], ["Accent", "Benjamin Moore", "Hale Navy", "HC-154", "#3b4a5a"]],
+                  refs: "office lounge city view interior", houzz: "contemporary-office", deco: "A living room in the sky for hosting guests: warm wood, leather, plush upholstery and plants everywhere.", extraPlants: true },
+  x_nvidia:     { label: "Faceted daylight (after Nvidia)", short: "Faceted daylight", exec: true, walls: "#eeefea", floor: "concrete", floorTint: "#d8d8d4", slat: 0x1d1f21, backing: 0x17181a,
+                  pal: { sofa: "charcoal", chair: "black", desk: "black", rug: "smoke", table: "white", lamp: "black", bookshelf: "black", reception: "black", dining: "black", bench: "moss", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"], ["Accent", "Sherwin-Williams", "Tricorn Black", "SW 6258", "#2f2f30"]],
+                  refs: "skylight office interior modern", houzz: "modern-office", deco: "High, bright ceilings, graphic triangular geometry in black steel and white, and a few strong greens." },
+  x_google:     { label: "Canopy biophilic (after Google Bay View)", short: "Canopy biophilic", exec: true, walls: "#e4e8dc", floor: "wood", floorTint: "#c49c66", slat: 0xb08a5e, backing: 0x3f6b45,
+                  pal: { sofa: "sage", chair: "teal", desk: "oak", rug: "moss", table: "oak", lamp: "white", bookshelf: "oak", reception: "oak", dining: "oak", bench: "sage", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Evergreen Fog", "SW 9130", "#95978a"], ["Trim", "Benjamin Moore", "Chantilly Lace", "OC-65", "#f3f3ee"]],
+                  refs: "timber office interior plants daylight", houzz: "biophilic-office", deco: "A tent-like canopy over filtered daylight, planters and curtains as room dividers, and no corner office.", extraPlants: true },
+  x_meta:       { label: "Rooftop-park industrial (after Meta)", short: "Rooftop-park industrial", exec: true, walls: "#dcd7cf", floor: "concrete", floorTint: "#a6a7a5", slat: 0xb08a5e, backing: 0x3a3d40,
+                  pal: { sofa: "blue", chair: "charcoal", desk: "oak", rug: "charcoal", table: "oak", lamp: "black", bookshelf: "oak", reception: "oak", dining: "oak", bench: "blue", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"], ["Accent", "Sherwin-Williams", "Tricorn Black", "SW 6258", "#2f2f30"]],
+                  refs: "industrial office exposed ceiling plywood", houzz: "industrial-office", deco: "One big open floor beside a garden of redwoods, art everywhere, and simple, hard-wearing materials." },
+  x_amazon:     { label: "Conservatory green (after Amazon's Spheres)", short: "Conservatory green", exec: true, walls: "#95978a", floor: "wood", floorTint: "#9a6a42", slat: 0x6a4630, backing: 0x2a3a2a,
+                  pal: { sofa: "moss", chair: "walnut", desk: "walnut", rug: "sage", table: "walnut", lamp: "charcoal", bookshelf: "walnut", reception: "walnut", dining: "walnut", bench: "moss", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Evergreen Fog", "SW 9130", "#95978a"], ["Trim", "Sherwin-Williams", "Dover White", "SW 6385", "#ece6d6"]],
+                  refs: "conservatory interior plants glass", houzz: "tropical-office", deco: "A greenhouse for work: dense cloud-forest planting, a living wall, deep greens and dark walnut.", extraPlants: true },
+  x_microsoft:  { label: "Campus commons (after Microsoft Redmond)", short: "Campus commons", exec: true, walls: "#efeee5", floor: "wood", floorTint: "#c8ad86", slat: 0x8a5a36, backing: 0x22406e,
+                  pal: { sofa: "navy", chair: "oak", desk: "oak", rug: "light gray", table: "oak", lamp: "white", bookshelf: "oak", reception: "oak", dining: "oak", bench: "navy", plant: "leaf" },
+                  paint: [["Walls", "Benjamin Moore", "White Dove", "OC-17", "#efeee5"], ["Accent", "Benjamin Moore", "Hale Navy", "HC-154", "#3b4a5a"]],
+                  refs: "mass timber office interior", houzz: "contemporary-office", deco: "A village-like campus: warm wood, navy and white, open green commons and calm meeting rooms." },
+  x_airbnb:     { label: "Residential warmth (after Airbnb)", short: "Residential warmth", exec: true, walls: "#ece6d6", floor: "wood", floorTint: "#9a6a42", slat: 0x8a5a36, backing: 0x6b4430,
+                  pal: { sofa: "terracotta", chair: "olive", desk: "teak", rug: "cream", table: "teak", lamp: "charcoal", bookshelf: "teak", reception: "teak", dining: "teak", bench: "olive", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Dover White", "SW 6385", "#ece6d6"], ["Accent", "Benjamin Moore", "Dark Teal", "2053-20", "#2f5357"]],
+                  refs: "residential style office interior living room", houzz: "eclectic-office", deco: "Rooms modeled on real homes: a calm monochrome base with warm, colorful, homey rooms set into it." },
+};
+for (const st of Object.values(STYLES)) if (!st.short) st.short = st.label;
+Object.assign(STYLES, EXEC_STYLES);
 
 /* ---------------- Space types (Layout agent's knowledge) ---------------- */
 const SPACES = {
@@ -2302,6 +2460,146 @@ function renderInsp(loading) {
         <a class="btn small" href="https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(insp.q)}" target="_blank" rel="noopener">More photos</a></div></div>`;
 }
 
+/* ---------------- Inspiration agent 2: executive headquarters with sources, named style, install and undo ---------------- */
+const R = window.__RESEARCH || { hq: [], firms: [], directories: [], fees: [], billion: [], products: { items: {} } };
+const HQ_STYLE = { apple: "x_apple", salesforce: "x_salesforce", nvidia: "x_nvidia", google: "x_google", meta: "x_meta", amazon: "x_amazon", microsoft: "x_microsoft", airbnb: "x_airbnb" };
+for (const h of R.hq) {
+  HQ[h.key] = { name: h.name, company: h.company, where: h.where || "", by: [h.architect, h.interior_designer].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(" with "),
+    year: h.year || "", q: h.commons_query || h.name, style: HQ_STYLE[h.key] || h.style || "modern", note: (h.traits || []).slice(0, 2).join("; "),
+    traits: h.traits || [], cost: h.cost, costUrl: h.cost_source_url, execNote: h.executive_note, sources: h.sources || [] };
+}
+$("#insp-list").innerHTML = Object.entries(HQ).map(([k, h]) => `<option value="${esc(h.company || k[0].toUpperCase() + k.slice(1))}">`).join("");
+$("#insp").placeholder = Object.values(HQ).slice(0, 6).map(h => h.company).filter(Boolean).join(", ") + " or any building";
+let inspApplied = null;   // { style, name } once the person installs an inspiration style
+const installedNow = () => !!(inspApplied && insp && inspApplied.style === insp.style && S.style === insp.style);
+function renderInsp(loading) {
+  if (!insp) { $("#inspcard").innerHTML = ""; return; }
+  const ph = insp.photos[inspIdx], st = STYLES[insp.style];
+  const img = ph ? `<a href="${esc(ph.page)}" target="_blank" rel="noopener"><img src="${esc(ph.src)}" alt="${esc(ph.title)}"></a>` : `<div class="ph">${loading ? "Finding photos…" : "Photo not available here. More photos opens Wikimedia Commons."}</div>`;
+  const thumbs = insp.photos.length > 1 ? `<div class="thumbs" role="group" aria-label="Photos">${insp.photos.slice(0, 6).map((p, i) =>
+    `<button type="button" class="thumb${i === inspIdx ? " on" : ""}" data-ph="${i}" aria-label="Photo ${i + 1} of ${Math.min(6, insp.photos.length)}" aria-pressed="${i === inspIdx}"><img src="${esc(p.src)}" alt=""></button>`).join("")}</div>` : "";
+  const on = installedNow();
+  const srcs = (insp.sources || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join("");
+  const chips = Object.entries(HQ).map(([k, h]) => `<button type="button" class="chip${insp.name === h.name ? " on" : ""}" data-hq="${esc(k)}">${esc(h.company || k)}</button>`).join("");
+  $("#inspcard").innerHTML = `<div>${img}${ph ? `<p class="credit">${esc(ph.artist || "Unknown author")} · ${esc(ph.license || "see source")} · Wikimedia Commons</p>` : ""}${thumbs}</div>
+    <div><p class="eyebrow">Executive inspiration</p><h3>${esc(insp.name)}</h3>
+      ${insp.where ? `<p>${esc(insp.where)}${insp.by ? ` · ${esc(insp.by)}` : ""}${insp.year ? ` · ${esc(insp.year)}` : ""}</p>` : ""}
+      ${insp.cost ? `<p>Reported cost: <b>${esc(insp.cost)}</b>${insp.costUrl ? ` (<a href="${esc(insp.costUrl)}" target="_blank" rel="noopener">source</a>)` : ""}</p>` : ""}
+      ${insp.traits && insp.traits.length ? `<ul class="traits">${insp.traits.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : insp.note ? `<p>${esc(insp.note)}</p>` : ""}
+      ${insp.execNote ? `<p>${esc(insp.execNote)}</p>` : ""}
+      <p class="named">Style agent names this style <b>${esc(st.short)}</b>. ${esc(st.deco)}</p>
+      <div class="btnrow">
+        <button class="btn primary small" type="button" id="applyinsp"${on ? " disabled" : ""}>${on ? "Installed here" : "Install " + esc(st.short) + " here"}</button>
+        <button class="btn small" type="button" id="undoinsp"${on ? "" : " disabled"}>Undo</button>
+        ${insp.photos.length > 1 ? `<button class="btn small" type="button" id="nextphoto">Next photo</button>` : ""}
+        <a class="btn small" href="https://www.architecturaldigest.com/search?q=${encodeURIComponent((insp.company || insp.name.replace(/ \(.*\)/, "")) + " office")}" target="_blank" rel="noopener">Architectural Digest</a>
+        <a class="btn small" href="https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(insp.q)}" target="_blank" rel="noopener">More photos</a></div>
+      <p class="credit">${on ? "Installed. Undo puts the room back the way it was." : "Nothing changes until you install it."}</p>
+      ${srcs ? `<p class="srcs"><b>Sources:</b> ${srcs}</p>` : ""}
+      <div class="hqchips"><span class="eyebrow">Executive inspirations</span>${chips}</div>
+      ${R.billion && R.billion.length ? `<details class="srcs"><summary>Billion-dollar offices: further reading</summary>${R.billion.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join("")}</details>` : ""}
+    </div>`;
+}
+$("#inspcard").addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.id === "undoinsp" && inspApplied) {
+    const name = inspApplied.name; inspApplied = null; window.SpatialDirector.undo();
+    post("style", "you", `Undid the ${name} style. The room is back the way it was.`); renderInsp(false);
+  } else if (t.dataset.ph != null) { inspIdx = +t.dataset.ph; renderInsp(false); }
+  else if (t.dataset.hq) { const h = HQ[t.dataset.hq]; $("#insp").value = h.company || t.dataset.hq; runInspiration(t.dataset.hq); }
+});
+let lastInstalled = false;
+window.addEventListener("sd:synced", () => { const now = installedNow(); if (now !== lastInstalled) { lastInstalled = now; if (!now && inspApplied && S.style !== inspApplied.style) inspApplied = null; renderInsp(false); } });
+
+/* ---------------- Render agent 2: final renders and a shareable walkthrough video ---------------- */
+function aim(G, v) {
+  G.yaw = v.yaw; G.pitch = v.pitch; G.radius = v.radius; G.target.set(v.target[0], v.target[1], v.target[2]); G.userZoom = true;
+  const { yaw, pitch, radius, target } = G;
+  G.camera.position.set(target.x + radius * Math.sin(yaw) * Math.cos(pitch), target.y + radius * Math.sin(pitch), target.z + radius * Math.cos(yaw) * Math.cos(pitch));
+  G.camera.lookAt(target);
+}
+function hideOverlays(G) {
+  const hidden = [];
+  G.scene.traverse(o => { if ((o.isSprite || o === G.pointer || o === G.numbers || o === G.preview) && o.visible) { hidden.push(o); o.visible = false; } });
+  return () => hidden.forEach(o => { o.visible = true; });
+}
+const camSave = G => ({ yaw: G.yaw, pitch: G.pitch, radius: G.radius, userZoom: G.userZoom, target: G.target.toArray() });
+const camRestore = (G, c) => { G.yaw = c.yaw; G.pitch = c.pitch; G.radius = c.radius; G.userZoom = c.userZoom; G.target.fromArray(c.target); };
+const SHOTS = [
+  ["Entrance", { yaw: 0.35, pitch: 0.3, radius: 7.4, target: [0, 0.9, -0.6] }],
+  ["Whole room", { yaw: 0.62, pitch: 0.7, radius: 10.4, target: [0, 0.45, -0.4] }],
+  ["Eye level", { yaw: 0.0001, pitch: 0.07, radius: 5.2, target: [0, 1.4, -1.6] }],
+  ["Toward the glass", { yaw: 1.3, pitch: 0.3, radius: 5.4, target: [-1.8, 1.0, 0] }],
+];
+function dlg(html) { const d = $("#mediadlg"); $("#mediabody").innerHTML = html; if (!d.open) { try { d.showModal(); } catch (e) { d.setAttribute("open", ""); } } return d; }
+function finalRenders() {
+  const G = SD.G; if (!G) { dlg(`<p>The 3D view isn't running in this browser, so there is nothing to render.</p>`); return; }
+  const r = G.renderer, cam = G.camera, pr = r.getPixelRatio(), save = camSave(G), restore = hideOverlays(G), exp = r.toneMappingExposure;
+  const W = 1920, H = 1080; r.setPixelRatio(1); r.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix(); r.toneMappingExposure = exp * 1.06;
+  const out = [];
+  for (const [name, v] of SHOTS) { aim(G, v); r.render(G.scene, cam); out.push({ name, url: r.domElement.toDataURL("image/jpeg", 0.92) }); }
+  r.toneMappingExposure = exp; r.setPixelRatio(pr); camRestore(G, save); restore(); SD.resize();
+  const title = `${SPACES[S.space].label} · ${STYLES[S.style].short}`;
+  dlg(`<p class="eyebrow">Final renders</p><h2>${esc(title)}</h2>
+    <p class="credit">Rendered at 1920 × 1080 from the 3D model with soft shadows and filmic light. A simulated room for planning; not a photograph.</p>
+    <div class="renders">${out.map((o, i) => `<figure><img src="${o.url}" alt="${esc(title)}, ${esc(o.name)} view"><figcaption>${esc(o.name)} · <a href="${o.url}" download="spatial-director-${S.space}-${S.style}-${i + 1}.jpg">Download</a></figcaption></figure>`).join("")}</div>`);
+  post("render", "you", `Rendered ${out.length} final views of the ${title} at 1920 × 1080.`, "good");
+}
+let recording = null;
+const KEYS = [
+  [0,    { yaw: 0.95, pitch: 0.36, radius: 9.6, target: [0, 0.8, 0] }],
+  [0.25, { yaw: 0.32, pitch: 0.12, radius: 5.8, target: [0, 1.2, -0.9] }],
+  [0.5,  { yaw: -0.45, pitch: 0.16, radius: 5.0, target: [1.6, 1.0, -1.5] }],
+  [0.75, { yaw: 1.15, pitch: 0.24, radius: 5.6, target: [-1.4, 0.8, 0.6] }],
+  [1,    { yaw: 0.62, pitch: 0.7, radius: 10.4, target: [0, 0.45, -0.4] }],
+];
+function camAt(p) {
+  let i = 0; while (i < KEYS.length - 2 && p > KEYS[i + 1][0]) i++;
+  const [p0, a] = KEYS[i], [p1, b] = KEYS[i + 1], u = Math.min(1, Math.max(0, (p - p0) / (p1 - p0))), s = u * u * (3 - 2 * u), L = (x, y) => x + (y - x) * s;
+  return { yaw: L(a.yaw, b.yaw), pitch: L(a.pitch, b.pitch), radius: L(a.radius, b.radius), target: a.target.map((v, k) => L(v, b.target[k])) };
+}
+function walkVideo() {
+  const G = SD.G;
+  if (!G) { dlg(`<p>The 3D view isn't running in this browser, so a video can't be recorded.</p>`); return; }
+  const cv = G.renderer.domElement;
+  if (!cv.captureStream || !window.MediaRecorder) { dlg(`<p>This browser can't record video from the page. Try Chrome, Edge or Safari 14.1 or later.</p>`); return; }
+  if (recording) return;
+  const mime = ["video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9", "video/webm"].find(m => MediaRecorder.isTypeSupported(m)) || "";
+  const stream = cv.captureStream(30), rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 6e6 } : {}), chunks = [];
+  const save = camSave(G), restore = hideOverlays(G), DUR = 12000, t0 = performance.now();
+  recording = { rec, cancelled: false };
+  rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = () => {
+    stream.getTracks().forEach(t => t.stop()); camRestore(G, save); restore(); const was = recording; recording = null; $("#walkvid").disabled = false;
+    if (was.cancelled) { dlg(`<p>Recording stopped. Nothing was saved.</p>`); return; }
+    const type = (rec.mimeType || mime || "video/webm").split(";")[0], ext = type.includes("mp4") ? "mp4" : "webm";
+    const blob = new Blob(chunks, { type }), url = URL.createObjectURL(blob), name = `spatial-director-${S.space}-${S.style}-walkthrough.${ext}`;
+    const file = new File([blob], name, { type }), canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+    dlg(`<p class="eyebrow">Walkthrough video</p><h2>${esc(SPACES[S.space].label)} · ${esc(STYLES[S.style].short)}</h2>
+      <video controls playsinline src="${url}" style="width:100%;border-radius:10px"></video>
+      <p class="credit">12 seconds, ${(blob.size / 1e6).toFixed(1)} MB, ${ext.toUpperCase()}. A simulated room, self-initiated concept.</p>
+      <div class="btnrow">${canShare ? `<button class="btn primary" type="button" id="sharevid">Share</button>` : ""}<a class="btn${canShare ? "" : " primary"}" href="${url}" download="${name}">Download video</a></div>
+      ${canShare ? "" : `<p class="credit">This browser can't share files directly. Download it, then attach it to a message or post.</p>`}`);
+    const sb = $("#sharevid"); if (sb) sb.addEventListener("click", () => navigator.share({ files: [file], title: "Spatial Director walkthrough", text: `${SPACES[S.space].label} in ${STYLES[S.style].short} style. A simulated room.` }).catch(() => {}));
+    post("render", "you", `Recorded a 12-second walkthrough of the ${SPACES[S.space].label.toLowerCase()}, ready to share.`, "good");
+  };
+  $("#walkvid").disabled = true;
+  SD.showCard("", `<p class="eyebrow">Recording</p><p>Walking through the room for 12 seconds… <button class="btn small" type="button" id="stopvid">Stop</button></p>`);
+  $("#stopvid").addEventListener("click", () => { if (recording) { recording.cancelled = true; rec.stop(); } });
+  rec.start(250);
+  const step = () => {
+    if (!recording || rec.state !== "recording") return;
+    const p = Math.min(1, (performance.now() - t0) / DUR); const v = camAt(p);
+    G.yaw = v.yaw; G.pitch = v.pitch; G.radius = v.radius; G.target.fromArray(v.target); G.userZoom = true;
+    if (p < 1) requestAnimationFrame(step); else { rec.stop(); SD.showCard("done", `<p class="eyebrow">Recorded</p><p>Walkthrough video is ready.</p>`); }
+  };
+  requestAnimationFrame(step);
+}
+$("#finalrenders").addEventListener("click", finalRenders);
+$("#bbrenders").addEventListener("click", finalRenders);
+$("#walkvid").addEventListener("click", walkVideo);
+$("#mediaclose").addEventListener("click", () => { const d = $("#mediadlg"); if (d.close) d.close(); else d.removeAttribute("open"); });
+
 /* ---------------- Review agent: comments pinned to the room ---------------- */
 let aud = "client";
 let comments = store.get("comments", []);
@@ -2396,7 +2694,7 @@ function drawNet() {
   const pos = { director: [cx, cy] };
   keys.forEach((k, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / keys.length; pos[k] = [cx + 290 * Math.cos(a), cy + 140 * Math.sin(a)]; });
   const flows = [["director", "layout"], ["inspire", "style"], ["inspire", "images"], ["style", "layout"], ["style", "paint"], ["layout", "check"], ["check", "source"], ["source", "sustain"],
-    ["sustain", "source"], ["source", "estimate"], ["paint", "estimate"], ["estimate", "ready"], ["review", "ready"], ["render", "director"], ["images", "style"], ["check", "layout"], ["review", "layout"]];
+    ["sustain", "source"], ["source", "estimate"], ["paint", "estimate"], ["estimate", "ready"], ["review", "ready"], ["render", "director"], ["images", "style"], ["check", "layout"], ["review", "layout"], ["source", "parts"], ["parts", "warranty"], ["parts", "invoice"], ["warranty", "invoice"], ["invoice", "pm"], ["pm", "ready"], ["sustain", "parts"], ["style", "render"]];
   const hot = hotEdge ? hotEdge.join(">") : "";
   let h = "";
   for (const [a, b] of flows) { const [x1, y1] = pos[a], [x2, y2] = pos[b], on = hot === a + ">" + b || hot === b + ">" + a;
@@ -2417,17 +2715,246 @@ function scheduleAgents() {
   timer = setTimeout(() => {
     const key = S.space + "/" + S.style + "/" + S.objs.map(o => o.type + o.x.toFixed(1) + o.z.toFixed(1)).join("|");
     const changed = key !== lastLayoutKey; lastLayoutKey = key;
-    runCheck(changed); runSourcing(); renderPaint(); renderEstimate(); runReady();
+    runCheck(changed); runSourcing(); renderPaint(); renderEstimate(); runReady(); runBudget();
     if (changed) { const k2 = S.style + "/" + S.space; if (k2 !== scheduleAgents.lastImg) { scheduleAgents.lastImg = k2; runImages(); } }
   }, 120);
 }
+
+/* ---------------- Build & Budget: Parts, Warranty, Invoice and Project manager agents ---------------- */
+Object.assign(AGENTS, {
+  parts:    { name: "Parts",           job: "Finds every part at an online retailer, with its price and a sustainable option" },
+  warranty: { name: "Warranty",        job: "Reads the warranty for every part and flags the gaps" },
+  invoice:  { name: "Invoice",         job: "Totals the approved parts into an invoice with buy links" },
+  pm:       { name: "Project manager", job: "Finds a designer to run the project and the trades and vendors to build it" },
+});
+const PR = (R.products && R.products.items) || {};
+const CHECKED = (R.products && R.products.checked) || "";
+const money = n => n == null || isNaN(n) ? "" : "$" + Math.round(n).toLocaleString("en-US");
+let affTag = store.get("afftag", "");
+let approved = store.get("approved", null);   // { space, style, t }
+let region = store.get("region", "ca");
+function withTag(url) {
+  if (!url || !affTag || !/(^|\.)amazon\.com\//.test(url.replace(/^https?:\/\//, "").replace(/^www\./, "") + "/")) return url;
+  return url + (url.includes("?") ? "&" : "?") + "tag=" + encodeURIComponent(affTag);
+}
+const isAmazon = u => /amazon\.com/.test(u || "");
+const amazonFor = q => withTag(amazon(q));
+// Fallback to the 2.0 catalog for parts the research didn't price
+const fromCat = (p, sus) => p ? { name: p.name, maker: p.maker, url: p.url, price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: p.url ? p.maker : "", amazon_query: p.q,
+  sus_claim: sus ? p.note : null, sus_source_url: null } : null;
+function part(key, label, qty, unit, catType, extra = {}) {
+  const r = PR[key] || {};
+  const cat = catType && CATALOG[catType];
+  const base = r.base || (cat && fromCat(cat[S.style] || cat.base));
+  const sus = r.sus || (cat && fromCat(cat.sus, true));
+  return { key: "bb:" + key, label, qty, unit, base, sus, custom: r.custom || null, ...extra };
+}
+function parts() {
+  const n = t => S.objs.filter(o => o.type === t).length, st = STYLES[S.style], tk = takeoff();
+  const out = [];
+  const desks = n("desk"), chairs = n("chair");
+  const deskChairs = S.space === "dining" ? 0 : Math.min(desks, chairs), others = chairs - deskChairs;
+  if (n("sofa")) out.push(part("couch", "Custom couch", n("sofa"), "each", "sofa", { match: ["sofa", "Order in"] }));
+  if (deskChairs) out.push(part("desk_chair", "Desk chair", deskChairs, "each", null, { match: ["chair", "Frame and seat in"] }));
+  if (others) out.push(S.space === "dining" ? { ...part("dining_chair", "Dining chairs", others, "each", "chair"), base: fromCat(CATALOG.chair.dining), sus: PR.dining_chair ? PR.dining_chair.sus : fromCat(CATALOG.chair.sus, true) }
+                                          : part("lounge_chair", "Lounge and guest chairs", others, "each", "chair"));
+  if (desks) out.push(part("desk", "Executive desk", desks, "each", "desk"));
+  if (n("reception")) out.push(part("reception_desk", "Reception desk", n("reception"), "each", "reception"));
+  if (n("dining")) out.push(part("dining_table", "Dining tables", n("dining"), "each", "dining"));
+  if (n("table")) out.push(part("coffee_table", "Coffee table", n("table"), "each", "table"));
+  if (n("lamp")) out.push(part("floor_lamp", "Floor lamp", n("lamp"), "each", "lamp"));
+  if (n("rug")) out.push(part("rug", "Rug", n("rug"), "each", "rug"));
+  if (n("bookshelf")) out.push(part("shelving", "Shelving", n("bookshelf"), "each", "bookshelf"));
+  if (n("bench")) out.push(part("bench", "Bench", n("bench"), "each", "bench"));
+  if (n("plant")) out.push(part("plant", "Plants and planters", n("plant"), "each", "plant"));
+  // Finishes. Feature wall is the plaster on the back wall (the takeoff's paintable area).
+  const wallSqft = tk.wall * SQFT, w = PR.wallpaper || {};
+  const wpUnits = p => { if (!p || !p.coverage_sqft) return 1; let q = Math.ceil(wallSqft * 1.15 / p.coverage_sqft); if (p.increment) q = Math.ceil(q / p.increment) * p.increment; return Math.max(q, p.min_qty || 1); };
+  out.push({ ...part("wallpaper", "Wallpaper, feature wall", 1, (w.base && w.base.unit) || "roll", "__none"), qtyFor: wpUnits,
+             note: `${Math.round(wallSqft)} sq ft of wall plus 15% for pattern match and trimming` });
+  const pc = st.paint[0], paintP = part("paint", "Paint, walls", tk.gallons, "gallon", "__none");
+  const named = { name: `${pc[2]} ${pc[3]}`, maker: pc[1], url: pc[1] === "Benjamin Moore" ? "https://www.benjaminmoore.com" : "https://www.sherwin-williams.com", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: pc[1], amazon_query: `${pc[1]} ${pc[2]} paint` };
+  const sameBrand = x => x && (x.maker || "").includes(pc[1]);
+  paintP.base = sameBrand(paintP.base) ? { ...paintP.base, name: `${pc[2]} ${pc[3]} in ${paintP.base.name}` } : named;
+  if (sameBrand(paintP.sus)) paintP.sus = { ...paintP.sus, name: `${pc[2]} ${pc[3]} in ${paintP.sus.name}` };
+  else paintP.sus = { ...named, name: `${pc[2]} ${pc[3]}, zero-VOC line`, maker: "Benjamin Moore Natura or Sherwin-Williams Harmony", sus_claim: "Zero-VOC paint lowers indoor air pollutants." };
+  out.push({ ...paintP, note: `${STYLES[S.style].paint[0][1]} ${STYLES[S.style].paint[0][2]} ${STYLES[S.style].paint[0][3]}, 2 coats` });
+  out.push({ ...part("faucet", "Faucet, pantry", 1, "each", "__none") });
+  out.push({ ...part("tile", "Tile, pantry wall", 30, "sq ft", "__none"), note: "30 sq ft backsplash: a planning assumption, measure on site" });
+  return out.filter(p => p.base || p.sus);
+}
+const pick = p => (useSus({ key: p.key }) ? p.sus || p.base : p.base || p.sus);
+const qtyOf = (p, prod) => p.qtyFor ? p.qtyFor(prod) : p.qty;
+const unitOf = (p, prod) => (prod && prod.unit) || p.unit;
+const plural = (q, u) => q > 1 && !/s$/.test(u) && !["sq ft", "each"].includes(u) ? u + "s" : u;
+const lineTotal = p => { const prod = pick(p); return prod && prod.price_usd != null ? prod.price_usd * qtyOf(p, prod) : null; };
+function prodCell(x, sus) {
+  if (!x) return `<span class="empty">Not found</span>`;
+  const buy = x.url || amazon(x.amazon_query || x.name);
+  return `<b>${esc(x.name)}</b><br><span class="mk">${esc(x.maker || "")}</span>
+    <br>${x.price_usd != null ? `<b>${money(x.price_usd)}</b>${x.price_note ? ` <span class="credit">${esc(x.price_note)}</span>` : ""}` : `<span class="credit">Price at retailer</span>`}
+    <br><span class="wty">${x.warranty ? `Warranty: ${esc(x.warranty)}` : `<span class="flag">No published warranty found</span>`}${x.warranty_url ? ` · <a href="${esc(x.warranty_url)}" target="_blank" rel="noopener">terms</a>` : ""}</span>
+    ${sus && x.sus_claim ? `<br>${esc(x.sus_claim)}${x.sus_source_url ? ` (<a href="${esc(x.sus_source_url)}" target="_blank" rel="noopener">source</a>)` : ""}` : ""}
+    <div class="links"><a href="${esc(withTag(buy))}" target="_blank" rel="noopener">${isAmazon(buy) ? "Buy on Amazon" : "Buy from " + esc(x.retailer || x.maker || "retailer")}</a><a href="${esc(amazonFor(x.amazon_query || x.name))}" target="_blank" rel="noopener">Compare on Amazon</a></div>`;
+}
+function renderParts(P) {
+  $("#parts").innerHTML = P.map(p => { const on = useSus({ key: p.key }), prod = pick(p), q = qtyOf(p, prod);
+    return `<tr class="${on ? "chosen-sus" : ""}"><td><b>${esc(p.label)}</b><br><span class="credit">${q} ${esc(plural(q, unitOf(p, prod)))}${p.note ? ` · ${esc(p.note)}` : ""}</span></td>
+      <td>${prodCell(p.base)}</td><td class="sus"><span class="pill sus">Sustainable</span><br>${prodCell(p.sus, true)}</td>
+      <td><label class="toggle"><input type="checkbox" data-bbsus="${esc(p.key)}" ${on ? "checked" : ""}> Use sustainable</label></td>
+      <td class="n">${money(lineTotal(p)) || `<span class="credit">at retailer</span>`}</td></tr>`; }).join("");
+}
+function renderMatched(P) {
+  const st = STYLES[S.style], sw = c => `<span class="sw-inline" style="background:${COLORS[c] || "#ccc"}"></span>${esc(c)}`;
+  const find = k => P.find(p => p.key === "bb:" + k);
+  const rows = [];
+  const couch = find("couch"); if (couch) { const x = couch.custom || pick(couch); rows.push(`<li><b>Custom couch:</b> ${esc(x.name)} (${esc(x.maker)}), upholstered in ${sw(st.pal.sofa)} to match the approved room.${x.price_usd != null ? ` From ${money(x.price_usd)}.` : ""} <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Configure it</a></li>`); }
+  const dc = find("desk_chair"); if (dc) { const x = pick(dc); rows.push(`<li><b>Desk chair:</b> ${esc(x.name)} (${esc(x.maker)}), frame and seat in ${sw(st.pal.chair)}. <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">Choose finish</a></li>`); }
+  const wp = find("wallpaper"); if (wp) { const x = pick(wp); rows.push(`<li><b>Wallpaper:</b> <a href="${esc(withTag(x.url || amazon(x.amazon_query)))}" target="_blank" rel="noopener">${esc(x.name)}</a> (${esc(x.maker)}), live product page. Order a sample to check it against ${esc(st.paint[0][1])} ${esc(st.paint[0][2])} on the other walls.</li>`); }
+  $("#matched").innerHTML = rows.length ? `<ul class="plain">${rows.join("")}</ul>` : `<p class="empty">This room has no couch or desk chair. Add one in the Room tab, or pick the C-suite office.</p>`;
+}
+function renderWarranty(P) {
+  const picked = P.map(p => ({ p, x: pick(p) }));
+  const none = picked.filter(o => !o.x.warranty), have = picked.filter(o => o.x.warranty);
+  $("#warranty").innerHTML = `<p><b>${have.length} of ${picked.length}</b> chosen parts have a published warranty.</p>
+    ${none.length ? `<p class="flag">No published warranty found: ${none.map(o => esc(o.p.label)).join(", ")}. Ask the vendor for written terms before you order.</p>` : ""}
+    <ul class="plain">${have.map(o => `<li>${esc(o.p.label)}: ${esc(o.x.warranty)}${o.x.warranty_url ? ` · <a href="${esc(o.x.warranty_url)}" target="_blank" rel="noopener">terms</a>` : ""}</li>`).join("")}</ul>
+    <p class="credit">Warranty terms are summarized from each maker's own page${CHECKED ? `, checked ${esc(CHECKED)}` : ""}. The maker's terms are the ones that apply.</p>`;
+}
+function invoiceRows(P) {
+  return P.map((p, i) => { const x = pick(p), q = qtyOf(p, x), buy = withTag(x.url || amazon(x.amazon_query || x.name));
+    return { no: i + 1, label: p.label, product: x.name, maker: x.maker, sus: useSus({ key: p.key }), qty: q, unit: plural(q, unitOf(p, x)), price: x.price_usd, total: x.price_usd != null ? x.price_usd * q : null, buy, amz: amazonFor(x.amazon_query || x.name) }; });
+}
+function renderInvoice(P) {
+  const rows = invoiceRows(P), sub = rows.reduce((s, r) => s + (r.total || 0), 0), unpriced = rows.filter(r => r.total == null).length;
+  const no = "SD-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + (S.space + S.style).length;
+  $("#invoice").innerHTML = `<div class="invhead"><div><b>Invoice ${esc(no)}</b> (estimate, not a bill)<br>${esc(SPACES[S.space].label)} · ${esc(STYLES[S.style].short)}<br>${approved ? `Approved ${esc(approved.t)}` : `<span class="flag">Room not approved yet</span>`}</div>
+    <div class="credit">Prices${CHECKED ? ` checked ${esc(CHECKED)}` : ""} from each retailer's page; they change, and checkout shows the current price.</div></div>
+    <div class="tablewrap"><table class="inv"><thead><tr><th>#</th><th>Item</th><th>Product</th><th class="n">Qty</th><th class="n">Unit price</th><th class="n">Total</th><th class="noprint">Buy</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${r.no}</td><td>${esc(r.label)}${r.sus ? ` <span class="pill sus">Sustainable</span>` : ""}</td><td>${esc(r.product)}<br><span class="credit">${esc(r.maker || "")}</span></td>
+      <td class="n">${r.qty} ${esc(r.unit)}</td><td class="n">${r.price != null ? money(r.price) : "at retailer"}</td><td class="n">${r.total != null ? money(r.total) : "—"}</td>
+      <td class="noprint"><a href="${esc(r.buy)}" target="_blank" rel="noopener sponsored">Buy</a> · <a href="${esc(r.amz)}" target="_blank" rel="noopener sponsored">Amazon</a></td></tr>`).join("")}
+    </tbody><tfoot><tr><td colspan="5">Subtotal, priced items</td><td class="n">${money(sub)}</td><td class="noprint"></td></tr>
+      <tr><td colspan="7" class="credit">${unpriced ? `${unpriced} made-to-order or quote-only item${unpriced > 1 ? "s are" : " is"} not in the subtotal. ` : ""}Sales tax, shipping and installation are added at checkout or by the installer.</td></tr></tfoot></table></div>
+    <p class="credit">${affTag ? `Amazon links carry the affiliate tag <b>${esc(affTag)}</b>. As an Amazon Associate, the owner of this page earns from qualifying purchases.` : `No affiliate tag is set, so every link is a plain link. Add your Amazon Associates tracking ID below to turn Amazon links into affiliate links.`} Links to other retailers are direct links.</p>`;
+  return { rows, sub, unpriced };
+}
+// Fit-out cost per square foot (Cushman & Wakefield 2026 guide, via the research)
+function fitoutPerSqft() {
+  const f = R.fitout; if (!f) return null;
+  return region === "ca" ? { low: f.sanjose, high: f.sanjose, label: "San Jose average", f } : { low: f.americas, high: f.americas, label: "Americas average (Phoenix not reported)", f };
+}
+function renderBudget(inv) {
+  const sqft = takeoff().floor * SQFT, fo = fitoutPerSqft();
+  const cont = inv.sub * 0.1;
+  $("#budget").innerHTML = `<table class="est"><tbody>
+    <tr><td>Furniture, fixtures and finishes (priced items)</td><td class="n">${money(inv.sub)}</td></tr>
+    ${inv.unpriced ? `<tr><td>Made-to-order and quote-only items</td><td class="n">${inv.unpriced} to quote</td></tr>` : ""}
+    <tr><td>Contingency, 10% of priced items (planning assumption)</td><td class="n">${money(cont)}</td></tr>
+    ${fo ? `<tr><td>Construction fit-out, ${Math.round(sqft)} sq ft at ${money(fo.low)}${fo.high !== fo.low ? "–" + money(fo.high) : ""} per sq ft, ${esc(fo.label)} (<a href="${esc(fo.f.url)}" target="_blank" rel="noopener">${esc(fo.f.title)}</a>)</td><td class="n">${money(fo.low * sqft)}${fo.high !== fo.low ? "–" + money(fo.high * sqft) : ""}</td></tr>` : ""}
+    <tr><td>Design and project management fee</td><td class="n">quoted by the firm</td></tr>
+    <tr><td><b>Planning total</b></td><td class="n"><b>${money(inv.sub + cont + (fo ? fo.low * sqft : 0))}${fo && fo.high !== fo.low ? "–" + money(inv.sub + cont + fo.high * sqft) : ""}</b> + fees and tax</td></tr>
+  </tbody></table>
+  ${R.fitout ? `<p class="credit">Fit-out averages, 2026: Americas $${R.fitout.americas}, San Jose $${R.fitout.sanjose}, San Francisco $${R.fitout.sf} per sq ft. Higher in the Bay Area because of labor, seismic standards and codes (<a href="${esc(R.fitout.corenet)}" target="_blank" rel="noopener">CoreNet Global</a>). Change the project location under Subcontractors to switch.</p>` : ""}
+  <p class="credit">A planning budget for a simulated ${Math.round(sqft)} sq ft room, not a quote.</p>`;
+}
+function renderFirms() {
+  const by = (insp && insp.by || "").toLowerCase();
+  const firms = (R.firms || []).map(f => ({ ...f, rec: !!(by && f.match && (by + " ").includes(f.match)) }));
+  firms.sort((a, b) => (b.rec ? 1 : 0) - (a.rec ? 1 : 0));
+  $("#firms").innerHTML = firms.length ? firms.map(f => `<div class="firm${f.rec ? " rec" : ""}">${f.rec ? `<span class="pill">Designed your inspiration</span>` : ""}<h4>${esc(f.name)}</h4>
+      <p>${esc(f.specialty || "")}</p>${f.offices ? `<p class="credit">Offices: ${esc(f.offices)}</p>` : ""}${f.projects ? `<p class="credit">${esc(f.projects)}</p>` : ""}
+      ${f.contact_url ? `<a class="btn small primary" href="${esc(f.contact_url)}" target="_blank" rel="noopener">Contact them</a>` : `<span class="credit">Contact page not confirmed; search the firm's site.</span>`}</div>`).join("")
+    : `<p class="empty">Firm list is loading.</p>`;
+}
+const DIRS = () => { const d = {}; for (const x of R.directories || []) d[(x.name || "").toLowerCase()] = x; return d; };
+const dirFind = re => (R.directories || []).find(x => re.test(x.name || ""));
+function renderTrades(P) {
+  const has = k => P.some(p => p.key === "bb:" + k);
+  const lic = region === "ca" ? dirFind(/cslb|california/i) : dirFind(/roc|arizona/i);
+  const houzz = dirFind(/houzz/i), asid = dirFind(/asid/i);
+  const T = [
+    ["General contractor", "Runs the build, permits and inspections", true],
+    ["Millwork and cabinetry", "Reception desk, shelving and built-ins", has("reception_desk") || has("shelving")],
+    ["Upholsterer or custom furniture maker", "Custom couch in the approved fabric", has("couch")],
+    ["Wallcovering installer", "Feature-wall wallpaper", has("wallpaper")],
+    ["Painter", "Walls in the specified colors", has("paint")],
+    ["Electrician", "Pendants, floor-lamp outlets and controls", true],
+    ["Plumber", "Pantry faucet", has("faucet")],
+    ["Tile setter", "Pantry wall tile", has("tile")],
+    ["Flooring installer", "Rug, carpet tile or wood floor", has("rug")],
+    ["Furniture installer and movers", "Receiving, assembly and placement", true],
+  ].filter(t => t[2]);
+  $("#trades").innerHTML = `<div class="tablewrap"><table class="inv"><thead><tr><th>Trade or vendor</th><th>What they do here</th><th>Find and contact</th></tr></thead><tbody>
+    ${T.map(([role, what]) => `<tr><td><b>${esc(role)}</b></td><td>${esc(what)}</td><td class="links">${lic ? `<a class="btn small" href="${esc(lic.url)}" target="_blank" rel="noopener">Check a license (${region === "ca" ? "CA" : "AZ"})</a>` : ""}${houzz ? `<a class="btn small primary" href="${esc(houzz.url)}" target="_blank" rel="noopener">Contact pros on Houzz</a>` : ""}</td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="credit">Your project manager usually brings the trades. Check every contractor's license before you sign${lic ? ` (<a href="${esc(lic.url)}" target="_blank" rel="noopener">${esc(lic.name)}</a>)` : ""}.${asid ? ` To find an independent designer instead: <a href="${esc(asid.url)}" target="_blank" rel="noopener">${esc(asid.name)}</a>.` : ""}</p>
+    ${(R.directories || []).length ? `<details class="srcs"><summary>All directories</summary>${R.directories.map(d => `<a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.name)}</a> <span class="credit">${esc(d.for || "")}</span><br>`).join("")}</details>` : ""}`;
+}
+function renderApprove() {
+  const same = approved && approved.space === S.space && approved.style === S.style;
+  $("#bb-title").textContent = `${SPACES[S.space].label} · ${STYLES[S.style].short}`;
+  $("#bbapprove").innerHTML = same ? `<p><span class="pill sus">Approved ${esc(approved.t)}</span></p><p class="credit">Change the room and this resets.</p><button class="btn small" type="button" id="unapprove">Withdraw approval</button>`
+    : `<p>${approved ? `<span class="flag">The room changed since you approved it.</span>` : "Approve the room to lock this list."}</p><button class="btn primary" type="button" id="approve">Approve this room</button>`;
+}
+let lastBB = "";
+function runBudget() {
+  const P = parts();
+  renderApprove(); renderParts(P); renderMatched(P); renderWarranty(P);
+  const inv = renderInvoice(P); renderBudget(inv); renderFirms(); renderTrades(P);
+  const key = S.space + "/" + S.style + "/" + P.map(p => p.key + qtyOf(p, pick(p)) + useSus({ key: p.key })).join(",");
+  if (key !== lastBB) { lastBB = key;
+    const priced = P.filter(p => pick(p).price_usd != null).length, susN = P.filter(p => useSus({ key: p.key })).length;
+    post("source", "parts", `Handing over ${P.length} parts for the ${SPACES[S.space].label.toLowerCase()}.`);
+    post("parts", "warranty", `Found ${P.length} parts online, ${priced} with a listed price. Every part has a sustainable option; ${susN} in use.`);
+    const noW = P.filter(p => !pick(p).warranty).length;
+    post("warranty", "invoice", noW ? `${P.length - noW} parts have published warranties. ${noW} need written terms from the vendor.` : `Every chosen part has a published warranty.`, noW ? "warn" : "good");
+    post("invoice", "pm", `Invoice subtotal ${money(inv.sub)} across ${P.length - inv.unpriced} priced lines${inv.unpriced ? `, ${inv.unpriced} to quote` : ""}.`);
+    const rec = (R.firms || []).find(f => insp && insp.by && f.match && (insp.by.toLowerCase() + " ").includes(f.match));
+    post("pm", "you", rec ? `${rec.name} designed your inspiration and manages projects like this; their contact page is one click away. The trades list shows who else you'll need.` : `Here are firms that design and manage executive interiors, plus the trades this room needs.`);
+  }
+}
+function exportInvoiceCSV() {
+  const rows = invoiceRows(parts()), sub = rows.reduce((s, r) => s + (r.total || 0), 0);
+  const out = [["Spatial Director invoice (estimate)", `${SPACES[S.space].label} · ${STYLES[S.style].short}`], [], ["#", "Item", "Product", "Maker", "Sustainable", "Qty", "Unit", "Unit price", "Total", "Buy link"]];
+  for (const r of rows) out.push([r.no, r.label, r.product, r.maker, r.sus ? "yes" : "no", r.qty, r.unit, r.price ?? "", r.total ?? "", r.buy]);
+  out.push([], ["Subtotal, priced items", "", "", "", "", "", "", "", Math.round(sub)]);
+  const csv = out.map(r => r.map(c => `"${String(c == null ? "" : c).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "spatial-director-invoice.csv"; a.click();
+  post("invoice", "you", `Invoice downloaded: ${rows.length} lines, subtotal ${money(sub)}.`, "good");
+}
+$("#view-budget").addEventListener("change", e => {
+  const k = e.target.dataset.bbsus;
+  if (k) { choice[k] = e.target.checked ? "sus" : "base"; store.set("choice", choice); post("sustain", "parts", e.target.checked ? "The person chose the sustainable option for a part." : "The person kept the original part.", e.target.checked ? "good" : ""); runBudget(); }
+  if (e.target.id === "region") { region = e.target.value; store.set("region", region); runBudget(); }
+});
+$("#view-budget").addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.id === "approve") { approved = { space: S.space, style: S.style, t: new Date().toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) }; store.set("approved", approved); post("ready", "parts", `The person approved the ${SPACES[S.space].label.toLowerCase()} in ${STYLES[S.style].short}. Locking the parts list to it.`, "good"); runBudget(); runReady(); }
+  if (t.id === "unapprove") { approved = null; store.set("approved", null); runBudget(); }
+  if (t.id === "printinv") { document.body.classList.add("print-invoice"); setTimeout(() => { window.print(); document.body.classList.remove("print-invoice"); }, 50); }
+  if (t.id === "csvinv") exportInvoiceCSV();
+  if (t.id === "bbsusall") { $("#prefersus").checked = true; $("#prefersus").dispatchEvent(new Event("change")); runBudget(); }
+});
+$("#afftag").value = affTag;
+$("#affform").addEventListener("submit", e => { e.preventDefault(); affTag = $("#afftag").value.trim().replace(/[^A-Za-z0-9_-]/g, ""); $("#afftag").value = affTag; store.set("afftag", affTag);
+  post("invoice", "you", affTag ? `Amazon links now carry your affiliate tag ${affTag}.` : "Affiliate tag cleared; all links are plain links."); runBudget(); });
+$("#region").value = region;
+$("#prefersus").addEventListener("change", () => runBudget());
+window.addEventListener("sd:synced", () => { clearTimeout(runBudget.t); runBudget.t = setTimeout(runBudget, 160); });
+
+Object.assign(window.SpatialDirector, {
+  invoice: () => { const P = parts(), rows = invoiceRows(P); return { design: `${SPACES[S.space].label} · ${STYLES[S.style].short}`, approved: !!approved, rows, subtotal: rows.reduce((t, r) => t + (r.total || 0), 0) }; },
+  approve: () => "approval waits for the person: press Approve this room in Build & Budget",
+  firms: () => (R.firms || []).map(f => ({ name: f.name, contact: f.contact_url })),
+});
 
 /* ---------------- Wiring ---------------- */
 $("#space").addEventListener("change", e => applyDesign(e.target.value, S.style));
 $("#style").addEventListener("change", e => applyDesign(S.space === "studio" ? "studio" : S.space, e.target.value));
 $("#inspform").addEventListener("submit", e => { e.preventDefault(); const v = $("#insp").value.trim(); if (v) runInspiration(v); });
 $("#inspcard").addEventListener("click", e => {
-  if (e.target.id === "applyinsp" && insp) { const sp = S.space === "studio" ? "csuite" : S.space; post("style", "layout", `The person approved ${STYLES[insp.style].label}, inspired by ${insp.name}.`); applyDesign(sp, insp.style, "inspired by " + insp.name); }
+  if (e.target.id === "applyinsp" && insp) { const sp = S.space === "studio" ? "csuite" : S.space; post("style", "layout", `The person approved ${STYLES[insp.style].label}, inspired by ${insp.name}.`); applyDesign(sp, insp.style, "inspired by " + insp.name); inspApplied = { style: insp.style, name: insp.name }; lastInstalled = true; renderInsp(false); }
   if (e.target.id === "nextphoto" && insp) { inspIdx = (inspIdx + 1) % insp.photos.length; renderInsp(false); }
 });
 $$("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));

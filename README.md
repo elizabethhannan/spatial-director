@@ -51,6 +51,14 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.1: executive inspirations, final renders, Build & Budget
+
+- **Executive inspirations.** Eleven tech headquarters (Apple Park, Salesforce Tower and its Ohana Floor, Nvidia Endeavor and Voyager, Google Bay View, Meta MPK 20 and 21, Amazon's Spheres, Microsoft Redmond, Airbnb, Adobe Founders Tower, Uber and LinkedIn), each with its architect, reported cost where one is published, design traits and source links. The Style agent names a style for each, eight of them new executive styles. Install puts it in the room; Undo takes it back.
+- **Final renders and a video walkthrough.** Four 1920 × 1080 renders from the 3D model, and a 12-second camera walkthrough recorded in the browser that can be shared or downloaded. Renders of a simulated room, not photographs.
+- **Build & Budget tab.** The Parts agent finds each part at an online retailer with its price; the Warranty agent summarizes each maker's warranty and flags gaps; the Invoice agent totals the approved room, with optional Amazon Associates links; the Project manager agent lists design firms with their contact pages, the trades the room needs, and license lookups for California and Arizona. Every part shows a sustainable option.
+
+Prices and warranties were checked on 22 October 2026 from the pages linked in the page. The fit-out budget uses Cushman & Wakefield's 2026 Americas Office Fit Out Cost Guide figures as reported by Fit Out Awards.
+
 ## Version 2.0: from idea to a room you can build
 
 Version 2.0 turns the prototype into a planning tool for executive spaces: C-suite offices, front door lobbies and reception areas, and corporate dining. Ten more agents join the original three. Each hands its work to the next, and each handoff appears in the Agent team feed and on the agent network map.
