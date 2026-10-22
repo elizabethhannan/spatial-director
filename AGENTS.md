@@ -17,12 +17,19 @@ The page exposes `window.SpatialDirector`:
 | `undo()` | Take back the last change. |
 | `state()` | The scene as JSON: objects with id, type, position, rotation, scale, color, where and what each faces. |
 | `reset()` | Return the room to its starting layout. |
+| `design(space, style)` | Version 2.0. Space: `studio`, `csuite`, `lobby`, `dining`. Style: `modern`, `gatsby`, `midcentury`, `biophilic`, `scandinavian`, `industrial`, `japandi`. Applies with undo. |
+| `inspiration(query)` | Look up a headquarters. Returns at once; the suggested style waits for the person. |
+| `sourcing()` | Line items with product, maker, sustainable alternative, which one is in use, and a shop link. |
+| `check()` | Scene check: reachable and blocked item ids, and overlaps. |
+| `readiness()` | Project stage (0 Idea, 1 Concept, 2 Build-ready) and checks passed. |
+| `agentLog()` | Every message the agents have sent each other. |
 
 ## The contract (same for agents and people)
 
 - Add, move, turn, resize and recolor preview for 1.6 seconds, then apply with undo.
 - Removals and the agents' own suggestions ("tidy up") wait for `confirm()`. Ask the person before confirming on their behalf.
 - If a request could mean more than one object, you get a numbered question. Don't guess.
+- Don't switch products to or from the sustainable option, or apply a suggested style, without the person's OK.
 
 ## Rules for changes to this repo
 

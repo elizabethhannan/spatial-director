@@ -1,6 +1,6 @@
 # Spatial Director
 
-Direct a 3D studio office by typing or speaking and pointing: "put a lamp there." The space is a high-end design office: polished concrete, floor-to-ceiling glass with a dusk view, a walnut slat wall, linear pendants and designer lounge furniture. Text is set at twice the usual size for readability. Three agents read the request, place it and check the layout, and you see what they understood before anything changes.
+Direct a 3D studio office by typing or speaking and pointing: "put a lamp there." The space is a high-end design office: polished concrete, floor-to-ceiling glass with a dusk view, a walnut slat wall, linear pendants and designer lounge furniture. Three agents read the request, place it and check the layout, and you see what they understood before anything changes.
 
 **Live prototype:** https://elizabethhannan.github.io/spatial-director/  
 **Designer:** Elizabeth Hannan · designer and builder · 2026  
@@ -48,6 +48,29 @@ Here the human outcome is confidence: you always know what's about to change, an
 | Stop | Cancels any preview and question, and turns the microphone off. Nothing changes. |
 
 Every preview shows what was understood (action, object, place in meters from the walls), a confidence level with its reason, and the agent trace.
+
+## Version 2.0: from idea to a room you can build
+
+Version 2.0 turns the prototype into a planning tool for executive spaces: C-suite offices, front door lobbies and reception areas, and corporate dining. Ten more agents join the original three. Each hands its work to the next, and each handoff appears in the Agent team feed and on the agent network map.
+
+| Agent | Its job | What it may not do |
+|---|---|---|
+| Inspiration | Looks up a tech headquarters (Nvidia, Apple, Google, Meta, Salesforce or any building you type) and pulls a credited photo from Wikimedia Commons | Change the room. It suggests a style; you apply it |
+| Style | Seven styles: Modern, Gatsby (Art Deco), Mid-century modern, Biophilic, Scandinavian, Industrial, Japandi. Each sets walls, floor, feature wall and furniture finishes | Apply a style you didn't choose |
+| Layout | Lays out the chosen space type | Skip the scene check |
+| Scene check | Checks that every seat and work surface can be reached along a 36-inch (0.91 m) clear route, the 2010 ADA Standards minimum, and that nothing overlaps | Move furniture on its own; it flags problems for you |
+| Image | Pulls reference photos for the style from Wikimedia Commons, credited, and links to matching Houzz photos | Copy photos from sites that don't allow reuse |
+| Sourcing | Matches every item to a real product from an approved vendor (Knoll, Herman Miller, Emeco, Flos, Artemide, USM, Vitsoe, Interface, Kohler, Heath Ceramics, Fireclay Tile, Phillip Jeffries, Flavor Paper) with a link to the live Amazon listing and the maker | Show prices it can't verify; price and stock load live on the retailer's page |
+| Sustainability | Offers a sustainable alternative for every line, highlighted in green | Swap anything without your OK |
+| Paint | Specifies named colors by brand and code (Benjamin Moore, Sherwin-Williams) | Promise the screen color matches the can |
+| Estimate | Measures floor and wall areas, counts items and paint, and exports a proposal as CSV | Add prices |
+| Review | Keeps client and team comments pinned to spots in the room | Resolve a comment for you |
+| Render | Floor plan, dollhouse and walkthrough views, PNG snapshots, and a 2D plan laid under the room for tracing | Claim photorealism; snapshots show the model as it is |
+| Build readiness | Tracks the project from Idea to Concept to Build-ready against nine checks | Mark the project build-ready while the scene check fails |
+
+All 28 combinations of space and style pass the scene check.
+
+**Honest limits.** Products are real lines from the makers named; Amazon links open a live search, not a specific listing, and nothing is bought from the page. The 36-inch check is a planning aid, not a code review. On-screen paint colors are approximate.
 
 ## Testing
 

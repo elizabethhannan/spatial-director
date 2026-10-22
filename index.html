@@ -37,7 +37,7 @@
   --focus: #6aa8f0; --stage: #1a222b; color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; font-size: 32px; }
+html { -webkit-text-size-adjust: 100%; font-size: 16px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 1rem; line-height: 1.45; }
 button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
@@ -367,19 +367,109 @@ html[data-motion="off"]::view-transition-old(root), html[data-motion="off"]::vie
 aside.panel { background: transparent !important; box-shadow: none !important; border: 0 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0; }
 aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
 @media (max-width: 640px) {
-  .brand h1 { font-size: 1.25rem; }
-  .brand p { font-size: .8rem; }
+  .brand h1 { font-size: 1.375rem; }
+  .brand p { font-size: .9375rem; }
   .tags { gap: 6px; }
-  .tag, .m-toggle { font-size: .6rem !important; padding: 2px 10px; }
+  .tag, .m-toggle { font-size: .75rem !important; padding: 2px 10px; }
   .tabbar .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .tabbar .tab, #starttest { flex: none; }
-  .tabbar .tab { white-space: nowrap; font-size: .8rem; padding: 8px 14px; }
-  #starttest { white-space: nowrap; font-size: .7rem; }
+  .tabbar .tab { white-space: nowrap; font-size: .9375rem; padding: 8px 14px; }
+  #starttest { white-space: nowrap; font-size: .875rem; }
   .tabs .spacer { display: none; }
-  .stop, #undo, .cmdrow .btn { white-space: nowrap; font-size: .8rem; }
-  .cmdrow input { font-size: .85rem; }
+  .stop, #undo, .cmdrow .btn { white-space: nowrap; font-size: .9375rem; }
+  .cmdrow input { font-size: 1rem; }
 }
 </style>
+<style id="studio-css">
+/* ---------- Version 2.0: studio agents ---------- */
+.studio-bar { display: grid; gap: 10px; margin-bottom: 10px; padding: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.stage { min-width: 0; }
+.studio-bar, .insp-card { box-sizing: border-box; max-width: 100%; min-width: 0; }
+.studio-selects label { min-width: 0; max-width: 100%; }
+.studio-selects select { max-width: 100%; }
+.studio-bar > * { min-width: 0; }
+.insp-row input { width: 0; }
+.insp-form label, .studio-selects label { display: grid; gap: 4px; font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
+.insp-row { display: flex; gap: 8px; }
+.insp-row input { flex: 1; min-width: 0; min-height: 40px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; }
+.studio-selects { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.studio-selects select { min-height: 40px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; font-weight: 400; }
+.viewmode { display: flex; flex-wrap: wrap; gap: 6px; }
+.viewmode .btn[aria-pressed="true"], .seg .btn[aria-pressed="true"] { background: var(--accent) !important; color: var(--accent-ink) !important; border-color: var(--accent) !important; }
+.insp-card:empty { display: none; }
+.insp-card { margin-top: 12px; display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: 14px; padding: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); align-items: start; }
+.insp-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; background: var(--surface-2); display: block; }
+.insp-card .ph { width: 100%; aspect-ratio: 4 / 3; border-radius: 10px; background: linear-gradient(135deg, var(--surface-2), var(--accent-soft)); display: grid; place-items: center; text-align: center; font-size: .8125rem; color: var(--ink-2); padding: 10px; }
+.insp-card h3 { margin: 0 0 4px; font-size: 1.0625rem; }
+.insp-card p { margin: 0 0 6px; font-size: .875rem; }
+.credit { font-size: .75rem; color: var(--ink-3); }
+.credit a, .src a, .refs a, .linkish { color: var(--accent); }
+.linkish { background: none; border: 0; padding: 0; font: inherit; font-size: .8125rem; text-decoration: underline; cursor: pointer; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.msgs { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.msgs li { font-size: .8125rem; line-height: 1.4; padding: 6px 8px; border-radius: 8px; background: var(--surface-2); }
+.msgs li b { color: var(--ai); }
+.msgs li .to { color: var(--ink-3); }
+.msgs li.warn { background: var(--warn-soft); }
+.msgs li.good { background: var(--good-soft); }
+.msgs.long { max-height: 260px; overflow: auto; }
+.build { padding-block: 16px 32px; }
+.build-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 14px; }
+.build-head h2 { margin: 2px 0 6px; font-size: 1.375rem; }
+.stage-track { display: flex; gap: 6px; }
+.stage-track span { padding: 6px 12px; border-radius: 999px; font-size: .8125rem; font-weight: 700; border: 1px solid var(--line); color: var(--ink-3); background: var(--surface); }
+.stage-track span.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.stage-track span.done { color: var(--good); border-color: var(--good); }
+.build-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.bcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
+.bcard.wide { grid-column: 1 / -1; }
+.bcard .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.bcard h3 { margin: 0; font-size: 1.0625rem; }
+.netwrap { background: var(--surface-2); border-radius: 12px; }
+#net { width: 100%; height: auto; display: block; }
+#net text { font: 700 12px var(--font-mono, monospace); fill: var(--ink); }
+#net .edge { stroke: var(--ink-3); stroke-opacity: .45; stroke-width: 1.6; }
+#net .edge.hot { stroke: var(--ai); stroke-opacity: 1; stroke-width: 2.6; }
+#net .node { fill: var(--surface); stroke-width: 3; }
+#net .halo { fill: var(--ai); opacity: .14; }
+#net .dot { fill: var(--accent); }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.checks li { display: grid; grid-template-columns: 1.4em 1fr; gap: 6px; font-size: .875rem; }
+.checks .ok { color: var(--good); font-weight: 700; }
+.checks .no { color: var(--warn); font-weight: 700; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8125rem; font-weight: 700; background: var(--surface-2); }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.sus { background: var(--good-soft); color: var(--good); font-size: .75rem; }
+table.src { width: 100%; border-collapse: collapse; font-size: .8125rem; }
+table.src th, table.src td { text-align: left; vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
+table.src td.sus { background: var(--good-soft); }
+table.src tr.chosen-sus td.sus { outline: 2px solid var(--good); outline-offset: -2px; }
+table.src .mk { color: var(--ink-3); }
+table.src .links { display: flex; gap: 10px; margin-top: 4px; }
+.sw { display: inline-block; width: 1.1em; height: 1.1em; border-radius: 4px; border: 1px solid var(--line); vertical-align: -0.2em; margin-right: 6px; }
+.paintrow { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: .875rem; margin-bottom: 10px; }
+.est { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.est td { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.est td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.refs > p { grid-column: 1 / -1; margin: 0; }
+.refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.refs figure { margin: 0; }
+.refs img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; background: var(--surface-2); }
+.refs figcaption { font-size: .6875rem; color: var(--ink-3); margin-top: 3px; overflow-wrap: anywhere; }
+.seg { display: flex; gap: 6px; }
+.comments { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 8px; }
+.comments li { display: grid; grid-template-columns: 2.2em 1fr; gap: 8px; font-size: .875rem; }
+.comments .av { width: 2.2em; height: 2.2em; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; font-weight: 700; color: #fff; background: var(--ai); }
+.comments .meta { color: var(--ink-3); font-size: .75rem; }
+.comments .resolved { opacity: .55; text-decoration: line-through; }
+.cform label { font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
+.planrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .875rem; }
+.scn p { margin: 0 0 6px; font-size: .875rem; }
+.scn ul { margin: 0; padding-left: 18px; font-size: .875rem; }
+@media (max-width: 900px) { .build-grid { grid-template-columns: 1fr; } .insp-card { grid-template-columns: 1fr; } }
+</style>
+<style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
 </head>
 <body>
 <a class="skip" href="#cmd">Skip to the command box</a>
@@ -387,14 +477,15 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
   <div class="wrap">
     <div class="brand">
       <h1>Spatial Director</h1>
-      <p>Direct a studio office by pointing and speaking. Three agents read the request, place it and check the layout, and you see what they understood before anything changes.</p>
+      <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.0</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
   <div class="wrap tabs" role="tablist">
     <button class="tab" role="tab" id="tab-room" aria-selected="true" aria-controls="view-room">Room</button>
+    <button class="tab" role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build it for real</button>
     <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
     <span class="spacer"></span>
     <button class="btn small" id="starttest">Run the usability test</button>
@@ -403,6 +494,44 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
 
 <main id="view-room" class="view wrap layout" role="tabpanel" aria-labelledby="tab-room">
   <section class="stage" aria-label="3D room">
+
+    <div class="studio-bar" role="group" aria-label="Project setup">
+      <form class="insp-form" id="inspform" autocomplete="off" role="search">
+        <label for="insp">Inspiration: tech headquarters</label>
+        <div class="insp-row">
+          <input id="insp" list="insp-list" value="Nvidia" placeholder="Nvidia, Apple, Google, Meta, Salesforce or any building">
+          <datalist id="insp-list"><option value="Nvidia"><option value="Apple"><option value="Google"><option value="Meta"><option value="Salesforce"></datalist>
+          <button class="btn primary" type="submit">Search</button>
+        </div>
+      </form>
+      <div class="studio-selects">
+        <label>Space
+          <select id="space">
+            <option value="studio">Studio office (original)</option>
+            <option value="csuite">C-suite office</option>
+            <option value="lobby">Front door lobby and reception</option>
+            <option value="dining">Corporate dining</option>
+          </select>
+        </label>
+        <label>Design style
+          <select id="style">
+            <option value="modern">Modern</option>
+            <option value="gatsby">Gatsby (Art Deco)</option>
+            <option value="midcentury">Mid-century modern</option>
+            <option value="biophilic">Biophilic</option>
+            <option value="scandinavian">Scandinavian</option>
+            <option value="industrial">Industrial</option>
+            <option value="japandi">Japandi</option>
+          </select>
+        </label>
+        <div class="viewmode" role="group" aria-label="View">
+          <button class="btn small" type="button" data-view="plan" aria-pressed="false">Floor plan</button>
+          <button class="btn small" type="button" data-view="dollhouse" aria-pressed="true">Dollhouse</button>
+          <button class="btn small" type="button" data-view="walk" aria-pressed="false">Walkthrough</button>
+          <button class="btn small" type="button" id="snapshot">Snapshot</button>
+        </div>
+      </div>
+    </div>
     <div id="canvaswrap" class="canvaswrap" tabindex="0" aria-label="3D room view. Arrow keys turn the view; click or tap the floor to mark a spot.">
       <canvas id="c" aria-hidden="true"></canvas>
       <div class="viewctl" role="group" aria-label="View controls">
@@ -416,6 +545,8 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
     </div>
     <p class="hint" id="hint">Drag to turn the view · click the floor to point · click furniture to select it</p>
     <p class="readout" id="readout">No spot marked. Click the floor to point, then say "there".</p>
+
+    <section class="insp-card" id="inspcard" aria-live="polite"></section>
   </section>
 
   <aside class="panel" aria-label="Commands">
@@ -440,6 +571,11 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
       <button class="chip" data-say="what's in the room">what's in the room</button>
     </div>
 
+
+    <section class="block agentfeed">
+      <div class="head"><h2>Agent team</h2><button class="linkish" type="button" id="seeall">See all in Build it for real</button></div>
+      <ol class="msgs" id="feed"></ol>
+    </section>
     <section id="testcard" class="card test" hidden aria-live="polite"></section>
     <section id="card" class="card" aria-live="polite"></section>
 
@@ -456,6 +592,74 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
       <p class="empty">Off: small changes preview for 1.6 seconds, then apply, and you can undo them. Removals and anything the agents suggest on their own always wait for your OK.</p>
     </section>
   </aside>
+</main>
+
+
+<main id="view-build" class="view wrap build" role="tabpanel" aria-labelledby="tab-build" hidden>
+  <div class="build-head">
+    <div>
+      <p class="eyebrow">From idea to a room you can build</p>
+      <h2 id="b-title">Studio office · Modern</h2>
+      <p class="empty">Twelve agents take the room from an idea to a buildable plan. Each one hands its work to the next, and anything that costs money or changes the room waits for your OK.</p>
+    </div>
+    <div class="stage-track" id="stagetrack" aria-label="Project stage"></div>
+  </div>
+
+  <div class="build-grid">
+    <section class="bcard wide">
+      <div class="head"><h3>Agent network</h3><span class="empty">Lines light up when one agent hands work to another</span></div>
+      <div class="netwrap"><svg id="net" viewBox="0 0 720 360" role="img" aria-label="Agent network"></svg></div>
+      <ol class="msgs long" id="feedall"></ol>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Build readiness</h3><span class="pill" id="readypill"></span></div>
+      <ol class="checks" id="checks"></ol>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Scene check</h3><span class="empty">Accessible routes and clearances</span></div>
+      <div id="scenecheck"></div>
+    </section>
+
+    <section class="bcard wide">
+      <div class="head"><h3>Products from approved vendors</h3>
+        <label class="toggle"><input type="checkbox" id="prefersus"> Prefer sustainable options</label></div>
+      <p class="empty">Real products from the makers listed. "Shop" opens the live listing on Amazon, where price and stock load; "Maker" opens the manufacturer. Nothing is bought from here.</p>
+      <div class="tablewrap"><table class="src"><thead><tr><th>Item</th><th>Product</th><th>Sustainable alternative</th><th>Use</th></tr></thead><tbody id="sourcing"></tbody></table></div>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Paint and finishes</h3></div>
+      <div id="paints"></div>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Estimate and takeoff</h3><button class="btn small" type="button" id="exportest">Download proposal (CSV)</button></div>
+      <div id="estimate"></div>
+    </section>
+
+    <section class="bcard wide">
+      <div class="head"><h3>Style references</h3><span class="empty" id="refnote"></span></div>
+      <div class="refs" id="refs"></div>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>Comments</h3>
+        <div class="seg" role="group" aria-label="Who sees it"><button class="btn small" type="button" data-aud="client" aria-pressed="true">Client</button><button class="btn small" type="button" data-aud="team" aria-pressed="false">Team</button></div></div>
+      <ol class="comments" id="comments"></ol>
+      <form id="cform" class="cform" autocomplete="off">
+        <label for="ctext">Comment on the marked spot or selected item</label>
+        <div class="cmdrow"><input id="ctext" placeholder="@Taylor check the pendant over the table"><button class="btn primary" type="submit">Post</button></div>
+      </form>
+    </section>
+
+    <section class="bcard">
+      <div class="head"><h3>From a 2D plan</h3></div>
+      <p class="empty">Upload a floor plan image. It is laid under the room at 8 m × 6 m so you can trace furniture onto it. Your file stays in your browser.</p>
+      <div class="planrow"><input type="file" id="planfile" accept="image/*" aria-label="Floor plan image"><button class="btn small" type="button" id="planclear">Remove plan</button></div>
+    </section>
+  </div>
 </main>
 
 <main id="view-about" class="view wrap about" role="tabpanel" aria-labelledby="tab-about" hidden>
@@ -534,9 +738,13 @@ const CAT = {
   plant:     { w: 0.5, d: 0.5, label: "plant", syn: ["olive tree", "plant", "fern", "ficus", "tree"], color: "leaf" },
   bookshelf: { w: 1.0, d: 0.35, label: "bookshelf", syn: ["bookshelf", "bookcase", "shelving", "shelves", "shelf"], color: "walnut" },
   rug:       { w: 2.4, d: 1.6, label: "rug", syn: ["rug", "carpet", "mat"], color: "stone", flat: true },
+  reception: { w: 2.6, d: 0.8, label: "reception desk", syn: ["reception desk", "front desk", "reception"], color: "walnut" },
+  dining:    { w: 2.4, d: 1.0, label: "dining table", syn: ["dining table", "conference table", "long table"], color: "oak" },
+  bench:     { w: 1.6, d: 0.45, label: "bench", syn: ["bench", "banquette"], color: "ivory" },
 };
 const COLORS = { ivory: "#e7e2d6", stone: "#c9c5bd", marble: "#f3f1ed", leaf: "#3f6b45", oak: "#b08a5e", navy: "#22406e", blue: "#2a63c4", "light blue": "#8fb8e8", teal: "#0b6b66", green: "#2f7d4a", sage: "#8aa58a", purple: "#5b47b8", lavender: "#a99ad8",
-  brown: "#6b4430", chocolate: "#4a2e1f", walnut: "#7a5236", gray: "#7a7f84", grey: "#7a7f84", charcoal: "#3a3d40", white: "#efeee9", black: "#1d1f21", red: "#b42a22", orange: "#d9772b", yellow: "#d8b23a", pink: "#d58aa6" };
+  brown: "#6b4430", chocolate: "#4a2e1f", walnut: "#7a5236", gray: "#7a7f84", grey: "#7a7f84", charcoal: "#3a3d40", white: "#efeee9", black: "#1d1f21", red: "#b42a22", orange: "#d9772b", yellow: "#d8b23a", pink: "#d58aa6",
+  brass: "#a8875a", emerald: "#1e5444", lacquer: "#17181a", birch: "#d9c9a8", terracotta: "#b0603f", cream: "#ece4d3", olive: "#6b7044", smoke: "#5d6266", rust: "#8a4b2a", plum: "#5a2e4a", teak: "#8a5a36", "light gray": "#c9ccce", moss: "#55704a", sand: "#d2c3a5" };
 const COLOR_WORDS = Object.keys(COLORS).sort((a, b) => b.length - a.length);
 const SYN = []; for (const [t, c] of Object.entries(CAT)) for (const s of c.syn) SYN.push([s, t]);
 SYN.sort((a, b) => b[0].length - a[0].length);
@@ -554,14 +762,14 @@ const S = {
     mk("bookshelf", -2.2, -2.8, 0),
     mk("plant", -3.5, -2.5, 0),
   ],
-  walls: "#eeece7",
+  walls: "#eeece7", style: "modern", space: "studio",
   pointer: null, selected: null,
   pending: null,   // { plan, timer }
   asking: null,    // { intent, forced, role, options }
   awaitingPoint: null,
   undo: [], history: [], lastOp: null,
 };
-const INITIAL = JSON.parse(JSON.stringify({ objs: S.objs, walls: S.walls }));
+const INITIAL = JSON.parse(JSON.stringify({ objs: S.objs, walls: S.walls, style: S.style, space: S.space }));
 const byId = id => S.objs.find(o => o.id === id);
 const ofType = t => S.objs.filter(o => o.type === t);
 const dims = o => { const c = CAT[o.type]; return { w: c.w * (o.scale || 1), d: c.d * (o.scale || 1) }; };
@@ -1036,7 +1244,7 @@ function propose() {
 }
 
 /* ---------------- Executing ---------------- */
-const snap = () => JSON.stringify({ objs: S.objs, walls: S.walls });
+const snap = () => JSON.stringify({ objs: S.objs, walls: S.walls, style: S.style, space: S.space });
 function applySteps(steps, summary, kind) {
   S.undo.push(snap());
   for (const st of steps) {
@@ -1055,7 +1263,7 @@ function applySteps(steps, summary, kind) {
 function undo() {
   cancelPending(true);
   if (!S.undo.length) { showCard("err", `<p>Nothing to undo.</p>`); announce("Nothing to undo."); return; }
-  const st = JSON.parse(S.undo.pop()); S.objs = st.objs; S.walls = st.walls;
+  const st = JSON.parse(S.undo.pop()); S.objs = st.objs; S.walls = st.walls; if (st.style) { S.style = st.style; S.space = st.space; }
   const h = [...S.history].reverse().find(x => !x.undone); if (h) h.undone = true;
   if (S.selected && !byId(S.selected)) S.selected = null;
   S.lastOp = "undo"; T.ev("undos");
@@ -1253,7 +1461,7 @@ function initGL() {
   if (!window.THREE) { $("#nogl").hidden = false; return; }
   try {
     const canvas = $("#c");
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.86;
@@ -1306,7 +1514,7 @@ function initGL() {
     pointer.visible = false; scene.add(pointer);
     const preview = new THREE.Group(); scene.add(preview);
     const numbers = new THREE.Group(); scene.add(numbers);
-    G = { renderer, scene, camera, room, floor, wallM, pointer, preview, numbers, TX, meshes: new Map(), yaw: 0.62, pitch: 0.74, radius: 10.2, target: new THREE.Vector3(0, 0.45, -0.4), t0: performance.now() };
+    G = { renderer, scene, camera, room, floor, wallM, slatM: walnut, backingM: backing, pointer, preview, numbers, TX, meshes: new Map(), yaw: 0.62, pitch: 0.74, radius: 10.2, target: new THREE.Vector3(0, 0.45, -0.4), t0: performance.now() };
     resize(); new ResizeObserver(resize).observe($("#canvaswrap"));
     bindPointer(canvas);
     sync();
@@ -1411,6 +1619,22 @@ function build(type, colorName, ghostHex) {
         else { const s = new THREE.Mesh(new THREE.SphereGeometry(0.07, 20, 14), mat(0x3a3d40, false, { roughness: 0.3, metalness: 0.4 })); s.position.set(c.w / 2 - 0.2, y + 0.07, 0); s.castShadow = true; g.add(s); }
       }
     }
+  } else if (type === "reception") {
+    const top = M(col, { roughness: 0.45 });
+    box(c.w, 1.05, 0.12, 0, 0.525, c.d / 2 - 0.06, top);
+    for (const s of [-1, 1]) box(0.12, 1.05, c.d, s * (c.w / 2 - 0.06), 0.525, 0, top);
+    box(c.w + 0.06, 0.04, 0.34, 0, 1.07, c.d / 2 - 0.12, gh ? main : mat(0xf1efeb, false, { map: G && G.TX ? G.TX.marble : null, roughness: 0.2 }));
+    box(c.w - 0.24, 0.035, c.d - 0.14, 0, 0.74, 0, top);
+    const scr = gh ? main : glow(new THREE.MeshStandardMaterial({ color: 0x0d1a2e, emissive: 0x2a5aa8, emissiveIntensity: 0.5, roughness: 0.2 }));
+    box(0.5, 0.3, 0.02, -0.5, 0.95, -0.1, steel); box(0.46, 0.26, 0.004, -0.5, 0.95, -0.088, scr).castShadow = false;
+  } else if (type === "dining") {
+    box(c.w, 0.05, c.d, 0, 0.735, 0, M(col, { roughness: 0.45 }));
+    for (const s of [-1, 1]) { box(0.06, 0.7, c.d - 0.3, s * (c.w / 2 - 0.3), 0.36, 0, steel); box(0.08, 0.03, c.d - 0.2, s * (c.w / 2 - 0.3), 0.015, 0, steel); }
+    box(c.w - 0.6, 0.05, 0.05, 0, 0.62, 0, steel);
+  } else if (type === "bench") {
+    box(c.w, 0.12, c.d, 0, 0.4, 0, main);
+    box(c.w, 0.04, c.d - 0.04, 0, 0.32, 0, wood);
+    for (const s of [-1, 1]) box(0.05, 0.32, c.d - 0.08, s * (c.w / 2 - 0.1), 0.16, 0, steel);
   } else if (type === "rug") {
     box(c.w, 0.012, c.d, 0, 0.006, 0, M(col, { roughness: 1 }));
     if (!gh) { const inner = mat(new THREE.Color(col).offsetHSL(0, 0, 0.05).getHex(), false, { roughness: 1 }); box(c.w - 0.22, 0.013, c.d - 0.22, 0, 0.0065, 0, inner); }
@@ -1431,6 +1655,7 @@ function sync() {
     const sel = S.selected === o.id;
     g.traverse(m => { if (m.material && m.material.emissive && !m.userData.glow) m.material.emissive.setHex(sel ? 0x1f3f7a : 0x000000); });
   }
+  window.dispatchEvent(new Event("sd:synced"));
 }
 function clearPreview() {
   if (!G) return;
@@ -1553,7 +1778,7 @@ const T = {
 };
 function resetRoom() {
   cancelPending(true);
-  S.objs = JSON.parse(JSON.stringify(INITIAL.objs)); S.walls = INITIAL.walls; S.undo = []; S.history = []; S.selected = null; S.pointer = null; S.lastOp = null;
+  S.objs = JSON.parse(JSON.stringify(INITIAL.objs)); S.walls = INITIAL.walls; S.style = INITIAL.style; S.space = INITIAL.space; S.undo = []; S.history = []; S.selected = null; S.pointer = null; S.lastOp = null;
   sync(); renderHistory(); renderScene(); updatePointer(); showCard("", "");
 }
 function startTestFlow() {
@@ -1615,11 +1840,12 @@ document.addEventListener("keydown", e => {
   else if (e.key === "Enter" && S.pending && !S.pending.timer && document.activeElement !== $("#cmd") && !(document.activeElement && document.activeElement.tagName === "BUTTON")) { confirm(); e.preventDefault(); }
 });
 function showTab(name) {
-  for (const [t, v] of [["room", "#view-room"], ["about", "#view-about"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
+  for (const [t, v] of [["room", "#view-room"], ["build", "#view-build"], ["about", "#view-about"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
   if (name === "room") resize();
 }
 $("#tab-room").addEventListener("click", () => showTab("room"));
 $("#tab-about").addEventListener("click", () => showTab("about"));
+$("#tab-build").addEventListener("click", () => showTab("build"));
 
 /* ---------------- For agents ---------------- */
 window.SpatialDirector = {
@@ -1633,10 +1859,606 @@ window.SpatialDirector = {
   reset: () => { resetRoom(); return "reset"; },
 };
 
+/* Hooks for the studio agents (version 2.0) */
+window.__SD = { S, CAT, COLORS, ROOM, mk, snap, sync, renderScene, renderHistory, showCard, announce, clockStr, cancelPending, byId, nameOf, whereOf, resize, showTab, get G() { return G; } };
+
 renderHistory(); renderScene(); updatePointer();
 initGL();
 })();
 </script>
+<script id="studio-js">
+/* Spatial Director 2.0: studio agents that take a room from idea to a buildable plan.
+   Each agent is a small function with one job. Agents talk to each other through post(); anything
+   that changes the room or the shopping list on the agents' own initiative waits for the person. */
+(() => {
+"use strict";
+const SD = window.__SD; if (!SD) return;
+const { S, CAT, COLORS, ROOM } = SD;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const strip = h => { const d = document.createElement("div"); d.innerHTML = h || ""; return (d.textContent || "").trim(); };
+const amazon = q => "https://www.amazon.com/s?k=" + encodeURIComponent(q);
+const store = { get(k, d) { try { const v = localStorage.getItem("sd2:" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem("sd2:" + k, JSON.stringify(v)); } catch (e) {} } };
+
+/* ---------------- Agents and the messages between them ---------------- */
+const AGENTS = {
+  director:   { name: "Director",          job: "Turns what you say and point at into a plan (version 1's language and spatial agents)" },
+  inspire:    { name: "Inspiration",       job: "Finds the headquarters you name and a photo of it" },
+  style:      { name: "Style",             job: "Turns a design style into materials, colors and furniture finishes" },
+  layout:     { name: "Layout",            job: "Lays out the space type: C-suite office, lobby and reception, or dining" },
+  check:      { name: "Scene check",       job: "Checks accessible routes and overlaps before you see a layout" },
+  images:     { name: "Image",             job: "Pulls reference photos that match the style" },
+  source:     { name: "Sourcing",          job: "Matches every item to a real product from an approved vendor" },
+  sustain:    { name: "Sustainability",    job: "Proposes a sustainable alternative for every product" },
+  paint:      { name: "Paint",             job: "Specifies named paint colors from Benjamin Moore and Sherwin-Williams" },
+  estimate:   { name: "Estimate",          job: "Counts items and measures floor and wall areas for a proposal" },
+  review:     { name: "Review",            job: "Keeps client and team comments pinned to the room" },
+  render:     { name: "Render",            job: "Floor plan, dollhouse and walkthrough views, and snapshots" },
+  ready:      { name: "Build readiness",   job: "Tracks the project from idea to concept to build-ready" },
+};
+const LOG = [];
+let hotEdge = null;
+function post(from, to, text, kind) {
+  LOG.push({ from, to, text, kind: kind || "", t: new Date().toTimeString().slice(0, 5) });
+  if (LOG.length > 80) LOG.shift();
+  hotEdge = [from, to];
+  renderFeed(); drawNet();
+}
+function msgHTML(m) {
+  return `<li class="${m.kind}"><b>${esc(AGENTS[m.from].name)}</b> <span class="to">→ ${esc(m.to === "you" ? "you" : AGENTS[m.to].name)} · ${m.t}</span><br>${esc(m.text)}</li>`;
+}
+function renderFeed() {
+  const last = LOG.slice(-6).reverse();
+  $("#feed").innerHTML = last.length ? last.map(msgHTML).join("") : `<li>Pick a space or a style, or search for a headquarters, and the agents start working.</li>`;
+  $("#feedall").innerHTML = LOG.slice().reverse().map(msgHTML).join("");
+}
+
+/* ---------------- Styles (Style agent's knowledge) ---------------- */
+const STYLES = {
+  modern:       { label: "Modern", walls: "#eeece7", floor: "concrete", floorTint: "#ffffff", slat: 0x6a4630, backing: 0x1d1f22,
+                  pal: { sofa: "ivory", chair: "chocolate", desk: "walnut", rug: "stone", table: "marble", lamp: "charcoal", bookshelf: "walnut", reception: "walnut", dining: "walnut", bench: "ivory", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"], ["Accent", "Benjamin Moore", "Hale Navy", "HC-154", "#3b4a5a"]],
+                  refs: "modern office interior", houzz: "modern-office", deco: "Clean lines, polished concrete, walnut and glass." },
+  gatsby:       { label: "Gatsby (Art Deco)", walls: "#24453c", floor: "deco", floorTint: "#ffffff", slat: 0xa8875a, backing: 0x111214,
+                  pal: { sofa: "emerald", chair: "navy", desk: "lacquer", rug: "cream", table: "marble", lamp: "brass", bookshelf: "lacquer", reception: "lacquer", dining: "lacquer", bench: "emerald", plant: "leaf" },
+                  paint: [["Walls", "Benjamin Moore", "Salamander", "2050-10", "#2f3a35"], ["Accent", "Benjamin Moore", "Dollar Bill Green", "2050-20", "#3b5a4c"]],
+                  refs: "art deco interior lobby", houzz: "art-deco-office", deco: "Lacquer, velvet, black-and-white marble and fluted metal, after the 1920s Jazz Age." },
+  midcentury:   { label: "Mid-century modern", walls: "#ece4d3", floor: "wood", floorTint: "#9a6a42", slat: 0x8a5a36, backing: 0x2a1d14,
+                  pal: { sofa: "olive", chair: "rust", desk: "teak", rug: "terracotta", table: "teak", lamp: "charcoal", bookshelf: "teak", reception: "teak", dining: "teak", bench: "olive", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Dover White", "SW 6385", "#ece6d6"], ["Accent", "Benjamin Moore", "Dark Teal", "2053-20", "#2f5357"]],
+                  refs: "mid-century modern interior", houzz: "midcentury-office", deco: "Teak, tapered legs, warm earth tones, as in 1950s and 1960s American design." },
+  biophilic:    { label: "Biophilic", walls: "#dfe6dc", floor: "wood", floorTint: "#b9925f", slat: 0xa98557, backing: 0x34402f,
+                  pal: { sofa: "sage", chair: "oak", desk: "oak", rug: "moss", table: "oak", lamp: "charcoal", bookshelf: "oak", reception: "oak", dining: "oak", bench: "sage", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Evergreen Fog", "SW 9130", "#95978a"], ["Trim", "Benjamin Moore", "Chantilly Lace", "OC-65", "#f3f3ee"]],
+                  refs: "biophilic design interior plants office", houzz: "biophilic-office", deco: "Plants, daylight, wood and natural textures, to connect people with nature.", extraPlants: true },
+  scandinavian: { label: "Scandinavian", walls: "#f4f3ef", floor: "wood", floorTint: "#dccaa6", slat: 0xd9c9a8, backing: 0xc9c2b4,
+                  pal: { sofa: "light gray", chair: "birch", desk: "birch", rug: "cream", table: "birch", lamp: "white", bookshelf: "birch", reception: "birch", dining: "birch", bench: "light gray", plant: "leaf" },
+                  paint: [["Walls", "Benjamin Moore", "Chantilly Lace", "OC-65", "#f3f3ee"], ["Accent", "Benjamin Moore", "Hale Navy", "HC-154", "#3b4a5a"]],
+                  refs: "scandinavian interior design", houzz: "scandinavian-office", deco: "Pale woods, white walls, soft textiles and as much daylight as possible." },
+  industrial:   { label: "Industrial", walls: "#8b7b6f", floor: "concrete", floorTint: "#8d9093", slat: 0x1d1f21, backing: 0x3a2e28,
+                  pal: { sofa: "chocolate", chair: "black", desk: "black", rug: "charcoal", table: "walnut", lamp: "black", bookshelf: "black", reception: "smoke", dining: "walnut", bench: "chocolate", plant: "leaf" },
+                  paint: [["Walls", "Sherwin-Williams", "Tricorn Black", "SW 6258", "#2f2f30"], ["Accent", "Sherwin-Williams", "Extra White", "SW 7006", "#eeefea"]],
+                  refs: "industrial loft office interior", houzz: "industrial-office", deco: "Exposed concrete, black steel, leather and reclaimed wood." },
+  japandi:      { label: "Japandi", walls: "#e9e3d8", floor: "wood", floorTint: "#c8ad86", slat: 0x2a2623, backing: 0xd8cdbb,
+                  pal: { sofa: "sand", chair: "charcoal", desk: "oak", rug: "stone", table: "oak", lamp: "charcoal", bookshelf: "oak", reception: "oak", dining: "oak", bench: "sand", plant: "leaf" },
+                  paint: [["Walls", "Benjamin Moore", "White Dove", "OC-17", "#efeee5"], ["Accent", "Sherwin-Williams", "Accessible Beige", "SW 7036", "#d1c7b8"]],
+                  refs: "japanese minimalist interior wood", houzz: "japandi", deco: "Japanese restraint meets Scandinavian warmth: low furniture, light oak, few objects.", fewer: true },
+};
+
+/* ---------------- Space types (Layout agent's knowledge) ---------------- */
+const SPACES = {
+  studio: { label: "Studio office", items: () => JSON.parse(JSON.stringify(window.__SD_INITIAL || [])) },
+  csuite: { label: "C-suite office", items: () => [
+    ["rug", -1.4, 0.7, 0], ["sofa", -1.4, 1.9, 180], ["table", -1.4, 0.7, 0], ["chair", -2.9, 0.7, 90], ["chair", 0.1, 0.7, -90],
+    ["desk", 2.1, -1.6, 0], ["chair", 2.1, -2.35, 0], ["chair", 1.55, -0.55, 180], ["chair", 2.65, -0.55, 180],
+    ["bookshelf", -0.4, -2.8, 0], ["plant", -3.5, -2.5, 0], ["plant", 3.5, 2.5, 0], ["lamp", -2.9, 1.9, 0] ] },
+  lobby: { label: "Front door lobby and reception", items: () => [
+    ["reception", 0.6, -1.25, 0], ["chair", 0.6, -2.25, 0],
+    ["rug", -2.2, 1.3, 0], ["sofa", -2.2, 2.45, 180], ["table", -2.2, 1.3, 0], ["chair", -3.4, 1.1, 90], ["chair", -1.0, 1.1, -90],
+    ["bench", 3.55, 0.6, -90], ["plant", -3.5, -2.5, 0], ["plant", 3.5, -2.5, 0], ["plant", 3.5, 2.5, 0], ["lamp", -3.4, 2.4, 0] ] },
+  dining: { label: "Corporate dining", items: () => {
+    const out = [["dining", -2.5, -0.6, 0], ["dining", 0.0, -0.6, 0]];
+    for (const x of [-3.3, -2.5, -1.7, -0.8, 0, 0.8]) { out.push(["chair", x, -1.42, 0]); out.push(["chair", x, 0.22, 180]); }
+    out.push(["rug", 2.6, 1.4, 0], ["sofa", 2.6, 2.5, 180], ["table", 2.6, 1.4, 0], ["bench", 0.2, 2.65, 0], ["plant", -3.6, -2.6, 0], ["plant", -3.6, 2.6, 0]);
+    return out; } },
+};
+window.__SD_INITIAL = JSON.parse(SD.snap()).objs;
+
+function layoutFor(space, style) {
+  const st = STYLES[style];
+  let items;
+  if (space === "studio") items = window.__SD_INITIAL.map(o => [o.type, o.x, o.z, o.rot]);
+  else items = SPACES[space].items();
+  if (st.fewer) items = items.filter(([t], i) => t !== "bookshelf" && !(t === "lamp"));
+  if (st.extraPlants) {
+    const fp = ([t, x, z, r]) => { const c = CAT[t], cs = Math.abs(Math.cos(r * Math.PI / 180)), sn = Math.abs(Math.sin(r * Math.PI / 180)); return { x, z, hx: cs * c.w / 2 + sn * c.d / 2, hz: sn * c.w / 2 + cs * c.d / 2 }; };
+    let added = 0;
+    for (const p of [[-3.55, -1.0], [3.6, -1.2], [3.6, 1.0], [-3.55, 2.6], [1.0, 2.7], [-3.55, -2.6]]) {
+      if (added >= 3) break;
+      const P = fp(["plant", p[0], p[1], 0]);
+      if (items.some(it => it[0] !== "rug" && (() => { const F = fp(it); return Math.abs(F.x - P.x) < F.hx + P.hx + 0.1 && Math.abs(F.z - P.z) < F.hz + P.hz + 0.1; })())) continue;
+      items.push(["plant", p[0], p[1], 0]); added++;
+    }
+  }
+  return items.map(([type, x, z, rot]) => { const o = SD.mk(type, x, z, rot); o.color = st.pal[type] || CAT[type].color; return o; });
+}
+
+/* ---------------- Materials for the room shell (Style agent) ---------------- */
+let floorTex = {};
+function texFloor(kind, tint) {
+  const G = SD.G; if (!G || !window.THREE) return;
+  if (!floorTex[kind]) {
+    if (kind === "concrete") floorTex[kind] = G.TX.concrete;
+    else {
+      const c = document.createElement("canvas"); c.width = 1024; c.height = 1024; const x = c.getContext("2d");
+      if (kind === "wood") {
+        x.fillStyle = "#ffffff"; x.fillRect(0, 0, 1024, 1024);
+        let seed = 4; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+        for (let row = 0; row < 16; row++) { let px = -r() * 300; while (px < 1024) { const len = 260 + r() * 300, sh = 220 + Math.floor(r() * 35);
+          x.fillStyle = `rgb(${sh},${sh - 6},${sh - 14})`; x.fillRect(px, row * 64, len, 64);
+          x.strokeStyle = "rgba(60,40,20,.10)"; for (let k = 0; k < 6; k++) { x.beginPath(); x.moveTo(px, row * 64 + 8 + k * 9 + r() * 4); x.bezierCurveTo(px + len / 3, row * 64 + r() * 64, px + 2 * len / 3, row * 64 + r() * 64, px + len, row * 64 + 8 + k * 9); x.stroke(); }
+          x.fillStyle = "rgba(40,28,18,.35)"; x.fillRect(px, row * 64, 2, 64); px += len; }
+          x.fillStyle = "rgba(40,28,18,.3)"; x.fillRect(0, row * 64, 1024, 2); }
+      } else if (kind === "deco") {
+        const n = 8, s = 1024 / n;
+        for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { x.fillStyle = (i + j) % 2 ? "#151617" : "#efece6"; x.fillRect(i * s, j * s, s, s); }
+        x.strokeStyle = "rgba(168,135,90,.85)"; x.lineWidth = 3;
+        for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const cx = i * s + s / 2, cy = j * s + s / 2; x.beginPath(); x.moveTo(cx, cy - s / 2.6); x.lineTo(cx + s / 2.6, cy); x.lineTo(cx, cy + s / 2.6); x.lineTo(cx - s / 2.6, cy); x.closePath(); x.stroke(); }
+      }
+      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(kind === "deco" ? 2 : 2, kind === "deco" ? 1.5 : 1.5);
+      t.encoding = THREE.sRGBEncoding; t.anisotropy = 8; floorTex[kind] = t;
+    }
+  }
+  G.floor.material.map = floorTex[kind]; G.floor.material.color.set(tint);
+  G.floor.material.roughness = kind === "deco" ? 0.18 : kind === "wood" ? 0.55 : 0.36;
+  G.floor.material.needsUpdate = true;
+}
+function applyShell() {
+  const G = SD.G, st = STYLES[S.style] || STYLES.modern; if (!G) return;
+  texFloor(st.floor, st.floorTint);
+  if (G.slatM) G.slatM.color.setHex(st.slat);
+  if (G.backingM) G.backingM.color.setHex(st.backing);
+}
+
+/* ---------------- Layout + Style agents: apply a space and style ---------------- */
+function applyDesign(space, style, why) {
+  SD.cancelPending(true);
+  const prevStyle = S.style, prevSpace = S.space;
+  S.undo.push(SD.snap());
+  S.space = space; S.style = style;
+  S.objs = layoutFor(space, style);
+  S.walls = STYLES[style].walls;
+  S.selected = null;
+  const text = `${SPACES[space].label} in ${STYLES[style].label} style`;
+  S.history.push({ t: SD.clockStr(), text, undone: false });
+  if (style !== prevStyle) post("style", "layout", `${STYLES[style].label}: ${STYLES[style].deco} Walls ${STYLES[style].paint[0][2]}, ${STYLES[style].floor === "wood" ? "wood floor" : STYLES[style].floor === "deco" ? "black-and-white marble floor" : "polished concrete"}.`);
+  if (space !== prevSpace || style !== prevStyle) post("layout", "check", `Laid out the ${SPACES[space].label.toLowerCase()} with ${S.objs.length} pieces${why ? " (" + why + ")" : ""}. Please check routes before the person sees it.`);
+  SD.sync(); SD.renderHistory(); SD.renderScene();
+  SD.showCard("done", `<p class="eyebrow">Applied</p><p>${esc(text)}. Undo takes it back.</p>`);
+  SD.announce(text + " applied. You can undo it.");
+}
+window.addEventListener("sd:synced", () => { applyShell(); syncControls(); scheduleAgents(); });
+
+function syncControls() {
+  if ($("#space").value !== S.space) $("#space").value = S.space;
+  if ($("#style").value !== S.style) $("#style").value = S.style;
+  $("#b-title").textContent = `${SPACES[S.space].label} · ${STYLES[S.style].label}`;
+}
+
+/* ---------------- Scene check agent: accessible routes (agent to agent) ---------------- */
+const CLEAR = 0.915; // 36 in clear route width (2010 ADA Standards, 403.5.1)
+function footprint(o) { const c = CAT[o.type], w = c.w * (o.scale || 1), d = c.d * (o.scale || 1), r = o.rot * Math.PI / 180;
+  const cs = Math.abs(Math.cos(r)), sn = Math.abs(Math.sin(r)); return { x: o.x, z: o.z, hx: cs * w / 2 + sn * d / 2, hz: sn * w / 2 + cs * d / 2 }; }
+function sceneCheck() {
+  const step = 0.1, nx = 80, nz = 60, R = CLEAR / 2;
+  const solid = S.objs.filter(o => o.type !== "rug");
+  const fps = solid.map(footprint);
+  const free = new Uint8Array(nx * nz), seen = new Uint8Array(nx * nz);
+  for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
+    const x = ROOM.minX + (i + 0.5) * step, z = ROOM.minZ + (j + 0.5) * step;
+    let ok = x - ROOM.minX >= R && z - ROOM.minZ >= R && ROOM.maxX - x >= R - 0.5; // open side and right edge count as the way in
+    if (ok) for (const f of fps) { const dx = Math.max(0, Math.abs(x - f.x) - f.hx), dz = Math.max(0, Math.abs(z - f.z) - f.hz); if (Math.hypot(dx, dz) < R) { ok = false; break; } }
+    free[i * nz + j] = ok ? 1 : 0;
+  }
+  const q = [];
+  for (let i = 0; i < nx; i++) { const j = nz - 1; if (free[i * nz + j]) { seen[i * nz + j] = 1; q.push([i, j]); } }
+  for (let j = 0; j < nz; j++) { const i = nx - 1; if (free[i * nz + j] && !seen[i * nz + j]) { seen[i * nz + j] = 1; q.push([i, j]); } } // the right side is open too
+  while (q.length) { const [i, j] = q.pop(); for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const a = i + di, b = j + dj; if (a < 0 || b < 0 || a >= nx || b >= nz) continue; const k = a * nz + b; if (free[k] && !seen[k]) { seen[k] = 1; q.push([a, b]); } } }
+  const reach = [], blocked = [];
+  for (let n = 0; n < solid.length; n++) {
+    const o = solid[n], f = fps[n]; if (o.type === "plant" || o.type === "lamp" || o.type === "bookshelf" || o.type === "dining") continue; // dining tables are reached from their chairs
+    let ok = false;
+    for (let i = 0; i < nx && !ok; i++) for (let j = 0; j < nz; j++) { if (!seen[i * nz + j]) continue; const x = ROOM.minX + (i + 0.5) * step, z = ROOM.minZ + (j + 0.5) * step;
+      const dx = Math.max(0, Math.abs(x - f.x) - f.hx), dz = Math.max(0, Math.abs(z - f.z) - f.hz); if (Math.hypot(dx, dz) <= R + 0.55) { ok = true; break; } }
+    (ok ? reach : blocked).push(o);
+  }
+  // overlaps between solid pieces
+  const over = [];
+  for (let a = 0; a < solid.length; a++) for (let b = a + 1; b < solid.length; b++) { const A = fps[a], B = fps[b];
+    if (Math.abs(A.x - B.x) < A.hx + B.hx - 0.02 && Math.abs(A.z - B.z) < A.hz + B.hz - 0.02) over.push([solid[a], solid[b]]); }
+  return { reach, blocked, over };
+}
+let lastCheck = null;
+function runCheck(fromLayout) {
+  const r = sceneCheck(); lastCheck = r;
+  const name = o => `${SD.nameOf(o)} (${SD.whereOf(o)})`;
+  $("#scenecheck").innerHTML = `<div class="scn">
+    <p><span class="pill ${r.blocked.length || r.over.length ? "warn" : "good"}">${r.blocked.length || r.over.length ? "Needs a look" : "Passes"}</span></p>
+    <p>${r.reach.length} of ${r.reach.length + r.blocked.length} seats and work surfaces can be reached from the open sides along a 36-inch (0.91 m) clear route, the minimum accessible route width in the 2010 ADA Standards.</p>
+    ${r.blocked.length ? `<p><b>Can't be reached with 36 inches clear:</b></p><ul>${r.blocked.map(o => `<li>${esc(name(o))}</li>`).join("")}</ul>` : ""}
+    ${r.over.length ? `<p><b>Overlapping:</b></p><ul>${r.over.map(([a, b]) => `<li>${esc(SD.nameOf(a))} and ${esc(SD.nameOf(b))}</li>`).join("")}</ul>` : ""}
+    <p class="credit">A planning check, not a code review. A licensed architect confirms code compliance.</p></div>`;
+  if (fromLayout) {
+    if (r.blocked.length || r.over.length) post("check", "layout", `Not yet: ${r.blocked.length ? r.blocked.map(o => SD.nameOf(o)).join(", ") + " can't be reached along a 36-inch route" : ""}${r.blocked.length && r.over.length ? "; " : ""}${r.over.length ? r.over.length + " overlap(s)" : ""}. Flagging it for the person instead of moving furniture on my own.`, "warn");
+    else post("check", "source", `Routes clear: all ${r.reach.length} seats and surfaces reachable at 36 inches. Passing the item list to Sourcing.`, "good");
+  }
+}
+
+/* ---------------- Sourcing + Sustainability agents ---------------- */
+// Real product lines from the makers named. No prices: the live listing shows price and stock.
+const P = (name, maker, url, q, note) => ({ name, maker, url, q, note });
+const CATALOG = {
+  sofa: { base: P("Florence Knoll Lounge sofa", "Knoll", "https://www.knoll.com", "Knoll Florence Knoll sofa"),
+          gatsby: P("Barcelona couch", "Knoll", "https://www.knoll.com", "Knoll Barcelona couch"),
+          midcentury: P("Eames Sofa", "Herman Miller", "https://www.hermanmiller.com", "Herman Miller Eames sofa"),
+          sus: P("Sofa upholstered in Re-wool", "Kvadrat (fabric)", "https://www.kvadrat.dk", "Kvadrat Re-wool fabric", "Re-wool is woven with recycled wool; pair it with an FSC-certified wood frame.") },
+  chair: { base: P("Barcelona Chair", "Knoll", "https://www.knoll.com", "Knoll Barcelona chair"),
+           midcentury: P("Eames Lounge Chair and Ottoman", "Herman Miller", "https://www.hermanmiller.com", "Herman Miller Eames lounge chair"),
+           csuite: P("Aeron Chair (executive desk chair)", "Herman Miller", "https://www.hermanmiller.com", "Herman Miller Aeron chair"),
+           dining: P("Saarinen Tulip side chair", "Knoll", "https://www.knoll.com", "Knoll Saarinen tulip chair"),
+           sus: P("111 Navy Chair", "Emeco", "https://www.emeco.net", "Emeco 111 Navy chair", "Each chair is made from 111 recycled plastic bottles.") },
+  desk: { base: P("Florence Knoll oval table desk", "Knoll", "https://www.knoll.com", "Knoll Florence Knoll oval table desk"),
+          sus: P("Jarvis bamboo standing desk", "Fully", "", "Jarvis bamboo standing desk", "Bamboo top: a fast-renewing material; standing height adjusts for every body.") },
+  table: { base: P("Saarinen low coffee table, marble", "Knoll", "https://www.knoll.com", "Knoll Saarinen coffee table marble"),
+           sus: P("Coffee table in FSC-certified or reclaimed wood", "Local millwork shop", "", "FSC certified wood coffee table", "FSC certification traces wood to responsibly managed forests.") },
+  lamp: { base: P("Arco floor lamp", "Flos", "https://flos.com", "Flos Arco floor lamp"),
+          scandinavian: P("Tolomeo floor lamp", "Artemide", "https://www.artemide.com", "Artemide Tolomeo floor lamp"),
+          sus: P("Tolomeo LED floor lamp", "Artemide", "https://www.artemide.com", "Artemide Tolomeo LED floor lamp", "LED source: far less energy than halogen, and a long service life.") },
+  plant: { base: P("Fiddle-leaf fig in a large planter", "Local plant service", "", "fiddle leaf fig large planter"),
+           sus: P("Low-water native plants in a recycled-content planter", "Local plant service", "", "recycled plastic large planter indoor", "Native, low-water species cut irrigation and replacement.") },
+  bookshelf: { base: P("USM Haller shelving", "USM", "https://www.usm.com", "USM Haller shelving"),
+               sus: P("606 Universal Shelving System", "Vitsoe", "https://www.vitsoe.com", "Vitsoe 606 shelving", "Built to be reconfigured and moved for decades instead of replaced.") },
+  rug: { base: P("Custom hand-tufted wool rug", "Rug maker of your choice", "", "hand tufted wool area rug 8x5"),
+         sus: P("Carpet tile with recycled content", "Interface", "https://www.interface.com", "Interface carpet tile", "Modular: replace only worn tiles; recycled-content backing.") },
+  reception: { base: P("Custom reception desk in walnut veneer with a stone top", "Millwork shop", "", "reception desk walnut"),
+               sus: P("Reception desk in FSC-certified veneer on formaldehyde-free board", "Millwork shop", "", "FSC certified reception desk", "Ask for FSC veneer and NAUF (no added urea-formaldehyde) panels.") },
+  dining: { base: P("Saarinen dining table", "Knoll", "https://www.knoll.com", "Knoll Saarinen dining table"),
+            sus: P("Dining table in reclaimed or FSC-certified wood", "Local millwork shop", "", "reclaimed wood dining table", "Reclaimed wood keeps existing timber in use.") },
+  bench: { base: P("Nelson Platform Bench", "Herman Miller", "https://www.hermanmiller.com", "Herman Miller Nelson platform bench"),
+           sus: P("Bench in FSC-certified wood", "Local millwork shop", "", "FSC certified wood bench") },
+};
+const FINISHES = [
+  { item: "Faucet (pantry or executive washroom)", base: P("Purist faucet", "Kohler", "https://www.kohler.com", "Kohler Purist faucet"),
+    sus: P("WaterSense-labeled version of the same faucet", "Kohler", "https://www.kohler.com", "Kohler WaterSense bathroom faucet", "WaterSense faucets use at least 20% less water than standard models (EPA).") },
+  { item: "Wall tile (pantry, washroom or dining wall)", base: P("Ceramic tile", "Heath Ceramics", "https://www.heathceramics.com", "Heath Ceramics tile"),
+    sus: P("Recycled-content tile", "Fireclay Tile", "https://www.fireclaytile.com", "Fireclay recycled tile", "Fireclay makes tile lines with recycled content.") },
+  { item: "Wallcovering (feature wall)", base: P("Grasscloth wallcovering", "Phillip Jeffries", "https://www.phillipjeffries.com", "Phillip Jeffries grasscloth wallpaper"),
+    gatsby: P("Art Deco pattern wallpaper", "Flavor Paper", "https://flavorpaper.com", "Flavor Paper art deco wallpaper"),
+    sus: P("Natural-fiber, PVC-free wallcovering", "Phillip Jeffries", "https://www.phillipjeffries.com", "PVC free grasscloth wallpaper", "Plant fibers instead of vinyl.") },
+  { item: "Paint (walls)", paint: true,
+    sus: P("Zero-VOC paint in the same color", "Benjamin Moore Natura or Sherwin-Williams Harmony", "", "zero VOC interior paint", "Zero-VOC paint lowers indoor air pollutants.") },
+];
+let choice = store.get("choice", {}); // key -> "base" | "sus"
+function lines() {
+  const counts = {};
+  for (const o of S.objs) counts[o.type] = (counts[o.type] || 0) + 1;
+  const out = [];
+  for (const [type, n] of Object.entries(counts)) {
+    const cat = CATALOG[type]; if (!cat) continue;
+    let base = cat[S.style] || cat.base;
+    if (type === "chair" && S.space === "csuite") base = cat.csuite;
+    if (type === "chair" && S.space === "dining") base = cat.dining;
+    out.push({ key: type, item: `${CAT[type].label[0].toUpperCase() + CAT[type].label.slice(1)} × ${n}`, n, base, sus: cat.sus });
+  }
+  for (const f of FINISHES) {
+    let base = f.paint ? (() => { const p = STYLES[S.style].paint[0]; return P(`${p[2]} ${p[3]}`, p[1], p[1] === "Benjamin Moore" ? "https://www.benjaminmoore.com" : "https://www.sherwin-williams.com", `${p[1]} ${p[2]} ${p[3]} paint`); })() : (f[S.style] || f.base);
+    out.push({ key: "f:" + f.item, item: f.item, n: 1, base, sus: f.sus });
+  }
+  return out;
+}
+const useSus = L => (choice[L.key] || ($("#prefersus").checked ? "sus" : "base")) === "sus";
+function prodHTML(p) {
+  return `<b>${esc(p.name)}</b><br><span class="mk">${esc(p.maker)}</span>${p.note ? `<br>${esc(p.note)}` : ""}
+    <div class="links"><a href="${amazon(p.q)}" target="_blank" rel="noopener">Shop on Amazon</a>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">Maker</a>` : ""}</div>`;
+}
+function renderSourcing() {
+  const L = lines();
+  $("#sourcing").innerHTML = L.map(l => `<tr class="${useSus(l) ? "chosen-sus" : ""}"><td>${esc(l.item)}</td><td>${prodHTML(l.base)}</td>
+    <td class="sus"><span class="pill sus">Sustainable</span><br>${prodHTML(l.sus)}</td>
+    <td><label class="toggle"><input type="checkbox" data-sus="${esc(l.key)}" ${useSus(l) ? "checked" : ""}> Use the sustainable option</label></td></tr>`).join("");
+  return L;
+}
+let lastSusOffer = "";
+function runSourcing() {
+  const L = renderSourcing();
+  const key = S.space + "/" + S.style + "/" + L.map(l => l.key).join(",");
+  if (key !== lastSusOffer) {
+    lastSusOffer = key;
+    post("source", "sustain", `Matched ${L.length} line items to approved vendors (Knoll, Herman Miller, Kohler, Flos and others). Live prices load on the retailer's page.`);
+    const swaps = L.filter(l => !useSus(l)).length;
+    post("sustain", "source", swaps ? `I have a sustainable alternative for all ${L.length} lines, for example ${L[0].sus.name}. Highlighted in green. I won't swap anything until the person says so.` : `Every line already uses the sustainable option.`, "good");
+    post("source", "you", swaps ? `Your call: tick "Use the sustainable option" per line, or turn on "Prefer sustainable options" for all of them.` : `Sustainable options are in use for every line.`);
+  }
+}
+
+/* ---------------- Paint agent ---------------- */
+function renderPaint() {
+  const st = STYLES[S.style];
+  $("#paints").innerHTML = st.paint.map(([where, brand, name, code, hex]) => `<div class="paintrow"><span><span class="sw" style="background:${hex}"></span></span>
+    <span><b>${esc(where)}:</b> ${esc(brand)} ${esc(name)} ${esc(code)}<br><a href="${amazon(brand + " " + name + " " + code + " paint")}" target="_blank" rel="noopener">Shop</a> · <a href="${brand === "Benjamin Moore" ? "https://www.benjaminmoore.com" : "https://www.sherwin-williams.com"}" target="_blank" rel="noopener">${esc(brand)}</a></span></div>`).join("") +
+    `<p class="credit">On-screen colors are approximate. Check a physical sample under your own light. For lower indoor emissions, ask for the color in a zero-VOC line (Benjamin Moore Natura or Sherwin-Williams Harmony).</p>`;
+}
+
+/* ---------------- Estimate agent ---------------- */
+const SQFT = 10.7639;
+function takeoff() {
+  const floor = (ROOM.maxX - ROOM.minX) * (ROOM.maxZ - ROOM.minZ);           // 48 m²
+  const perim = 2 * ((ROOM.maxX - ROOM.minX) + (ROOM.maxZ - ROOM.minZ));      // 28 m
+  const wall = 8 * 2.9 - 3.4 * 2.9;                                            // plaster on the back wall, less the slat panel
+  const coats = 2, cover = 350;                                                 // sq ft per gallon, a common label figure
+  const gallons = Math.max(1, Math.ceil(wall * SQFT * coats / cover));
+  const L = lines();
+  const susShare = Math.round(100 * L.filter(useSus).length / L.length);
+  return { floor, perim, wall, gallons, L, susShare };
+}
+function renderEstimate() {
+  const t = takeoff();
+  $("#estimate").innerHTML = `<table class="est"><tbody>
+    <tr><td>Floor area</td><td class="n">${t.floor.toFixed(0)} m² · ${(t.floor * SQFT).toFixed(1)} sq ft</td></tr>
+    <tr><td>Floor perimeter</td><td class="n">${t.perim.toFixed(0)} m · ${(t.perim * 3.28084).toFixed(1)} ft</td></tr>
+    <tr><td>Paintable wall (back wall, less feature panel)</td><td class="n">${t.wall.toFixed(1)} m² · ${(t.wall * SQFT).toFixed(0)} sq ft</td></tr>
+    <tr><td>Paint, 2 coats at 350 sq ft per gallon</td><td class="n">${t.gallons} gal</td></tr>
+    <tr><td>Furniture pieces</td><td class="n">${S.objs.length}</td></tr>
+    <tr><td>Line items</td><td class="n">${t.L.length}</td></tr>
+    <tr><td>Sustainable share of line items</td><td class="n">${t.susShare}%</td></tr>
+  </tbody></table><p class="credit">Prices are left out on purpose: they come live from each retailer at checkout.</p>`;
+}
+function exportCSV() {
+  const t = takeoff();
+  const rows = [["Project", `${SPACES[S.space].label} · ${STYLES[S.style].label}`], [], ["Line item", "Quantity", "Product", "Maker", "Sustainable", "Shop link"]];
+  for (const l of t.L) { const p = useSus(l) ? l.sus : l.base; rows.push([l.item.replace(/ × \d+$/, ""), l.n, p.name, p.maker, useSus(l) ? "yes" : "no", amazon(p.q)]); }
+  rows.push([], ["Floor area (sq ft)", (t.floor * SQFT).toFixed(1)], ["Paint (gal)", t.gallons], ["Sustainable share", t.susShare + "%"]);
+  const csv = rows.map(r => r.map(c => `"${String(c == null ? "" : c).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "spatial-director-proposal.csv"; a.click();
+  exported = true; store.set("exported", true);
+  post("estimate", "you", `Proposal downloaded: ${t.L.length} line items, ${(t.floor * SQFT).toFixed(0)} sq ft, ${t.gallons} gal of paint, ${t.susShare}% sustainable.`, "good");
+  runReady();
+}
+let exported = store.get("exported", false);
+
+/* ---------------- Image agent: references from Wikimedia Commons ---------------- */
+const COMMONS = "https://commons.wikimedia.org/w/api.php";
+async function commonsSearch(q, n = 8) {
+  const u = `${COMMONS}?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=${n}&gsrsearch=${encodeURIComponent(q + " filetype:bitmap")}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=480&iiextmetadatafilter=Artist|LicenseShortName|ObjectName`;
+  const r = await fetch(u); if (!r.ok) throw new Error("HTTP " + r.status);
+  const j = await r.json(); const pages = j.query ? Object.values(j.query.pages) : [];
+  return pages.sort((a, b) => (a.index || 0) - (b.index || 0)).map(p => { const ii = (p.imageinfo || [])[0] || {}, m = ii.extmetadata || {};
+    return { src: ii.thumburl || ii.url, page: ii.descriptionurl, title: (p.title || "").replace(/^File:/, "").replace(/\.[a-z]+$/i, ""), artist: strip(m.Artist && m.Artist.value), license: m.LicenseShortName ? m.LicenseShortName.value : "" }; })
+    .filter(x => x.src);
+}
+const refCache = {};
+async function runImages() {
+  const st = STYLES[S.style], spaceWord = { studio: "office", csuite: "office", lobby: "lobby", dining: "cafeteria" }[S.space];
+  const q = `${st.refs} ${spaceWord}`.replace(/office office/, "office");
+  $("#refnote").innerHTML = `Matching "${esc(st.label)}" · <a href="https://www.houzz.com/photos/query/${encodeURIComponent(st.houzz)}" target="_blank" rel="noopener">More on Houzz</a>`;
+  if (!refCache[q]) {
+    $("#refs").innerHTML = `<p class="empty">Looking for ${esc(st.label.toLowerCase())} reference photos…</p>`;
+    try { refCache[q] = await commonsSearch(q, 8); if (refCache[q].length < 3) refCache[q] = refCache[q].concat(await commonsSearch(st.refs, 8)); }
+    catch (e) { $("#refs").innerHTML = `<p class="empty">Reference photos could not load (offline or blocked). The Houzz link above still opens matching photos.</p>`; post("images", "style", "Couldn't reach Wikimedia Commons from this browser; pointed the person to Houzz instead.", "warn"); return; }
+  }
+  const imgs = refCache[q].slice(0, 8);
+  $("#refs").innerHTML = imgs.length ? imgs.map(i => `<figure><a href="${esc(i.page)}" target="_blank" rel="noopener"><img src="${esc(i.src)}" alt="${esc(i.title)}" loading="lazy"></a>
+    <figcaption>${esc(i.artist || "Unknown author")} · ${esc(i.license || "see source")} · Wikimedia Commons</figcaption></figure>`).join("") : `<p class="empty">No matching photos found.</p>`;
+  post("images", "style", `Found ${imgs.length} ${st.label} reference photos on Wikimedia Commons, each credited to its photographer.`);
+}
+
+/* ---------------- Inspiration agent: tech headquarters ---------------- */
+const HQ = {
+  nvidia:     { name: "Nvidia headquarters (Endeavor and Voyager)", where: "Santa Clara, California", by: "Gensler", year: "2018 and 2022", q: "Nvidia headquarters Santa Clara", style: "modern",
+                note: "Two triangle-patterned buildings under one roof, filled with daylight through skylights." },
+  apple:      { name: "Apple Park", where: "Cupertino, California", by: "Foster + Partners", year: "2017", q: "Apple Park Cupertino", style: "scandinavian",
+                note: "A ring-shaped building of curved glass around a landscaped park." },
+  google:     { name: "Google Bay View", where: "Mountain View, California", by: "BIG and Heatherwick Studio", year: "2022", q: "Google Bay View Mountain View", style: "biophilic",
+                note: "Tent-like canopy roofs with integrated solar panels over open floor plates." },
+  meta:       { name: "Meta MPK 20", where: "Menlo Park, California", by: "Gehry Partners", year: "2015", q: "Facebook MPK 20 Menlo Park", style: "industrial",
+                note: "One huge open floor with exposed structure and a 9-acre rooftop garden." },
+  salesforce: { name: "Salesforce Tower", where: "San Francisco, California", by: "Pelli Clarke Pelli Architects", year: "2018", q: "Salesforce Tower San Francisco", style: "modern",
+                note: "San Francisco's tallest office tower, with a glass curtain wall and an observation floor at the top." },
+};
+const KEYWORDS = [["deco|gatsby|chrysler|empire state", "gatsby"], ["garden|green|living|forest|bay view|google", "biophilic"], ["loft|warehouse|brick|factory|meta|facebook", "industrial"],
+  ["eames|1950|1960|mid", "midcentury"], ["japan|tokyo|kyoto|zen", "japandi"], ["nordic|scandi|apple|copenhagen|stockholm", "scandinavian"]];
+let insp = null, inspIdx = 0;
+async function runInspiration(text) {
+  const key = text.trim().toLowerCase();
+  const preset = Object.entries(HQ).find(([k]) => key.includes(k));
+  const h = preset ? preset[1] : { name: text.trim(), where: "", by: "", year: "", q: text.trim() + " building", note: "", style: (KEYWORDS.find(([re]) => new RegExp(re).test(key)) || [0, "modern"])[1] };
+  insp = { ...h, photos: [], err: null }; inspIdx = 0; renderInsp(true);
+  post("inspire", "images", `Looking up ${h.name}${h.by ? ` (${h.by}, ${h.year})` : ""}.`);
+  try { insp.photos = await commonsSearch(h.q, 6); } catch (e) { insp.err = e; }
+  renderInsp(false);
+  post("inspire", "style", insp.photos.length ? `Found ${insp.photos.length} photos of ${h.name}. Its look reads as ${STYLES[h.style].label}; suggesting it, not applying it.` : `No photos reachable for ${h.name}. Suggesting ${STYLES[h.style].label} from what I know.`);
+  runReady();
+}
+function renderInsp(loading) {
+  if (!insp) { $("#inspcard").innerHTML = ""; return; }
+  const ph = insp.photos[inspIdx];
+  const img = ph ? `<a href="${esc(ph.page)}" target="_blank" rel="noopener"><img src="${esc(ph.src)}" alt="${esc(ph.title)}"></a>` : `<div class="ph">${loading ? "Finding a photo…" : "Photo not available here. Search opens on Wikimedia Commons."}</div>`;
+  $("#inspcard").innerHTML = `<div>${img}${ph ? `<p class="credit">${esc(ph.artist || "Unknown author")} · ${esc(ph.license || "see source")} · Wikimedia Commons</p>` : ""}</div>
+    <div><p class="eyebrow">Inspiration</p><h3>${esc(insp.name)}</h3>
+      ${insp.where ? `<p>${esc(insp.where)}${insp.by ? ` · ${esc(insp.by)}` : ""}${insp.year ? ` · ${esc(insp.year)}` : ""}</p>` : ""}
+      ${insp.note ? `<p>${esc(insp.note)}</p>` : ""}
+      <p>Style agent suggests: <b>${esc(STYLES[insp.style].label)}</b>. Nothing changes until you apply it.</p>
+      <div class="btnrow"><button class="btn primary small" type="button" id="applyinsp">Apply ${esc(STYLES[insp.style].label)}</button>
+        ${insp.photos.length > 1 ? `<button class="btn small" type="button" id="nextphoto">Next photo</button>` : ""}
+        <a class="btn small" href="https://www.architecturaldigest.com/search?q=${encodeURIComponent(insp.name.replace(/ \(.*\)/, "") + " office")}" target="_blank" rel="noopener">Architectural Digest</a>
+        <a class="btn small" href="https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(insp.q)}" target="_blank" rel="noopener">More photos</a></div></div>`;
+}
+
+/* ---------------- Review agent: comments pinned to the room ---------------- */
+let aud = "client";
+let comments = store.get("comments", []);
+const PEOPLE = { client: ["Client", "#5b47b8"], team: ["Team", "#0b6b66"] };
+function renderComments() {
+  const list = comments.filter(c => c.aud === aud);
+  $("#comments").innerHTML = list.length ? list.map(c => `<li><span class="av" style="background:${PEOPLE[c.aud][1]}">${c.n}</span><div class="${c.done ? "resolved" : ""}">
+    <span class="meta">${esc(PEOPLE[c.aud][0])} · ${esc(c.where)} · ${esc(c.t)}</span><br>${esc(c.text)}<br>
+    <button class="linkish" type="button" data-resolve="${c.id}">${c.done ? "Reopen" : "Resolve"}</button></div></li>`).join("") : `<li><span></span><span class="empty">No ${aud} comments yet.</span></li>`;
+  drawPins();
+}
+let pins = null;
+function drawPins() {
+  const G = SD.G; if (!G || !window.THREE) return;
+  if (!pins) { pins = new THREE.Group(); G.scene.add(pins); }
+  while (pins.children.length) pins.remove(pins.children[0]);
+  for (const c of comments) { if (c.done) continue;
+    const cv = document.createElement("canvas"); cv.width = 128; cv.height = 128; const x = cv.getContext("2d");
+    x.fillStyle = PEOPLE[c.aud][1]; x.beginPath(); x.arc(64, 56, 46, 0, 7); x.fill(); x.beginPath(); x.moveTo(44, 96); x.lineTo(64, 124); x.lineTo(84, 96); x.fill();
+    x.fillStyle = "#fff"; x.font = "700 52px Arial"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(String(c.n), 64, 58);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false, toneMapped: false }));
+    sp.scale.set(0.45, 0.45, 1); sp.position.set(c.x, 1.7, c.z); sp.renderOrder = 10; pins.add(sp); }
+}
+function addComment(text) {
+  const sel = S.selected && SD.byId(S.selected), p = sel ? { x: sel.x, z: sel.z } : S.pointer;
+  if (!p) { SD.showCard("err", `<p>Mark a spot on the floor or select an item first, then post the comment.</p>`); SD.showTab("room"); return false; }
+  const where = sel ? "on the " + SD.nameOf(sel) : `at ${(p.x - ROOM.minX).toFixed(1)} m, ${(p.z - ROOM.minZ).toFixed(1)} m`;
+  const n = comments.length + 1;
+  comments.push({ id: Date.now(), n, aud, text, where, x: p.x, z: p.z, t: new Date().toTimeString().slice(0, 5), done: false });
+  store.set("comments", comments); renderComments();
+  post("review", aud === "client" ? "ready" : "layout", `New ${aud} comment #${n} ${where}: "${text.slice(0, 80)}"`);
+  runReady(); return true;
+}
+
+/* ---------------- Render agent: views and snapshots ---------------- */
+function setView(v) {
+  const G = SD.G; if (!G) return;
+  $$("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
+  if (v === "plan") { G.yaw = 0.0001; G.pitch = 1.52; G.radius = 11.5; G.userZoom = true; G.target.set(0, 0, 0); }
+  else if (v === "walk") { G.yaw = 0.0001; G.pitch = 0.06; G.radius = 5.2; G.userZoom = true; G.target.set(0, 1.45, -1.6); }
+  else { G.yaw = 0.62; G.pitch = 0.74; G.userZoom = false; G.radius = G.base || 10.2; G.target.set(0, 0.45, -0.4); }
+  post("render", "you", { plan: "Floor plan: straight down, like a 2D drawing.", walk: "Walkthrough: eye level from the open side, as a visitor walks in.", dollhouse: "Dollhouse: the whole room from above at an angle." }[v]);
+}
+function snapshot() {
+  const G = SD.G; if (!G) return;
+  G.renderer.render(G.scene, G.camera);
+  const a = document.createElement("a"); a.href = G.renderer.domElement.toDataURL("image/png"); a.download = `spatial-director-${S.space}-${S.style}.png`; a.click();
+  post("render", "you", "Saved a PNG snapshot of the current view.");
+}
+
+/* ---------------- 2D plan underlay ---------------- */
+let planMesh = null;
+function setPlan(file) {
+  const G = SD.G; if (!G || !window.THREE) return;
+  clearPlan(); if (!file) return;
+  const url = URL.createObjectURL(file);
+  new THREE.TextureLoader().load(url, t => { t.encoding = THREE.sRGBEncoding;
+    planMesh = new THREE.Mesh(new THREE.PlaneGeometry(8, 6), new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: 0.6, depthWrite: false, toneMapped: false }));
+    planMesh.rotation.x = -Math.PI / 2; planMesh.position.y = 0.004; G.scene.add(planMesh);
+    post("render", "layout", "Laid the uploaded floor plan under the room at 8 m × 6 m for tracing.");
+    setView("plan"); SD.showTab("room"); });
+}
+function clearPlan() { const G = SD.G; if (planMesh && G) { G.scene.remove(planMesh); planMesh = null; } }
+
+/* ---------------- Build readiness agent ---------------- */
+function runReady() {
+  const t = takeoff(), c = lastCheck || sceneCheck();
+  const open = comments.filter(x => !x.done).length;
+  const items = [
+    ["Space type chosen", S.space !== "studio"],
+    ["Design style chosen", true],
+    ["Inspiration found", !!insp],
+    ["Scene check passes (36-inch routes, no overlaps)", !c.blocked.length && !c.over.length],
+    ["Every item matched to an approved vendor", t.L.every(l => l.base && l.sus)],
+    ["Paint specified by brand and code", true],
+    [`At least half the line items sustainable (now ${t.susShare}%)`, t.susShare >= 50],
+    [`All comments resolved (${open} open)`, open === 0],
+    ["Proposal downloaded", exported],
+  ];
+  const done = items.filter(i => i[1]).length;
+  const stage = done === items.length ? 2 : done >= 4 ? 1 : 0;
+  $("#checks").innerHTML = items.map(([t, ok]) => `<li><span class="${ok ? "ok" : "no"}" aria-hidden="true">${ok ? "✓" : "○"}</span><span>${esc(t)}<span class="sr-only">${ok ? " done" : " to do"}</span></span></li>`).join("");
+  $("#readypill").className = "pill " + (stage === 2 ? "good" : "warn"); $("#readypill").textContent = `${done} of ${items.length}`;
+  $("#stagetrack").innerHTML = ["Idea", "Concept", "Build-ready"].map((s, i) => `<span class="${i === stage ? "on" : i < stage ? "done" : ""}">${s}</span>`).join("");
+  return { stage, done, total: items.length };
+}
+
+/* ---------------- Agent network map ---------------- */
+function drawNet() {
+  const svg = $("#net"); if (!svg) return;
+  const keys = Object.keys(AGENTS).filter(k => k !== "director"), cx = 360, cy = 180;
+  const pos = { director: [cx, cy] };
+  keys.forEach((k, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / keys.length; pos[k] = [cx + 290 * Math.cos(a), cy + 140 * Math.sin(a)]; });
+  const flows = [["director", "layout"], ["inspire", "style"], ["inspire", "images"], ["style", "layout"], ["style", "paint"], ["layout", "check"], ["check", "source"], ["source", "sustain"],
+    ["sustain", "source"], ["source", "estimate"], ["paint", "estimate"], ["estimate", "ready"], ["review", "ready"], ["render", "director"], ["images", "style"], ["check", "layout"], ["review", "layout"]];
+  const hot = hotEdge ? hotEdge.join(">") : "";
+  let h = "";
+  for (const [a, b] of flows) { const [x1, y1] = pos[a], [x2, y2] = pos[b], on = hot === a + ">" + b || hot === b + ">" + a;
+    h += `<line class="edge${on ? " hot" : ""}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    if (on) h += `<circle class="dot" r="5"><animateMotion dur="1.2s" repeatCount="indefinite" path="M${x1},${y1} L${x2},${y2}"/></circle>`; }
+  for (const [k, [x, y]] of Object.entries(pos)) { const center = k === "director", on = hotEdge && hotEdge.includes(k);
+    if (on) h += `<circle class="halo" cx="${x}" cy="${y}" r="${center ? 34 : 24}"/>`;
+    h += `<circle class="node" cx="${x}" cy="${y}" r="${center ? 22 : 13}" style="stroke:${center ? "var(--accent)" : on ? "var(--ai)" : "var(--ink-3)"}"/>`;
+    h += `<text x="${x}" y="${y + (center ? 38 : y > cy ? 30 : -20)}" text-anchor="middle">${esc(AGENTS[k].name)}</text>`; }
+  svg.innerHTML = h;
+  svg.setAttribute("aria-label", "Agent network: " + Object.values(AGENTS).map(a => a.name + ", " + a.job).join("; "));
+}
+
+/* ---------------- Running the team ---------------- */
+let timer = null, lastLayoutKey = "";
+function scheduleAgents() {
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    const key = S.space + "/" + S.style + "/" + S.objs.map(o => o.type + o.x.toFixed(1) + o.z.toFixed(1)).join("|");
+    const changed = key !== lastLayoutKey; lastLayoutKey = key;
+    runCheck(changed); runSourcing(); renderPaint(); renderEstimate(); runReady();
+    if (changed) { const k2 = S.style + "/" + S.space; if (k2 !== scheduleAgents.lastImg) { scheduleAgents.lastImg = k2; runImages(); } }
+  }, 120);
+}
+
+/* ---------------- Wiring ---------------- */
+$("#space").addEventListener("change", e => applyDesign(e.target.value, S.style));
+$("#style").addEventListener("change", e => applyDesign(S.space === "studio" ? "studio" : S.space, e.target.value));
+$("#inspform").addEventListener("submit", e => { e.preventDefault(); const v = $("#insp").value.trim(); if (v) runInspiration(v); });
+$("#inspcard").addEventListener("click", e => {
+  if (e.target.id === "applyinsp" && insp) { const sp = S.space === "studio" ? "csuite" : S.space; post("style", "layout", `The person approved ${STYLES[insp.style].label}, inspired by ${insp.name}.`); applyDesign(sp, insp.style, "inspired by " + insp.name); }
+  if (e.target.id === "nextphoto" && insp) { inspIdx = (inspIdx + 1) % insp.photos.length; renderInsp(false); }
+});
+$$("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+$("#snapshot").addEventListener("click", snapshot);
+$("#seeall").addEventListener("click", () => SD.showTab("build"));
+$("#prefersus").checked = store.get("prefersus", false);
+$("#prefersus").addEventListener("change", e => { store.set("prefersus", e.target.checked); choice = {}; store.set("choice", choice);
+  post("sustain", "source", e.target.checked ? "The person wants sustainable options everywhere. Swapping every line." : "The person turned off the sustainable preference. Back to the original products.", e.target.checked ? "good" : "");
+  renderSourcing(); renderEstimate(); runReady(); });
+$("#sourcing").addEventListener("change", e => { const k = e.target.dataset.sus; if (!k) return; choice[k] = e.target.checked ? "sus" : "base"; store.set("choice", choice);
+  const l = lines().find(x => x.key === k); if (l) post("source", "sustain", e.target.checked ? `Using ${l.sus.name} for ${l.item.replace(/ × \d+$/, "").toLowerCase()}.` : `Keeping ${l.base.name} for ${l.item.replace(/ × \d+$/, "").toLowerCase()}.`, e.target.checked ? "good" : "");
+  renderSourcing(); renderEstimate(); runReady(); });
+$("#exportest").addEventListener("click", exportCSV);
+$$("[data-aud]").forEach(b => b.addEventListener("click", () => { aud = b.dataset.aud; $$("[data-aud]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); renderComments(); }));
+$("#cform").addEventListener("submit", e => { e.preventDefault(); const v = $("#ctext").value.trim(); if (v && addComment(v)) $("#ctext").value = ""; });
+$("#comments").addEventListener("click", e => { const id = +e.target.dataset.resolve; if (!id) return; const c = comments.find(x => x.id === id); if (c) { c.done = !c.done; store.set("comments", comments); renderComments();
+  post("review", "ready", `Comment #${c.n} ${c.done ? "resolved" : "reopened"}.`, c.done ? "good" : ""); runReady(); } });
+$("#planfile").addEventListener("change", e => setPlan(e.target.files[0]));
+$("#planclear").addEventListener("click", () => { clearPlan(); $("#planfile").value = ""; });
+
+/* For other agents: the studio layer is drivable too (AXO) */
+Object.assign(window.SpatialDirector, {
+  design: (space, style) => { if (!SPACES[space] || !STYLES[style]) return { error: "space must be one of " + Object.keys(SPACES).join(", ") + "; style one of " + Object.keys(STYLES).join(", ") }; applyDesign(space, style, "requested by an agent"); return { applied: `${space}/${style}`, undo: "SpatialDirector.undo()" }; },
+  inspiration: q => { runInspiration(String(q)); return "searching; the suggestion waits for the person"; },
+  sourcing: () => lines().map(l => ({ item: l.item, product: l.base.name, maker: l.base.maker, sustainable: l.sus.name, using: useSus(l) ? "sustainable" : "original", shop: amazon((useSus(l) ? l.sus : l.base).q) })),
+  check: () => { const r = sceneCheck(); return { reachable: r.reach.map(o => o.id), blocked: r.blocked.map(o => o.id), overlaps: r.over.map(([a, b]) => [a.id, b.id]) }; },
+  readiness: () => runReady(),
+  agentLog: () => LOG.slice(),
+});
+
+renderFeed(); drawNet(); renderComments(); syncControls();
+let tries = 0;
+const wait = () => { if (SD.G || ++tries > 40) { applyShell(); drawPins(); scheduleAgents(); runInspiration($("#insp").value); } else setTimeout(wait, 150); };
+setTimeout(wait, 200);
+})();
+</script>
+
 <script id="motion-js">
 (() => {
   "use strict";
