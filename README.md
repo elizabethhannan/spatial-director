@@ -51,6 +51,11 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.3: Final look and the Find It agent
+
+- **Final look.** The first card in Build & Budget restyles the room after any tech company's design (13 looks), with Apply and Undo, final renders, and links to matching real rooms on Houzz.
+- **Find It agent.** Picks out the one-of-a-kind pieces in the inspiration and in your room: custom couches, artwork, wall paneling, installations, plant walls, signage. For each it opens live searches for sale anywhere (Google Shopping, Amazon, Etsy, 1stDibs, Chairish, Houzz), names the artist when the source does (Jim Campbell at Salesforce Tower, Matthias Pliessnig at Dropbox, BREAKFAST at Intuit), finds similar artists (Saatchi Art, Artsy) or makers who can build it (Houzz pros, Etsy, local makers), and offers a reclaimed or certified-material version. "Find these pieces" on the inspiration card jumps straight there.
+
 ## Version 2.2: curated executive looks, Art and Style agent, floors
 
 - **Curated executive inspirations.** LinkedIn New York (M Moser Associates), Nvidia Voyager (Gensler, with One Workplace), Dropbox (Rapt Studio), Salesforce Tower guest reception, Microsoft's Executive Briefing Center (Unispace), Slack (Studio O+A), Google Bay View (STUDIOS Architecture interiors), Adobe Founders Tower (Gensler), Qualcomm's executive suite and Intuit Petah Tikva (Axelrod Architects with Gensler). Each shows the spaces to explore, what stands out, and a "See the photos" link to the photographed interiors at the source. Photos are linked, not copied.
