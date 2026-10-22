@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, noai, noimageai">
+<title>Spatial Director</title>
+<meta name="description" content="A working prototype: direct a 3D room by typing or speaking and pointing. Three agents read the request, place it and check the layout, and you see what they understood before anything changes. Self-initiated concept by Elizabeth Hannan.">
+<link rel="alternate" type="text/markdown" href="AGENTS.md" title="Instructions for AI agents">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the room on the left, the command panel on the right. On phones the room sits on top and the command bar, with Stop, is fixed to the bottom of the screen. */
+:root {
+  --bg: #f2f4f6; --surface: #ffffff; --surface-2: #e9edf1; --ink: #121a24; --ink-2: #44515c; --ink-3: #5f6c76; --line: #d3dae0;
+  --accent: #1f4f9a; --accent-ink: #ffffff; --accent-soft: #e1eaf7; --ai: #5b47b8; --ai-soft: #eeebfb;
+  --good: #1c7a43; --good-soft: #e1f2e7; --warn: #a14d18; --warn-soft: #f8e9df; --crit: #b42a22; --crit-soft: #f9e3e1;
+  --focus: #2a78d6; --stage: #dfe5ea;
+  --font-display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --radius: 10px; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1419; --surface: #161d24; --surface-2: #1e2731; --ink: #e8edf1; --ink-2: #b7c2cb; --ink-3: #94a1ab; --line: #2b3742;
+    --accent: #7fb0f5; --accent-ink: #0b1a30; --accent-soft: #1b2a40; --ai: #a797ff; --ai-soft: #241f3f;
+    --good: #52c482; --good-soft: #15301f; --warn: #ef8c4e; --warn-soft: #36210f; --crit: #ff7b72; --crit-soft: #3a1714;
+    --focus: #6aa8f0; --stage: #1a222b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1419; --surface: #161d24; --surface-2: #1e2731; --ink: #e8edf1; --ink-2: #b7c2cb; --ink-3: #94a1ab; --line: #2b3742;
+  --accent: #7fb0f5; --accent-ink: #0b1a30; --accent-soft: #1b2a40; --ai: #a797ff; --ai-soft: #241f3f;
+  --good: #52c482; --good-soft: #15301f; --warn: #ef8c4e; --warn-soft: #36210f; --crit: #ff7b72; --crit-soft: #3a1714;
+  --focus: #6aa8f0; --stage: #1a222b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; line-height: 1.2; text-wrap: balance; }
+p { margin: 0; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 8px; z-index: 50; background: var(--surface); padding: 8px 12px; border-radius: 8px; }
+.wrap { max-width: 1480px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; padding-block: 14px; }
+.brand h1 { font-size: 1.5rem; }
+.brand p { color: var(--ink-2); max-width: 70ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.tag { font-size: 0.8125rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); background: var(--surface-2); }
+.tabbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.tab { border: 0; background: none; padding: 12px 14px; cursor: pointer; color: var(--ink-2); border-bottom: 3px solid transparent; font-weight: 700; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tabs .spacer { flex: 1; }
+[hidden], .view[hidden] { display: none !important; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; min-height: 44px; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.ai { background: var(--ai); color: #fff; border-color: var(--ai); }
+.btn.ghost { background: none; }
+.btn.small { min-height: 36px; padding: 5px 10px; font-size: 0.9375rem; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+kbd { font-family: var(--font-mono); font-size: .75rem; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; opacity: .8; }
+
+/* Room + panel */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 16px; padding-block: 16px 40px; align-items: start; }
+.stage { position: sticky; top: 12px; }
+.canvaswrap { position: relative; height: calc(100vh - 200px); min-height: 460px; background: var(--stage); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; touch-action: none; }
+.canvaswrap canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+.hint { position: absolute; left: 12px; top: 12px; background: color-mix(in srgb, var(--surface) 88%, transparent); border: 1px solid var(--line); padding: 6px 10px; border-radius: 8px; font-size: .875rem; color: var(--ink-2); max-width: calc(100% - 24px); }
+.viewctl { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+.viewctl .btn { min-height: 40px; min-width: 40px; padding: 4px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--ink-2); }
+.readout { margin-top: 8px; color: var(--ink-2); font-size: .9375rem; }
+
+.panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
+.cmdbar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; gap: 8px; }
+.cmdbar label { font-weight: 700; }
+.cmdrow { display: flex; gap: 8px; }
+.cmdrow input { flex: 1; min-width: 0; width: 0; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-size: 1.0625rem; }
+.stoprow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.stop { flex: 1; background: var(--crit); color: #fff; border: 0; border-radius: 8px; min-height: 44px; font-weight: 700; cursor: pointer; padding: 6px 14px; }
+:root[data-theme="dark"] .stop { color: #2a0b08; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stop { color: #2a0b08; } }
+.mic[aria-pressed="true"] { background: var(--crit-soft); border-color: var(--crit); color: var(--crit); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 4px 10px; cursor: pointer; font-size: .875rem; color: var(--ink-2); min-height: 32px; }
+.chip:hover { color: var(--ink); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 10px; }
+.card:empty { display: none; }
+.card.plan { border-left: 4px solid var(--ai); }
+.card.ask { border-left: 4px solid var(--accent); }
+.card.err { border-left: 4px solid var(--warn); }
+.card.done { border-left: 4px solid var(--good); }
+.card h2 { font-size: 1.125rem; }
+.eyebrow { font-size: .8125rem; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+.slots { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 0; }
+.slots dt { color: var(--ink-3); }
+.slots dd { margin: 0; font-weight: 700; }
+.conf { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .8125rem; font-weight: 700; }
+.conf.high { background: var(--good-soft); color: var(--good); }
+.conf.medium { background: var(--warn-soft); color: var(--warn); }
+.notes { margin: 0; padding-left: 18px; color: var(--ink-2); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.countdown { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.countdown i { display: block; height: 100%; width: 0; background: var(--ai); animation: fill var(--dur, 1.6s) linear forwards; }
+@keyframes fill { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .countdown i { animation: none; width: 100%; opacity: .5; } }
+.trace { border-top: 1px solid var(--line); padding-top: 8px; }
+.trace summary { cursor: pointer; font-weight: 700; color: var(--ink-2); }
+.trace ol { margin: 8px 0 0; padding-left: 0; list-style: none; display: grid; gap: 6px; }
+.trace li { font-size: .875rem; display: grid; grid-template-columns: 8.5em 1fr; gap: 8px; }
+.trace .who { font-weight: 700; color: var(--ai); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.steps label { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; cursor: pointer; }
+.steps input { width: 20px; height: 20px; margin-top: 2px; }
+.steps small { display: block; color: var(--ink-2); }
+.opts { display: grid; gap: 6px; }
+.opts .btn { text-align: left; display: flex; gap: 10px; align-items: center; }
+.opts .num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); flex: none; }
+
+.block { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 8px; }
+.block h2 { font-size: 1rem; }
+.block .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.history { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; max-height: 220px; overflow: auto; }
+.history li { display: grid; grid-template-columns: 4.2em 1fr; gap: 8px; font-size: .9375rem; }
+.history li.undone { color: var(--ink-3); text-decoration: line-through; }
+.history .t { color: var(--ink-3); font-family: var(--font-mono); font-size: .8125rem; padding-top: 2px; }
+.empty { color: var(--ink-3); }
+.scene { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.scene button { width: 100%; text-align: left; border: 1px solid transparent; background: none; padding: 6px 8px; border-radius: 8px; cursor: pointer; display: grid; grid-template-columns: 1fr; }
+.scene button:hover { background: var(--surface-2); }
+.scene button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.scene b { font-weight: 700; }
+.scene span { color: var(--ink-2); font-size: .875rem; }
+.toggle { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.toggle input { width: 20px; height: 20px; }
+
+/* Test */
+.card.test { border-left: 4px solid var(--good); }
+.taskn { font-family: var(--font-mono); color: var(--ink-3); }
+.task { font-size: 1.125rem; font-weight: 700; }
+.meter { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--ink-2); font-size: .875rem; }
+.seq { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.seq .btn { min-width: 0; padding: 4px; }
+.seqlab { display: flex; justify-content: space-between; font-size: .8125rem; color: var(--ink-3); }
+table { border-collapse: collapse; width: 100%; font-size: .875rem; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink-3); font-weight: 700; }
+td.n, th.n { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; }
+
+/* About */
+.about { padding-block: 24px 64px; display: grid; gap: 24px; max-width: 980px; }
+.about section { display: grid; gap: 10px; }
+.about h2 { font-size: 1.375rem; }
+.about p, .about li { max-width: 72ch; }
+.about pre { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow: auto; font-family: var(--font-mono); font-size: .8125rem; max-height: 360px; }
+.ref { padding-left: 2em; text-indent: -2em; }
+.ref a { word-break: break-all; }
+footer { border-top: 1px solid var(--line); color: var(--ink-3); font-size: .875rem; padding-block: 16px 24px; }
+footer p { max-width: 90ch; margin-bottom: 6px; }
+
+@media (max-width: 999px) {
+  .layout { grid-template-columns: 1fr; padding-bottom: 170px; }
+  .stage { position: static; }
+  .canvaswrap { height: 56vh; min-height: 320px; }
+  .cmdbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; border-radius: 14px 14px 0 0; border-bottom: 0; padding: 10px max(12px, env(safe-area-inset-left)) max(10px, env(safe-area-inset-bottom)); box-shadow: 0 -6px 18px rgba(0,0,0,.12); }
+  .cmdbar label { font-size: .875rem; }
+  .hint { font-size: .8125rem; }
+  footer { padding-bottom: 180px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#cmd">Skip to the command box</a>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Spatial Director</h1>
+      <p>Point at the room and say what you want. Three agents read the request, place it and check the layout, and you see what they understood before anything changes.</p>
+    </div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Simulated room</span><span class="tag">Nothing leaves your browser</span></div>
+  </div>
+</header>
+<nav class="tabbar" aria-label="Views">
+  <div class="wrap tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-room" aria-selected="true" aria-controls="view-room">Room</button>
+    <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
+    <span class="spacer"></span>
+    <button class="btn small" id="starttest">Run the usability test</button>
+  </div>
+</nav>
+
+<main id="view-room" class="view wrap layout" role="tabpanel" aria-labelledby="tab-room">
+  <section class="stage" aria-label="3D room">
+    <div id="canvaswrap" class="canvaswrap" tabindex="0" aria-label="3D room view. Arrow keys turn the view; click or tap the floor to mark a spot.">
+      <canvas id="c" aria-hidden="true"></canvas>
+      <p class="hint" id="hint">Drag to turn the view · click the floor to point · click furniture to select it</p>
+      <div class="viewctl" role="group" aria-label="View controls">
+        <button class="btn" id="vl" aria-label="Turn view left">◀</button>
+        <button class="btn" id="vr" aria-label="Turn view right">▶</button>
+        <button class="btn" id="vin" aria-label="Zoom in">+</button>
+        <button class="btn" id="vout" aria-label="Zoom out">−</button>
+        <button class="btn" id="vreset">Reset view</button>
+      </div>
+      <div class="nogl" id="nogl" hidden><p>The 3D view could not start in this browser. Everything else still works: type commands, and the room is listed in words under "In the room".</p></div>
+    </div>
+    <p class="readout" id="readout">No spot marked. Click the floor to point, then say "there".</p>
+  </section>
+
+  <aside class="panel" aria-label="Commands">
+    <div class="cmdbar" id="cmdbar">
+      <form id="cmdform" autocomplete="off">
+        <label for="cmd">Tell the room what to do</label>
+        <div class="cmdrow">
+          <input id="cmd" name="cmd" placeholder="Put a lamp next to the sofa" enterkeyhint="go">
+          <button type="button" class="btn mic" id="mic" aria-pressed="false">Speak</button>
+          <button type="submit" class="btn primary">Go</button>
+        </div>
+      </form>
+      <div class="stoprow"><button class="stop" id="stop" type="button">Stop everything <kbd>Esc</kbd></button><button class="btn" id="undo" type="button">Undo</button></div>
+    </div>
+
+    <div class="chips" aria-label="Examples">
+      <button class="chip" data-say="put a lamp next to the sofa">put a lamp next to the sofa</button>
+      <button class="chip" data-say="move the chair there">move the chair there</button>
+      <button class="chip" data-say="turn the chair to face the table">turn the chair to face the table</button>
+      <button class="chip" data-say="remove the plant">remove the plant</button>
+      <button class="chip" data-say="tidy up">tidy up</button>
+      <button class="chip" data-say="what's in the room">what's in the room</button>
+    </div>
+
+    <section id="testcard" class="card test" hidden aria-live="polite"></section>
+    <section id="card" class="card" aria-live="polite"></section>
+
+    <section class="block">
+      <div class="head"><h2>Changes</h2><span class="empty" id="histcount"></span></div>
+      <ol class="history" id="history"></ol>
+    </section>
+    <section class="block">
+      <h2>In the room</h2>
+      <ul class="scene" id="scenelist"></ul>
+    </section>
+    <section class="block">
+      <label class="toggle"><input type="checkbox" id="reviewall"> Ask me before every change</label>
+      <p class="empty">Off: small changes preview for 1.6 seconds, then apply, and you can undo them. Removals and anything the agents suggest on their own always wait for your OK.</p>
+    </section>
+  </aside>
+</main>
+
+<main id="view-about" class="view wrap about" role="tabpanel" aria-labelledby="tab-about" hidden>
+  <section>
+    <p class="eyebrow">Spatial interfaces · Self-initiated concept</p>
+    <h2>What this prototype tests</h2>
+    <p>Spatial AI lets people change a 3D space by speaking and pointing, as in Bolt's "put that there" (1980). The hard part isn't understanding the words. It's making sure the person knows what the system thinks "that" and "there" mean before it acts, and that they can stop it or take it back. Guidelines for human-AI interaction ask systems to make clear what they can do, to support efficient correction, and to narrow the scope of what they do when in doubt (Amershi et al., 2019). Mixed-initiative design adds that an agent should weigh the cost of acting against the cost of asking (Horvitz, 1999). This room puts those rules into practice.</p>
+  </section>
+  <section>
+    <h2>Three agents, one contract</h2>
+    <p>Each request passes through three agents. You can open their messages under "Agent trace" on every preview.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Agent</th><th>Its job</th><th>What it may not do</th></tr></thead>
+      <tbody>
+        <tr><td>Language agent</td><td>Turns what you said into an action, an object and a place</td><td>Guess which object you mean when there's more than one; it asks a numbered question</td></tr>
+        <tr><td>Spatial agent</td><td>Works out where "there", "next to the sofa" or "the corner" is, in meters</td><td>Use a spot you haven't marked; if you say "there" with nothing marked, it asks you to point</td></tr>
+        <tr><td>Layout checker</td><td>Checks for overlaps and walls, and nudges a placement when needed</td><td>Nudge anything without saying how far and why</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Kind of change</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Add, move, turn, resize, recolor</td><td>A purple preview shows the result for 1.6 seconds, then it applies. Undo takes it back.</td></tr>
+        <tr><td>Remove</td><td>The object turns red and waits for your OK.</td></tr>
+        <tr><td>Agent suggestions ("tidy up")</td><td>Each suggestion has a reason and a checkbox. Nothing applies until you choose. Suggestions that add furniture start unchecked.</td></tr>
+        <tr><td>Unclear which object</td><td>A numbered question, with the numbers shown in the room</td></tr>
+        <tr><td>Stop</td><td>Cancels any preview and question, and turns the microphone off. Nothing changes.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section>
+    <h2>The usability test</h2>
+    <p>Five tasks cover the riskiest moments: placing by reference, pointing, a removal that needs an OK, recovering with undo, and reviewing agent suggestions. For each task the test records completion, time, the number of commands, clarifying questions, misunderstood requests, stops and undos. After each task it asks one question: how easy was it, on a 7-point scale. That is the Single Ease Question, which performs as well as longer post-task questionnaires (Sauro &amp; Dumas, 2009). Results export as CSV or JSON and never leave the browser.</p>
+  </section>
+  <section>
+    <h2>For agents</h2>
+    <p>The room is usable by software too, not just by people. An agent can drive it through <code>window.SpatialDirector</code> and read the scene as data. The same contract applies: a removal or suggestion called through the API still waits for <code>confirm()</code>.</p>
+    <pre>SpatialDirector.run("put a lamp next to the sofa")  // returns what the agents understood
+SpatialDirector.point(x, z)   // mark a spot, in meters from the room's center
+SpatialDirector.confirm()     // approve a change that is waiting for an OK
+SpatialDirector.answer(1)     // answer a numbered question
+SpatialDirector.stop()        // cancel everything pending
+SpatialDirector.undo()
+SpatialDirector.state()       // the scene as JSON (below)</pre>
+    <details><summary>Live scene, as an agent reads it</summary><pre id="scenejson"></pre></details>
+  </section>
+  <section>
+    <h2>References</h2>
+    <p class="ref">Amershi, S., Weld, D., Vorvoreanu, M., Fourney, A., Nushi, B., Collisson, P., Suh, J., Iqbal, S., Bennett, P. N., Inkpen, K., Teevan, J., Kikin-Gil, R., &amp; Horvitz, E. (2019). Guidelines for human-AI interaction. In <i>Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems</i> (Paper 3, pp. 1–13). ACM. <a href="https://doi.org/10.1145/3290605.3300233">https://doi.org/10.1145/3290605.3300233</a></p>
+    <p class="ref">Bolt, R. A. (1980). "Put-that-there": Voice and gesture at the graphics interface. <i>Computer Graphics, 14</i>(3), 262–270. <a href="https://www.media.mit.edu/publications/put-that-there-voice-and-gesture-at-the-graphics-interface/">https://www.media.mit.edu/publications/put-that-there-voice-and-gesture-at-the-graphics-interface/</a></p>
+    <p class="ref">Horvitz, E. (1999). Principles of mixed-initiative user interfaces. In <i>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</i> (pp. 159–166). ACM. <a href="https://www.microsoft.com/en-us/research/publication/principles-mixed-initiative-user-interfaces/">https://www.microsoft.com/en-us/research/publication/principles-mixed-initiative-user-interfaces/</a></p>
+    <p class="ref">Sauro, J., &amp; Dumas, J. S. (2009). Comparison of three one-question, post-task usability questionnaires. In <i>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</i> (pp. 1599–1608). ACM. <a href="https://measuringu.com/article/comparison-of-three-one-question-post-task-usability-questionnaires/">https://measuringu.com/article/comparison-of-three-one-question-post-task-usability-questionnaires/</a></p>
+  </section>
+</main>
+
+<div id="sr" class="sr" aria-live="assertive"></div>
+<footer><div class="wrap"><p>Designed and built by Elizabeth Hannan with HXO and AXO. <i>HXO (Human Experience Optimization) is a design methodology that starts from human outcomes, not features, technology or business requirements, and tests every system with one question: does it help or hurt the full spectrum of human experience?</i></p><p>© 2026 Elizabeth Hannan. All rights reserved. Self-initiated concept; the room is simulated.</p></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
+
+/* ---------------- Catalog and room ---------------- */
+const ROOM = { minX: -4, maxX: 4, minZ: -3, maxZ: 3 };
+const WINDOW = { x: -3.7, z: 0 };
+const CAT = {
+  sofa:      { w: 2.0, d: 0.9, label: "sofa", syn: ["sofa", "couch", "settee"], color: "navy" },
+  chair:     { w: 0.6, d: 0.6, label: "chair", syn: ["armchair", "chair", "seat"], color: "teal" },
+  table:     { w: 1.1, d: 0.6, label: "coffee table", syn: ["coffee table", "table"], color: "walnut" },
+  desk:      { w: 1.4, d: 0.7, label: "desk", syn: ["desk", "workstation"], color: "charcoal" },
+  lamp:      { w: 0.4, d: 0.4, label: "lamp", syn: ["floor lamp", "lamp", "light"], color: "white" },
+  plant:     { w: 0.5, d: 0.5, label: "plant", syn: ["plant", "fern", "ficus", "tree"], color: "green" },
+  bookshelf: { w: 1.0, d: 0.35, label: "bookshelf", syn: ["bookshelf", "bookcase", "shelves", "shelf"], color: "walnut" },
+  rug:       { w: 2.4, d: 1.6, label: "rug", syn: ["rug", "carpet", "mat"], color: "lavender", flat: true },
+};
+const COLORS = { navy: "#22406e", blue: "#2a63c4", "light blue": "#8fb8e8", teal: "#0b6b66", green: "#2f7d4a", sage: "#8aa58a", purple: "#5b47b8", lavender: "#a99ad8",
+  brown: "#6b4430", chocolate: "#4a2e1f", walnut: "#7a5236", gray: "#7a7f84", grey: "#7a7f84", charcoal: "#3a3d40", white: "#efeee9", black: "#1d1f21", red: "#b42a22", orange: "#d9772b", yellow: "#d8b23a", pink: "#d58aa6" };
+const COLOR_WORDS = Object.keys(COLORS).sort((a, b) => b.length - a.length);
+const SYN = []; for (const [t, c] of Object.entries(CAT)) for (const s of c.syn) SYN.push([s, t]);
+SYN.sort((a, b) => b[0].length - a[0].length);
+
+let seq = 0;
+const mk = (type, x, z, rot, extra = {}) => ({ id: type + "-" + (++seq), type, x, z, rot, scale: 1, color: CAT[type].color, ...extra });
+const S = {
+  objs: [
+    mk("rug", 0, -1.1, 0),
+    mk("sofa", 0, -2.45, 0),
+    mk("table", 0, -1.0, 0),
+    mk("chair", -3.1, 0.2, -90),
+    mk("desk", 3.1, -2.6, 0),
+    mk("chair", 3.0, -1.75, 180),
+    mk("bookshelf", -2.2, -2.8, 0),
+    mk("plant", -3.5, -2.5, 0),
+  ],
+  walls: "#ecebe6",
+  pointer: null, selected: null,
+  pending: null,   // { plan, timer }
+  asking: null,    // { intent, forced, role, options }
+  awaitingPoint: null,
+  undo: [], history: [], lastOp: null,
+};
+const INITIAL = JSON.parse(JSON.stringify({ objs: S.objs, walls: S.walls }));
+const byId = id => S.objs.find(o => o.id === id);
+const ofType = t => S.objs.filter(o => o.type === t);
+const dims = o => { const c = CAT[o.type]; return { w: c.w * (o.scale || 1), d: c.d * (o.scale || 1) }; };
+const dist = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+const rad = d => d * Math.PI / 180;
+const normDeg = d => { d = ((d % 360) + 360) % 360; return d > 180 ? d - 360 : d; };
+const faceAngle = (from, to) => normDeg(Math.atan2(to.x - from.x, to.z - from.z) * 180 / Math.PI);
+const half = (w, d, rot) => { const c = Math.abs(Math.cos(rad(rot))), s = Math.abs(Math.sin(rad(rot))); return { hx: c * w / 2 + s * d / 2, hz: s * w / 2 + c * d / 2 }; };
+
+/* ---------------- Words for places ---------------- */
+const fromWalls = (x, z) => `${fmt(x - ROOM.minX)} m from the left wall, ${fmt(z - ROOM.minZ)} m from the back wall`;
+function nameOf(o) { return CAT[o.type].label; }
+function whereOf(o) {
+  const marks = [{ name: "the window", x: WINDOW.x, z: WINDOW.z }];
+  for (const p of S.objs) if (p !== o && !CAT[p.type].flat && p.type !== o.type) marks.push({ name: "the " + nameOf(p), x: p.x, z: p.z });
+  let best = null, bd = 1e9;
+  for (const m of marks) { const d = dist(o, m) - (m.name === "the window" ? 0.4 : 0); if (d < bd) { bd = d; best = m; } }
+  const cx = o.x < -2.6 ? "left" : o.x > 2.6 ? "right" : null, cz = o.z < -1.8 ? "back" : o.z > 1.8 ? "front" : null;
+  if (bd < 1.6) return "by " + best.name;
+  if (cx && cz) return `in the ${cz}-${cx} corner`;
+  if (Math.abs(o.x) < 1.2 && Math.abs(o.z) < 1.2) return "near the middle";
+  return "near " + best.name;
+}
+function facesOf(o) {
+  const f = { x: Math.sin(rad(o.rot)), z: Math.cos(rad(o.rot)) };
+  let best = null, bd = 1e9;
+  const marks = [{ name: "the window", x: WINDOW.x, z: WINDOW.z }].concat(S.objs.filter(p => p !== o && !CAT[p.type].flat).map(p => ({ name: "the " + nameOf(p), x: p.x, z: p.z })));
+  for (const m of marks) {
+    const vx = m.x - o.x, vz = m.z - o.z, L = Math.hypot(vx, vz); if (L < 0.05) continue;
+    const ang = Math.acos(Math.max(-1, Math.min(1, (vx * f.x + vz * f.z) / L))) * 180 / Math.PI;
+    if (ang < 28 && L < bd) { bd = L; best = m.name; }
+  }
+  if (best) return "faces " + best;
+  if (f.z < -0.7) return "faces the back wall";
+  if (f.x < -0.7) return "faces the left wall";
+  if (f.z > 0.7) return "faces the open side";
+  return "faces the right side";
+}
+const describe = o => `${nameOf(o)} ${whereOf(o)}`;
+
+/* ---------------- Language agent: words to intent ---------------- */
+function norm(s) {
+  s = s.toLowerCase().replace(/[’`]/g, "'").replace(/[^a-z0-9.' -]/g, " ").replace(/\s+/g, " ").trim();
+  for (let i = 0; i < 3; i++) s = s.replace(/^(please|hey|ok|okay|so|now|and|then|um)\s+/, "")
+    .replace(/^(can|could|would|will) you\s+/, "").replace(/^(i want you to|i need you to|i'd like you to|i would like you to|let's|lets)\s+/, "");
+  return s.replace(/\s+please$/, "").trim();
+}
+function findTypes(s) {
+  const out = [], used = [];
+  for (const [syn, t] of SYN) {
+    const re = new RegExp("\\b" + syn + "(e?s)?\\b", "g"); let m;
+    while ((m = re.exec(s))) { const a = m.index, b = a + m[0].length; if (used.some(([x, y]) => a < y && b > x)) continue; used.push([a, b]); out.push({ type: t, idx: a, end: b, word: m[0] }); }
+  }
+  return out.sort((a, b) => a.idx - b.idx);
+}
+function colorIn(s) { for (const c of COLOR_WORDS) if (new RegExp("\\b" + c + "\\b").test(s)) return c; return null; }
+function amountIn(s) {
+  const m = s.match(/(\d+(?:\.\d+)?)\s*(m|meters?|metres?|cm|centimeters?|centimetres?|ft|feet|foot)\b/);
+  if (m) { const v = +m[1]; return /cm|cent/.test(m[2]) ? v / 100 : /ft|feet|foot/.test(m[2]) ? v * 0.3048 : v; }
+  if (/\b(a bit|slightly|a little|a touch|a tad)\b/.test(s)) return 0.25;
+  if (/\b(a lot|far|way over|all the way)\b/.test(s)) return 1.2;
+  return 0.5;
+}
+function parseRef(s) {
+  s = (s || "").trim();
+  if (!s) return null;
+  if (/^(the )?window/.test(s)) return { landmark: "window" };
+  if (/^(me|you|the camera|the viewer|my side)\b/.test(s)) return { landmark: "viewer" };
+  if (/^(the )?door/.test(s)) return { missing: "door" };
+  const ts = findTypes(s);
+  if (ts.length && ts[0].idx < 12) return { type: ts[0].type, phrase: s };
+  return null;
+}
+function parseLoc(L) {
+  if (!L) return null; L = L.trim(); let m;
+  if (/\b(there|here|where i (pointed|clicked|tapped|marked)|at the (marker|spot|point|mark)|that spot|this spot|the spot)\b/.test(L)) return { kind: "point" };
+  if ((m = L.match(/\b(?:on top of|onto|on|under|underneath)\s+(?:the\s+)?(.+)$/))) return { kind: "unsupported", what: "stacking things on or under other furniture" };
+  if ((m = L.match(/\bin front of\s+(?:the\s+)?(.+)$/))) return { kind: "adj", rel: "front", ref: parseRef(m[1]) };
+  if ((m = L.match(/\bbehind\s+(?:the\s+)?(.+)$/))) return { kind: "adj", rel: "behind", ref: parseRef(m[1]) };
+  if ((m = L.match(/\b(?:closer to|toward|towards|nearer to|nearer)\s+(?:the\s+)?(.+)$/))) return { kind: "toward", ref: parseRef(m[1]), amt: amountIn(L) };
+  if ((m = L.match(/\baway from\s+(?:the\s+)?(.+)$/))) return { kind: "away", ref: parseRef(m[1]), amt: amountIn(L) };
+  if ((m = L.match(/\b(?:next to|beside|by|near|alongside|close to)\s+(?:the\s+)?(.+)$/))) return { kind: "adj", rel: "next", ref: parseRef(m[1]) };
+  if (/\bcorner\b/.test(L)) {
+    const lr = /\bleft\b/.test(L) ? -1 : /\bright\b/.test(L) ? 1 : 0;
+    const fb = /\b(back|far|rear)\b/.test(L) ? -1 : /\b(front|near)\b/.test(L) ? 1 : 0;
+    return { kind: "corner", lr, fb };
+  }
+  if (/\b(middle|center|centre)\b/.test(L)) return { kind: "center" };
+  if ((m = L.match(/\b(?:against|along|to|by|on) the (back|left|far) wall\b/))) return { kind: "wall", which: m[1] === "left" ? "left" : "back" };
+  if (/\b(?:against|along) the wall\b/.test(L)) return { kind: "wall", which: "back" };
+  if ((m = L.match(/\b(left|right|forward|forwards|back|backward|backwards|toward me|towards me|closer|away)\b/))) {
+    const w = m[1], a = amountIn(L);
+    const d = w === "left" ? [-1, 0] : w === "right" ? [1, 0] : /forward|toward me|towards me|closer/.test(w) ? [0, 1] : [0, -1];
+    return { kind: "dir", dx: d[0] * a, dz: d[1] * a, word: w, amt: a };
+  }
+  return null;
+}
+const QUAL_RE = /^(?:that'?s |which is |that is |the one )?(?:by|near|next to|beside|closest to|nearest(?: to)?|nearer to|at) (?:the )?(window|desk|sofa|couch|table|coffee table|bookshelf|bookcase|plant|lamp|rug|chair|wall|back wall|left wall|corner|middle|center)\b\s*/;
+function intentOf(raw) {
+  const t = norm(raw);
+  if (!t) return { op: "empty" };
+  if (/^(undo|undo that|undo it|go back|revert|undo the last( change| one)?|take that back)$/.test(t)) return { op: "undo" };
+  if (/^(stop|cancel|never ?mind|halt|wait|no stop|stop it|abort)$/.test(t)) return { op: "stop" };
+  if (/^(yes|yes do it|do it|ok do it|apply|confirm|go ahead|sure|yep|approve)$/.test(t)) return { op: "confirm" };
+  if (/^(no|nope|don't|dont|reject)$/.test(t)) return { op: "stop" };
+  if (/^(help|what can you do|commands|how does this work)\b/.test(t)) return { op: "help" };
+  if (/\b(what's|what is|whats) in the room\b|^(describe|list)( the room| everything)?$/.test(t)) return { op: "describe" };
+  let m;
+  if ((m = t.match(/^(?:number |option |the )?(\d|one|two|three|four|first|second|third|fourth|1st|2nd|3rd)(?: one)?$/))) {
+    const w = { one: 1, two: 2, three: 3, four: 4, first: 1, second: 2, third: 3, fourth: 4, "1st": 1, "2nd": 2, "3rd": 3 }[m[1]] || +m[1];
+    return { op: "answer", n: w };
+  }
+  if (/\b(tidy|clean up|declutter|arrange|organi[sz]e|suggest|improve|fix the layout|make it better|rearrange)\b/.test(t)) return { op: "propose", text: t };
+  if ((m = t.match(/^(?:paint|color|colour|make) (?:the )?walls? (?:in |to )?([a-z ]+)$/))) { const c = colorIn(m[1]); if (c) return { op: "walls", color: c }; }
+
+  const verbs = [
+    ["remove", /^(remove|delete|take away|take out|get rid of|throw out|throw away|lose|clear away|ditch)\b/],
+    ["add", /^(add|insert|drop in|bring in|bring|give me|i want|i need|i'd like|i would like|we need|create|make a|make an)\b/],
+    ["place", /^(put|place|set|stick|pop)\b/],
+    ["move", /^(move|push|slide|shift|drag|nudge|pull|take|relocate|bring)\b/],
+    ["rotate", /^(rotate|turn|spin|face|flip|angle|point)\b/],
+    ["paint", /^(paint|color|colour|recolor|recolour|make)\b/],
+    ["scale", /^(resize|scale|enlarge|shrink|grow)\b/],
+  ];
+  let verb = null, vlen = 0;
+  for (const [v, re] of verbs) { const mm = t.match(re); if (mm) { verb = v; vlen = mm[0].length; break; } }
+  const types = findTypes(t);
+  if (!verb && types.length && /\b(there|here)$/.test(t)) { verb = "place"; }
+  if (!verb) return { op: "unknown", text: t };
+  if (!types.length) {
+    if (verb === "add" || verb === "place") return { op: "unknown", text: t, unknownObject: unknownObjectIn(t.slice(vlen).trim()) };
+    if (/\b(it|this|that|this one|that one|the selected)\b/.test(t) && S.selected) { const o = byId(S.selected); if (o) { types.push({ type: o.type, idx: t.search(/\b(it|this|that)\b/), end: t.search(/\b(it|this|that)\b/) + 2, word: "it", pronoun: true }); } }
+    if (!types.length) return { op: "unknown", text: t, needObject: true };
+  }
+  let T = types[0], compound = null;
+  if (types[1] && types[1].idx === T.end + 1) { compound = T; T = types[1]; }
+  else { const wm = t.slice(0, T.idx).match(/\b(window|corner|wall)\s+$/); if (wm) compound = { landmark: wm[1] }; }
+  const before = t.slice(vlen, T.idx).trim();
+  const after = t.slice(T.end).trim();
+  const article = (before.match(/\b(a|an|another|one more|a new|new|a second|second|the|my|that|this)\b/) || [])[1] || "";
+  const plural = /s$/.test(T.word) && !/^(glass|grass)$/.test(T.word) && T.word !== CAT[T.type].syn.find(x => x === T.word);
+  let op = verb;
+  if (verb === "place") op = (/^(the|my|that|this)$/.test(article) && ofType(T.type).length) ? "move" : "add";
+  if (verb === "add" && /^(the|my|that|this)$/.test(article) && ofType(T.type).length && /\bback\b/.test(t)) op = "move";
+  if (verb === "paint" && /\b(bigger|larger|smaller|tinier|wider|narrower|taller|shorter)\b/.test(t)) op = "scale";
+  if (verb === "scale" || /\b(bigger|larger|smaller|tinier)\b/.test(t) && verb !== "add") op = "scale";
+  const I = { op, type: T.type, article, before, after, text: t, pronoun: !!T.pronoun, color: colorIn(t), plural };
+  if (op === "scale") I.factor = /\b(smaller|tinier|shrink|narrower|shorter)\b/.test(t) ? 0.83 : 1.2;
+  if (op === "rotate") {
+    let mm;
+    if ((mm = after.match(/\b(?:to )?fac(?:e|ing)\s+(?:the\s+)?(.+)$/) || t.match(/^face (?:the )?\w+(?: \w+)? (?:toward|towards|to) (?:the )?(.+)$/))) I.faceRef = parseRef(mm[1]);
+    else if ((mm = after.match(/(\d+)\s*(?:deg|degrees|°)?/))) I.deg = +mm[1] * (/\bleft|counter/.test(after) ? 1 : -1);
+    else if (/\baround|180\b/.test(after)) I.deg = 180;
+    else if (/\bleft\b/.test(after)) I.deg = 90;
+    else I.deg = -90;
+  }
+  if (op === "paint" && !I.color) return { op: "unknown", text: t, msg: "Which color? I know: " + Object.keys(COLORS).filter(c => c !== "grey").join(", ") + "." };
+  // object qualifier vs destination
+  let qual = null, rest = after;
+  const qm = after.match(QUAL_RE);
+  if (compound && op !== "add") qual = compound.landmark === "window" ? { landmark: "window" } : compound.type ? { type: compound.type, phrase: compound.word } : null;
+  else if (qm && op !== "add") { qual = parseRef(qm[1]) || (/(corner|middle|center|wall)/.test(qm[1]) ? { area: qm[1] } : null); rest = after.slice(qm[0].length); }
+  I.qualText = compound ? (compound.word || compound.landmark) : qm ? qm[0].trim() : null;
+  const preQual = (before.match(/\b(left|right|front|back|first|second|other|new|newest|old|original|green|navy|teal|blue|purple|white|black|red|brown|gray|grey|charcoal|walnut|lavender|orange|pink|sage|chocolate)\b/) || [])[1] || null;
+  I.preQual = preQual;
+  if (op === "move") {
+    const restLoc = parseLoc(rest);
+    if (qual && !restLoc) {
+      // "move the chair by the window": is "by the window" which chair, or where to put it?
+      const cands = ofType(T.type);
+      const qp = refPoint(qual);
+      const near = qp ? cands.filter(c => dist(c, qp) < 1.8) : [];
+      if (cands.length > 1 && near.length === 1) { I.qual = qual; I.loc = null; }
+      else { I.qual = null; I.loc = parseLoc(after); }
+    } else { I.qual = qual; I.loc = restLoc; }
+  } else if (op === "add") {
+    I.loc = parseLoc(after);
+  } else { I.qual = qual; }
+  return I;
+}
+function unknownObjectIn(s) {
+  const m = s.match(/^(?:(?:a|an|the|another|some|one more|new)\s+)?([a-z]+(?: [a-z]+)?)/);
+  if (!m) return null;
+  const w = m[1].replace(/\b(there|here|next|by|in|on|to|near)\b.*$/, "").trim();
+  return w && !findTypes(w).length ? w : null;
+}
+function refPoint(ref) {
+  if (!ref) return null;
+  if (ref.landmark === "window") return { x: WINDOW.x, z: WINDOW.z };
+  if (ref.landmark === "viewer") return { x: 0, z: ROOM.maxZ + 2 };
+  if (ref.area) { if (/corner/.test(ref.area)) return null; if (/wall/.test(ref.area)) return { x: 0, z: ROOM.minZ }; return { x: 0, z: 0 }; }
+  if (ref.type) { const c = ofType(ref.type); if (c.length === 1) return c[0]; }
+  return null;
+}
+
+/* ---------------- Resolving which object ---------------- */
+function resolveObject(type, I, forcedId, role) {
+  if (forcedId) return { obj: byId(forcedId), how: "you chose it" };
+  const cands = ofType(type);
+  if (!cands.length) return { err: `There's no ${CAT[type].label} in the room. Say "add a ${CAT[type].label}" to add one.` };
+  if (cands.length === 1) return { obj: cands[0], how: "it's the only one" };
+  if (S.selected && byId(S.selected) && byId(S.selected).type === type && (I.pronoun || /\b(this|that|selected)\b/.test(I.before || ""))) return { obj: byId(S.selected), how: "you selected it" };
+  const q = role === "target" ? I.qual : null;
+  if (q) {
+    const p = refPoint(q);
+    if (p) { const s = cands.slice().sort((a, b) => dist(a, p) - dist(b, p)); if (dist(s[1], p) - dist(s[0], p) > 0.6) return { obj: s[0], how: `you said "${I.qualText || "which one"}"` }; }
+  }
+  const pq = role === "target" ? I.preQual : null;
+  if (pq) {
+    let pick = null;
+    if (pq === "left") pick = cands.reduce((a, b) => a.x < b.x ? a : b);
+    else if (pq === "right") pick = cands.reduce((a, b) => a.x > b.x ? a : b);
+    else if (pq === "back") pick = cands.reduce((a, b) => a.z < b.z ? a : b);
+    else if (pq === "front") pick = cands.reduce((a, b) => a.z > b.z ? a : b);
+    else if (pq === "first" || pq === "old" || pq === "original") pick = cands[0];
+    else if (pq === "second") pick = cands[1];
+    else if (pq === "new" || pq === "newest") pick = cands[cands.length - 1];
+    else if (COLORS[pq]) { const m = cands.filter(c => c.color === pq); if (m.length === 1) pick = m[0]; }
+    if (pick) return { obj: pick, how: `you said "${pq}"` };
+  }
+  if (S.selected && byId(S.selected) && byId(S.selected).type === type) return { obj: byId(S.selected), how: "you selected it" };
+  return { ask: { role, type, options: cands.map(c => ({ id: c.id, label: describe(c) })) } };
+}
+
+/* ---------------- Spatial agent + layout checker ---------------- */
+function inRoom(x, z, w, d, rot) { const h = half(w, d, rot); return { x: Math.min(ROOM.maxX - h.hx - 0.05, Math.max(ROOM.minX + h.hx + 0.05, x)), z: Math.min(ROOM.maxZ - h.hz - 0.05, Math.max(ROOM.minZ + h.hz + 0.05, z)) }; }
+function overlaps(x, z, w, d, rot, ignore, objs) {
+  const h = half(w, d, rot), hits = [];
+  for (const o of objs) {
+    if (ignore.includes(o.id) || CAT[o.type].flat) continue;
+    const od = dims(o), oh = half(od.w, od.d, o.rot);
+    if (Math.abs(x - o.x) < h.hx + oh.hx + 0.04 && Math.abs(z - o.z) < h.hz + oh.hz + 0.04) hits.push(o);
+  }
+  return hits;
+}
+function findFree(type, x, z, rot, scale, ignore = [], objs = S.objs) {
+  const c = CAT[type], w = c.w * scale, d = c.d * scale;
+  const p0 = inRoom(x, z, w, d, rot);
+  const clamped = Math.hypot(p0.x - x, p0.z - z);
+  if (c.flat) return { x: p0.x, z: p0.z, nudge: clamped, hit: null, wall: clamped > 0.05 };
+  const first = overlaps(p0.x, p0.z, w, d, rot, ignore, objs);
+  if (!first.length) return { x: p0.x, z: p0.z, nudge: clamped, hit: null, wall: clamped > 0.05 };
+  for (let r = 0.1; r <= 2.6; r += 0.1) {
+    const n = Math.max(8, Math.round(r * 24));
+    for (let k = 0; k < n; k++) {
+      const a = (k / n) * Math.PI * 2, q = inRoom(p0.x + Math.cos(a) * r, p0.z + Math.sin(a) * r, w, d, rot);
+      if (!overlaps(q.x, q.z, w, d, rot, ignore, objs).length) return { x: q.x, z: q.z, nudge: Math.hypot(q.x - x, q.z - z), hit: first[0], wall: false };
+    }
+  }
+  return null;
+}
+function resolveLoc(loc, type, scale, mover, I, forced) {
+  const c = CAT[type], w = c.w * scale, d = c.d * scale;
+  const curRot = mover ? mover.rot : 0;
+  if (!loc) {
+    if (S.pointer) return { x: S.pointer.x, z: S.pointer.z, rot: curRot, where: "at the spot you marked", why: "you'd marked a spot, so I used it", conf: "medium", usedPointer: true };
+    if (mover) return { needPoint: true };
+    return { x: 0.3, z: 0.9, rot: 0, where: "in an open spot near the middle", why: "you didn't say where, so I picked an open spot", conf: "medium" };
+  }
+  if (loc.kind === "unsupported") return { err: `I can't do ${loc.what} yet. Try "next to", "in front of", "in the corner", or point and say "there".` };
+  if (loc.kind === "point") {
+    if (!S.pointer) return { needPoint: true };
+    return { x: S.pointer.x, z: S.pointer.z, rot: curRot, where: "at the spot you marked", conf: "high", usedPointer: true };
+  }
+  if (loc.kind === "center") return { x: 0, z: 0, rot: curRot, where: "in the middle of the room", conf: "high" };
+  if (loc.kind === "corner") {
+    const all = [[-1, -1], [1, -1], [-1, 1], [1, 1]].filter(([a, b]) => (!loc.lr || a === loc.lr) && (!loc.fb || b === loc.fb));
+    const opts = all.map(([a, b]) => { const p = inRoom(a * 4, b * 3, w, d, 0); return { a, b, ...p, busy: overlaps(p.x, p.z, w, d, 0, mover ? [mover.id] : [], S.objs).length }; });
+    opts.sort((p, q) => p.busy - q.busy || (mover ? dist(p, mover) - dist(q, mover) : 0));
+    const o = opts[0];
+    const named = `${o.b < 0 ? "back" : "front"}-${o.a < 0 ? "left" : "right"}`;
+    return { x: o.x, z: o.z, rot: o.b < 0 ? 180 + (o.a < 0 ? -45 : 45) : (o.a < 0 ? 45 : -45), where: `in the ${named} corner`, conf: (loc.lr && loc.fb) ? "high" : "medium", why: (loc.lr && loc.fb) ? null : `you didn't say which corner, so I picked the ${o.busy ? "closest" : "free"} one` };
+  }
+  if (loc.kind === "wall") {
+    if (loc.which === "left") return { x: ROOM.minX + d / 2 + 0.05, z: mover ? mover.z : 1.2, rot: 90, where: "against the left wall", conf: "high" };
+    return { x: mover ? mover.x : 0, z: ROOM.minZ + d / 2 + 0.05, rot: 0, where: "against the back wall", conf: "high" };
+  }
+  if (loc.kind === "dir") {
+    if (!mover) return { err: `"${loc.word}" needs something to move from. Try "next to the sofa" or point and say "there".` };
+    return { x: mover.x + loc.dx, z: mover.z + loc.dz, rot: mover.rot, where: `${fmt(loc.amt)} m ${loc.word === "back" || loc.word === "backward" || loc.word === "backwards" ? "back" : loc.word === "left" || loc.word === "right" ? "to the " + loc.word : "forward"}`, conf: "high" };
+  }
+  // reference-based
+  const ref = loc.ref;
+  if (!ref) return { err: "I couldn't tell what you want it next to. Try naming a piece of furniture or the window." };
+  if (ref.missing) return { err: `This room has no ${ref.missing}. Try the window or a piece of furniture.` };
+  let R, rname;
+  if (ref.landmark === "window") { R = { x: ROOM.minX, z: WINDOW.z, rot: 90, w: 0, d: 0 }; rname = "the window"; }
+  else if (ref.landmark === "viewer") { R = { x: 0, z: ROOM.maxZ, rot: 180, w: 0, d: 0 }; rname = "you"; }
+  else {
+    const r = resolveObject(ref.type, I, forced.ref, "ref");
+    if (r.err) return { err: r.err };
+    if (r.ask) return { ask: r.ask };
+    if (mover && r.obj.id === mover.id) return { err: `It can't go next to itself. Name another piece of furniture.` };
+    const rd = dims(r.obj); R = { ...r.obj, w: rd.w, d: rd.d }; rname = "the " + nameOf(r.obj); if (ofType(ref.type).length > 1) rname = "the " + describe(r.obj);
+  }
+  if (loc.kind === "toward" || loc.kind === "away") {
+    if (!mover) return { err: `"Closer to" needs something to move. Try "put a lamp next to the sofa".` };
+    const vx = R.x - mover.x, vz = R.z - mover.z, L = Math.hypot(vx, vz) || 1, s = loc.kind === "toward" ? 1 : -1;
+    const step = loc.kind === "toward" ? Math.min(loc.amt === 0.5 ? L * 0.5 : loc.amt, Math.max(0, L - 0.8)) : loc.amt;
+    return { x: mover.x + s * vx / L * step, z: mover.z + s * vz / L * step, rot: mover.rot, where: `${fmt(step)} m ${loc.kind === "toward" ? "closer to" : "away from"} ${rname}`, conf: "high" };
+  }
+  if (ref.landmark === "window") {
+    if (loc.rel !== "next") return { x: ROOM.minX + d / 2 + 0.25, z: WINDOW.z, rot: 90, where: "by the window", conf: "medium", why: "the window is on the wall, so I put it just inside" };
+    return { x: ROOM.minX + Math.max(w, d) / 2 + 0.2, z: WINDOW.z + (mover && mover.z > WINDOW.z ? 0.2 : 0), rot: type === "chair" ? 90 : (mover ? mover.rot : 90), where: "by the window", conf: "high" };
+  }
+  if (ref.landmark === "viewer") return { x: mover ? mover.x : 0, z: ROOM.maxZ - d / 2 - 0.3, rot: mover ? mover.rot : 0, where: "toward the open side, closest to you", conf: "medium" };
+  const f = { x: Math.sin(rad(R.rot)), z: Math.cos(rad(R.rot)) }, p = { x: Math.cos(rad(R.rot)), z: -Math.sin(rad(R.rot)) };
+  if (loc.rel === "front" || loc.rel === "behind") {
+    const s = loc.rel === "front" ? 1 : -1, gap = R.d / 2 + d / 2 + (loc.rel === "front" ? 0.45 : 0.1);
+    const rot = type === "chair" || type === "sofa" ? normDeg(R.rot + 180 * (s > 0 ? 1 : 0)) : (mover ? mover.rot : R.rot);
+    return { x: R.x + f.x * gap * s, z: R.z + f.z * gap * s, rot, where: `${loc.rel === "front" ? "in front of" : "behind"} ${rname}`, conf: "high" };
+  }
+  // next to: try both sides, prefer one that's free and inside the room
+  const gap = R.w / 2 + w / 2 + 0.15;
+  const sides = [1, -1].map(s => { const x = R.x + p.x * gap * s, z = R.z + p.z * gap * s; const q = inRoom(x, z, w, d, R.rot); return { x, z, cost: Math.hypot(q.x - x, q.z - z) * 4 + overlaps(q.x, q.z, w, d, R.rot, mover ? [mover.id] : [], S.objs).length + (mover ? dist({ x, z }, mover) * 0.05 : 0) }; });
+  sides.sort((a, b) => a.cost - b.cost);
+  const rot = type === "chair" ? faceAngle(sides[0], { x: R.x + f.x * 1.2, z: R.z + f.z * 1.2 }) : (CAT[type].flat ? 0 : R.rot);
+  return { x: sides[0].x, z: sides[0].z, rot, where: `next to ${rname}`, conf: "high" };
+}
+
+/* ---------------- Planner: intent to plan, with agent trace ---------------- */
+function plan(I, forced = {}) {
+  const trace = [];
+  const say = (who, msg) => trace.push({ who, msg });
+  say("Language agent", `Heard: "${I.text}".`);
+  if (I.op === "unknown") {
+    if (I.msg) return { kind: "error", msg: I.msg, trace };
+    if (I.unknownObject) return { kind: "error", msg: `I don't have a "${I.unknownObject}" yet. I can add: ${Object.values(CAT).map(c => c.label).join(", ")}.`, trace, unknown: true };
+    if (I.needObject) return { kind: "error", msg: `Which object? Name it ("the chair") or click it in the room first.`, trace, unknown: true };
+    return { kind: "error", msg: `I didn't catch an action. Try: "add a lamp next to the sofa", "move the chair there", "turn the chair to face the table", "remove the plant", "tidy up" or "undo".`, trace, unknown: true };
+  }
+  if (I.op === "walls") {
+    say("Language agent", `Action: recolor · Object: the walls · Color: ${I.color}.`);
+    return { kind: "plan", title: `Paint the walls ${I.color}`, slots: [["Action", "Recolor"], ["Object", "Walls"], ["Color", I.color]], conf: "high", confWhy: "you named the color", steps: [{ op: "walls", color: COLORS[I.color] }], needsOK: false, trace, summary: `Painted the walls ${I.color}` };
+  }
+  if (I.op === "add") {
+    const type = I.type, scale = 1;
+    say("Language agent", `Action: add · Object: ${CAT[type].label}${I.color ? " · Color: " + I.color : ""}${I.loc ? " · Place: given" : " · Place: not given"}.`);
+    if (I.plural) say("Language agent", "You used a plural; I'll add one, and you can repeat the request for more.");
+    const L = resolveLoc(I.loc, type, scale, null, I, forced);
+    if (L.err) return { kind: "error", msg: L.err, trace };
+    if (L.ask) return { kind: "ask", ask: L.ask, trace, intent: I, forced };
+    if (L.needPoint) return { kind: "point", msg: `Where should the ${CAT[type].label} go? Click or tap the floor to mark the spot.`, trace, intent: I, forced };
+    say("Spatial agent", `Place: ${L.where} (${fromWalls(L.x, L.z)}).`);
+    const F = findFree(type, L.x, L.z, L.rot, scale);
+    if (!F) return { kind: "error", msg: `There's no free space for a ${CAT[type].label} there. Try another spot.`, trace };
+    const notes = [];
+    if (L.why) notes.push("I " + L.why.replace(/^you/, "noticed you") + ".");
+    if (F.nudge > 0.08 && F.hit) { notes.push(`I moved it ${fmt(F.nudge)} m so it doesn't overlap the ${nameOf(F.hit)}.`); say("Layout checker", `Overlap with the ${nameOf(F.hit)}; nudged ${fmt(F.nudge)} m.`); }
+    else if (F.nudge > 0.08) { notes.push(`I moved it ${fmt(F.nudge)} m to keep it inside the room.`); say("Layout checker", `Too close to a wall; nudged ${fmt(F.nudge)} m.`); }
+    else say("Layout checker", "No overlaps; inside the room.");
+    const conf = (F.nudge > 0.3 || L.conf === "medium") ? "medium" : "high";
+    const color = I.color || CAT[type].color;
+    return { kind: "plan", title: `Add a ${I.color ? I.color + " " : ""}${CAT[type].label}`, slots: [["Action", "Add"], ["Object", `${I.color ? I.color + " " : ""}${CAT[type].label}`], ["Where", `${L.where}`], ["Exactly", fromWalls(F.x, F.z)]], conf, confWhy: conf === "high" ? "you named the object and the place" : (L.why || "I had to adjust the place"), notes, steps: [{ op: "add", type, x: F.x, z: F.z, rot: L.rot, color }], needsOK: false, trace, usedPointer: L.usedPointer, summary: `Added a ${CAT[type].label} ${L.where}` };
+  }
+  // ops on existing objects
+  const r = resolveObject(I.type, I, forced.target, "target");
+  if (r.err) return { kind: "error", msg: r.err, trace };
+  if (r.ask) { say("Language agent", `There are ${r.ask.options.length} ${CAT[I.type].label}s and nothing says which one. Asking.`); return { kind: "ask", ask: r.ask, trace, intent: I, forced }; }
+  const o = r.obj, oname = ofType(o.type).length > 1 ? describe(o) : nameOf(o);
+  say("Language agent", `Object: the ${oname} (${r.how}).`);
+  if (I.op === "remove") {
+    say("Language agent", "Action: remove. Removals wait for your OK.");
+    return { kind: "plan", title: `Remove the ${oname}`, slots: [["Action", "Remove"], ["Object", `the ${oname}`]], conf: "high", confWhy: r.how, notes: ["Removals always wait for your OK. You can undo afterward."], steps: [{ op: "remove", id: o.id }], needsOK: true, trace, summary: `Removed the ${oname}` };
+  }
+  if (I.op === "rotate") {
+    let rot, what;
+    if (I.faceRef) {
+      const fp = I.faceRef.landmark ? refPoint(I.faceRef) : null;
+      let target = fp, tname = I.faceRef.landmark === "window" ? "the window" : "you";
+      if (!fp) {
+        if (!I.faceRef.type) return { kind: "error", msg: "I couldn't tell what it should face. Name a piece of furniture or the window.", trace };
+        const rr = resolveObject(I.faceRef.type, I, forced.ref, "ref");
+        if (rr.err) return { kind: "error", msg: rr.err, trace };
+        if (rr.ask) return { kind: "ask", ask: rr.ask, trace, intent: I, forced };
+        if (rr.obj.id === o.id) return { kind: "error", msg: "It can't face itself.", trace };
+        target = rr.obj; tname = "the " + nameOf(rr.obj);
+      }
+      rot = faceAngle(o, target); what = `to face ${tname}`;
+    } else { rot = normDeg(o.rot + I.deg); what = Math.abs(I.deg) === 180 ? "around" : `${Math.abs(I.deg)}° ${I.deg > 0 ? "left" : "right"}`; }
+    say("Spatial agent", `Turn ${what}: from ${Math.round(o.rot)}° to ${Math.round(rot)}°.`);
+    const od = dims(o), F = findFree(o.type, o.x, o.z, rot, o.scale, [o.id]);
+    if (!F) return { kind: "error", msg: "It doesn't fit turned that way. Move it first.", trace };
+    const notes = [];
+    if (F.nudge > 0.08) { notes.push(`Turned, it would ${F.hit ? "hit the " + nameOf(F.hit) : "touch a wall"}, so I'll shift it ${fmt(F.nudge)} m.`); say("Layout checker", `Shift ${fmt(F.nudge)} m to fit.`); } else say("Layout checker", "Fits where it is.");
+    return { kind: "plan", title: `Turn the ${oname} ${what}`, slots: [["Action", "Turn"], ["Object", `the ${oname}`], ["How", what]], conf: "high", confWhy: r.how, notes, steps: [{ op: "move", id: o.id, x: F.x, z: F.z, rot }], needsOK: false, trace, summary: `Turned the ${oname} ${what}` };
+  }
+  if (I.op === "scale") {
+    const s = Math.min(1.6, Math.max(0.6, (o.scale || 1) * I.factor));
+    if (Math.abs(s - o.scale) < 0.01) return { kind: "error", msg: `The ${oname} is already as ${I.factor > 1 ? "big" : "small"} as it goes.`, trace };
+    const F = findFree(o.type, o.x, o.z, o.rot, s, [o.id]);
+    if (!F) return { kind: "error", msg: "It won't fit at that size here.", trace };
+    say("Spatial agent", `Size: ${Math.round(o.scale * 100)}% → ${Math.round(s * 100)}%.`);
+    const notes = []; if (F.nudge > 0.08) { notes.push(`At that size I'll shift it ${fmt(F.nudge)} m to fit.`); say("Layout checker", `Shift ${fmt(F.nudge)} m.`); } else say("Layout checker", "Fits.");
+    return { kind: "plan", title: `Make the ${oname} ${I.factor > 1 ? "bigger" : "smaller"}`, slots: [["Action", "Resize"], ["Object", `the ${oname}`], ["Size", `${Math.round(s * 100)}%`]], conf: "high", confWhy: r.how, notes, steps: [{ op: "move", id: o.id, x: F.x, z: F.z, rot: o.rot, scale: s }], needsOK: false, trace, summary: `Made the ${oname} ${I.factor > 1 ? "bigger" : "smaller"}` };
+  }
+  if (I.op === "paint") {
+    say("Language agent", `Action: recolor · Color: ${I.color}.`);
+    say("Layout checker", "Color only; nothing moves.");
+    return { kind: "plan", title: `Make the ${oname} ${I.color}`, slots: [["Action", "Recolor"], ["Object", `the ${oname}`], ["Color", I.color]], conf: "high", confWhy: r.how, notes: [], steps: [{ op: "color", id: o.id, color: I.color }], needsOK: false, trace, summary: `Made the ${oname} ${I.color}` };
+  }
+  // move
+  say("Language agent", `Action: move${I.loc ? "" : " · Place: not given"}.`);
+  const L = resolveLoc(I.loc, o.type, o.scale, o, I, forced);
+  if (L.err) return { kind: "error", msg: L.err, trace };
+  if (L.ask) return { kind: "ask", ask: L.ask, trace, intent: I, forced: { ...forced, target: o.id } };
+  if (L.needPoint) return { kind: "point", msg: `Where should the ${oname} go? Click or tap the floor to mark the spot.`, trace, intent: I, forced: { ...forced, target: o.id } };
+  say("Spatial agent", `Place: ${L.where} (${fromWalls(L.x, L.z)}).`);
+  const F = findFree(o.type, L.x, L.z, L.rot, o.scale, [o.id]);
+  if (!F) return { kind: "error", msg: "There's no free space for it there. Try another spot.", trace };
+  const notes = [];
+  if (L.why) notes.push("I " + L.why.replace(/^you/, "noticed you") + ".");
+  if (F.nudge > 0.08 && F.hit) { notes.push(`I moved it ${fmt(F.nudge)} m from that spot so it doesn't overlap the ${nameOf(F.hit)}.`); say("Layout checker", `Overlap with the ${nameOf(F.hit)}; nudged ${fmt(F.nudge)} m.`); }
+  else if (F.nudge > 0.08) { notes.push(`I moved it ${fmt(F.nudge)} m to keep it inside the room.`); say("Layout checker", `Wall; nudged ${fmt(F.nudge)} m.`); }
+  else say("Layout checker", "No overlaps; inside the room.");
+  const moved = Math.hypot(F.x - o.x, F.z - o.z);
+  if (moved < 0.05 && Math.abs(normDeg(L.rot - o.rot)) < 1) return { kind: "error", msg: `The ${oname} is already there.`, trace };
+  const conf = (F.nudge > 0.3 || L.conf === "medium") ? "medium" : "high";
+  return { kind: "plan", title: `Move the ${oname}`, slots: [["Action", "Move"], ["Object", `the ${oname}`], ["Where", L.where], ["Exactly", fromWalls(F.x, F.z)]], conf, confWhy: conf === "high" ? `${r.how}, and the place is clear` : (L.why || "I had to adjust the place"), notes, steps: [{ op: "move", id: o.id, x: F.x, z: F.z, rot: L.rot }], needsOK: false, trace, usedPointer: L.usedPointer, summary: `Moved the ${oname} ${L.where}` };
+}
+
+/* ---------------- Agent suggestions (tidy up) ---------------- */
+function propose() {
+  const trace = [{ who: "Language agent", msg: "Asked for suggestions. Nothing applies until you choose." }];
+  const steps = [];
+  const tables = ofType("table"), desks = ofType("desk"), sofas = ofType("sofa");
+  const sim = JSON.parse(JSON.stringify(S.objs));
+  for (const ch of ofType("chair")) {
+    const atDesk = desks.some(d => dist(d, ch) < 1.3);
+    if (atDesk || !tables.length) continue;
+    const t = tables.reduce((a, b) => dist(a, ch) < dist(b, ch) ? a : b);
+    const want = faceAngle(ch, t);
+    if (Math.abs(normDeg(want - ch.rot)) > 25) steps.push({ on: true, text: `Turn the ${describe(ch)} to face the coffee table`, why: "Seats in a sitting area face the table so people can talk. This one faces " + facesOf(ch).replace(/^faces /, "") + ".", step: { op: "move", id: ch.id, x: ch.x, z: ch.z, rot: want } });
+  }
+  trace.push({ who: "Spatial agent", msg: `Checked ${ofType("chair").length} chairs against the coffee table.` });
+  const lamps = ofType("lamp");
+  if (sofas.length) {
+    const so = sofas[0];
+    if (!lamps.length) {
+      const L = resolveLoc({ kind: "adj", rel: "next", ref: { type: "sofa" } }, "lamp", 1, null, { text: "" }, {});
+      const F = L && !L.err && !L.ask ? findFree("lamp", L.x, L.z, 0, 1) : null;
+      if (F) steps.push({ on: false, text: "Add a lamp next to the sofa", why: "The sitting area has no light. This adds furniture, so it starts unchecked.", step: { op: "add", type: "lamp", x: F.x, z: F.z, rot: 0, color: CAT.lamp.color } });
+    } else {
+      for (const l of lamps) if (dist(l, so) > 2.2) {
+        const L = resolveLoc({ kind: "adj", rel: "next", ref: { type: "sofa" } }, "lamp", l.scale, l, { text: "" }, {});
+        const F = L && !L.err && !L.ask ? findFree("lamp", L.x, L.z, l.rot, l.scale, [l.id]) : null;
+        if (F) steps.push({ on: true, text: `Move the lamp ${whereOf(l)} next to the sofa`, why: `A reading light should be within reach of the seat; this one is ${fmt(dist(l, so))} m away.`, step: { op: "move", id: l.id, x: F.x, z: F.z, rot: l.rot } });
+      }
+    }
+  }
+  trace.push({ who: "Spatial agent", msg: `Checked lighting for the sofa: ${lamps.length ? lamps.length + " lamp(s)" : "no lamp"}.` });
+  // overlaps
+  const solid = S.objs.filter(o => !CAT[o.type].flat);
+  for (let i = 0; i < solid.length; i++) for (let j = i + 1; j < solid.length; j++) {
+    const a = solid[i], b = solid[j], ad = dims(a), bd = dims(b), ah = half(ad.w, ad.d, a.rot), bh = half(bd.w, bd.d, b.rot);
+    if (Math.abs(a.x - b.x) < ah.hx + bh.hx - 0.02 && Math.abs(a.z - b.z) < ah.hz + bh.hz - 0.02) {
+      const F = findFree(b.type, b.x, b.z, b.rot, b.scale, [b.id]);
+      if (F) steps.push({ on: true, text: `Separate the ${nameOf(b)} from the ${nameOf(a)}`, why: "They overlap.", step: { op: "move", id: b.id, x: F.x, z: F.z, rot: b.rot } });
+    }
+  }
+  // walkway: keep 0.45 m between the table and the sofa
+  if (tables.length && sofas.length) {
+    const t = tables[0], so = sofas[0], gap = Math.abs(t.z - so.z) - dims(t).d / 2 - dims(so).d / 2;
+    if (Math.abs(t.x - so.x) < 1.2 && gap < 0.4) {
+      const nz = so.z + Math.sign(t.z - so.z || 1) * (dims(so).d / 2 + dims(t).d / 2 + 0.45);
+      steps.push({ on: true, text: "Give the coffee table room from the sofa", why: `Only ${fmt(Math.max(0, gap))} m to get past; 0.45 m is the usual minimum.`, step: { op: "move", id: t.id, x: t.x, z: nz, rot: t.rot } });
+    }
+  }
+  trace.push({ who: "Layout checker", msg: `Checked every pair for overlaps and the gap at the sofa. ${steps.length} suggestion${steps.length === 1 ? "" : "s"}.` });
+  if (!steps.length) return { kind: "done", msg: "The room already passes my checks: chairs face the table, the sofa has a light, nothing overlaps and the walkway is clear. No changes suggested.", trace, proposal: true };
+  return { kind: "plan", proposal: true, title: `${steps.length} suggestion${steps.length === 1 ? "" : "s"} from the agents`, items: steps, conf: "medium", confWhy: "these are the agents' ideas, not your request", notes: [], steps: [], needsOK: true, trace, summary: "Applied agent suggestions" };
+}
+
+/* ---------------- Executing ---------------- */
+const snap = () => JSON.stringify({ objs: S.objs, walls: S.walls });
+function applySteps(steps, summary, kind) {
+  S.undo.push(snap());
+  for (const st of steps) {
+    if (st.op === "add") { const o = mk(st.type, st.x, st.z, st.rot); o.color = st.color; S.objs.push(o); S.selected = o.id; }
+    else if (st.op === "move") { const o = byId(st.id); if (o) { o.x = st.x; o.z = st.z; o.rot = st.rot; if (st.scale) o.scale = st.scale; } }
+    else if (st.op === "remove") { S.objs = S.objs.filter(o => o.id !== st.id); if (S.selected === st.id) S.selected = null; }
+    else if (st.op === "color") { const o = byId(st.id); if (o) o.color = st.color; }
+    else if (st.op === "walls") S.walls = st.color;
+  }
+  S.history.push({ t: clockStr(), text: summary, undone: false });
+  S.lastOp = kind || "change";
+  sync(); renderHistory(); renderScene();
+  announce(summary + ". You can undo it.");
+  T.after();
+}
+function undo() {
+  cancelPending(true);
+  if (!S.undo.length) { showCard("err", `<p>Nothing to undo.</p>`); announce("Nothing to undo."); return; }
+  const st = JSON.parse(S.undo.pop()); S.objs = st.objs; S.walls = st.walls;
+  const h = [...S.history].reverse().find(x => !x.undone); if (h) h.undone = true;
+  if (S.selected && !byId(S.selected)) S.selected = null;
+  S.lastOp = "undo"; T.ev("undos");
+  sync(); renderHistory(); renderScene();
+  showCard("done", `<p class="eyebrow">Undone</p><p>${esc(h ? h.text : "Last change")}, taken back.</p>`);
+  announce("Undone: " + (h ? h.text : "last change"));
+  T.after();
+}
+function cancelPending(quiet) {
+  if (S.pending && S.pending.timer) clearTimeout(S.pending.timer);
+  const had = !!(S.pending || S.asking || S.awaitingPoint);
+  S.pending = null; S.asking = null; S.awaitingPoint = null;
+  clearPreview(); clearNumbers();
+  if (!quiet) showCard("", "");
+  return had;
+}
+function stopAll() {
+  const had = cancelPending(true);
+  stopMic();
+  T.ev("stops");
+  showCard("done", `<p class="eyebrow">Stopped</p><p>${had ? "Cancelled what was pending. Nothing changed." : "Nothing was pending. Nothing changed."}</p>`);
+  announce("Stopped. Nothing changed.");
+  if (T.task && T.task.proposalOpen) { T.task.proposalOpen = false; }
+}
+function clockStr() { const d = new Date(); return d.toTimeString().slice(0, 5); }
+
+/* ---------------- Running a command ---------------- */
+function run(text, src = "typed") {
+  const I = intentOf(text);
+  if (I.op === "empty") return null;
+  T.ev("commands");
+  if (I.op === "stop") { stopAll(); return { kind: "stopped" }; }
+  if (I.op === "undo") { undo(); return { kind: "undone" }; }
+  if (I.op === "confirm") { if (S.pending) { confirm(); return { kind: "applied" }; } showCard("err", "<p>Nothing is waiting for an OK.</p>"); return { kind: "error" }; }
+  if (I.op === "answer") { if (S.asking) return answer(I.n); showCard("err", "<p>There's no question to answer right now.</p>"); return { kind: "error" }; }
+  if (I.op === "help") { showCard("done", helpHTML()); return { kind: "help" }; }
+  if (I.op === "describe") { showCard("done", `<p class="eyebrow">In the room</p><ul class="notes">${S.objs.map(o => `<li>${esc(cap(nameOf(o)))}, ${esc(whereOf(o))}${CAT[o.type].flat ? "" : ", " + esc(facesOf(o))}</li>`).join("")}</ul>`); announce(S.objs.map(o => nameOf(o) + " " + whereOf(o)).join(". ")); return { kind: "describe" }; }
+  // a new request while an answer is awaited: maybe it answers the question
+  if (S.asking && I.op !== "propose") {
+    const opt = S.asking.options.findIndex(o => matchesOption(I.text, o));
+    if (opt >= 0) return answer(opt + 1);
+  }
+  cancelPending(true);
+  const P = I.op === "propose" ? propose() : plan(I);
+  return present(P);
+}
+function matchesOption(text, o) {
+  const ob = byId(o.id); if (!ob) return false;
+  const w = whereOf(ob).replace(/^(by|near|in) /, "").replace(/^the /, "");
+  return text.includes(w) && text.length < w.length + 20;
+}
+function present(P) {
+  if (P.kind === "error") { T.ev(P.unknown ? "notUnderstood" : "errors"); showCard("err", `<p>${esc(P.msg)}</p>${traceHTML(P.trace)}`); announce(P.msg); return { kind: "error", message: P.msg }; }
+  if (P.kind === "done") { showCard("done", `<p>${esc(P.msg)}</p>${traceHTML(P.trace)}`); announce(P.msg); if (P.proposal) T.proposalResolved("none"); return { kind: "done", message: P.msg }; }
+  if (P.kind === "point") { S.awaitingPoint = { intent: P.intent, forced: P.forced }; showCard("ask", `<p class="eyebrow">Point to a spot</p><p>${esc(P.msg)}</p>${traceHTML(P.trace)}<div class="actions"><button class="btn" data-act="cancel">Cancel</button></div>`); announce(P.msg); hint("Click or tap the floor to mark the spot."); return { kind: "needs-point", message: P.msg }; }
+  if (P.kind === "ask") {
+    T.ev("clarifications");
+    S.asking = { intent: P.intent, forced: P.forced, role: P.ask.role, options: P.ask.options };
+    const q = `Which ${CAT[P.ask.type].label}${P.ask.role === "ref" ? " do you mean as the reference" : ""}?`;
+    showCard("ask", `<p class="eyebrow">Question</p><h2>${esc(q)}</h2><div class="opts">${P.ask.options.map((o, i) => `<button class="btn" data-answer="${i + 1}"><span class="num">${i + 1}</span>The ${esc(o.label)}</button>`).join("")}</div><p class="empty">Say or type a number, click one, or click it in the room.</p>${traceHTML(P.trace)}`);
+    showNumbers(P.ask.options.map(o => o.id));
+    announce(q + " " + P.ask.options.map((o, i) => (i + 1) + ": the " + o.label).join(". "));
+    return { kind: "question", question: q, options: P.ask.options.map((o, i) => ({ n: i + 1, label: o.label })) };
+  }
+  // plan
+  const review = $("#reviewall").checked;
+  const needsOK = P.needsOK || review;
+  S.pending = { plan: P, timer: null };
+  if (P.usedPointer) { S.pointer = null; updatePointer(); }
+  showPreview(P);
+  const slots = P.slots ? `<dl class="slots">${P.slots.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : "";
+  const items = P.items ? `<ul class="steps">${P.items.map((it, i) => `<li><label><input type="checkbox" data-item="${i}" ${it.on ? "checked" : ""}><span>${esc(it.text)}<small>${esc(it.why)}</small></span></label></li>`).join("")}</ul>` : "";
+  const notes = P.notes && P.notes.length ? `<ul class="notes">${P.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : "";
+  const conf = `<p><span class="conf ${P.conf}">Confidence: ${P.conf}</span> <span class="empty">${esc(P.confWhy || "")}</span></p>`;
+  const dur = 1.6;
+  const actions = needsOK
+    ? `<div class="actions"><button class="btn ${P.proposal ? "ai" : "primary"}" data-act="confirm">${P.proposal ? "Apply checked" : P.steps[0] && P.steps[0].op === "remove" ? "Remove it" : "Apply"} <kbd>Enter</kbd></button><button class="btn" data-act="cancel">${P.proposal ? "Reject all" : "Cancel"}</button></div>`
+    : `<div class="countdown" style="--dur:${dur}s" aria-hidden="true"><i></i></div><div class="actions"><button class="btn primary" data-act="confirm">Apply now</button><button class="btn" data-act="cancel">Cancel</button></div><p class="empty">Applying in ${dur} seconds. Press Stop or Esc to cancel.</p>`;
+  showCard("plan", `<p class="eyebrow">${P.proposal ? "The agents suggest" : "What I understood"}</p><h2>${esc(P.title)}</h2>${slots}${items}${conf}${notes}${actions}${traceHTML(P.trace)}`);
+  if (P.proposal && T.task) T.task.proposalOpen = true;
+  announce(P.title + (needsOK ? ". Waiting for your OK." : ". Applying in 2 seconds unless you stop it."));
+  if (!needsOK) S.pending.timer = setTimeout(confirm, dur * 1000);
+  return { kind: needsOK ? "waiting-for-ok" : "previewing", title: P.title, confidence: P.conf, slots: P.slots, suggestions: P.items ? P.items.map(i => ({ text: i.text, why: i.why, checked: i.on })) : undefined, trace: P.trace };
+}
+function confirm() {
+  if (!S.pending) return;
+  const P = S.pending.plan;
+  if (S.pending.timer) clearTimeout(S.pending.timer);
+  let steps = P.steps, summary = P.summary;
+  if (P.proposal) {
+    const boxes = [...document.querySelectorAll("#card [data-item]")];
+    const chosen = P.items.filter((it, i) => boxes.length ? boxes[i].checked : it.on);
+    steps = chosen.map(c => c.step);
+    S.pending = null; clearPreview();
+    if (!steps.length) { showCard("done", "<p>No suggestions were checked. Nothing changed.</p>"); T.proposalResolved("rejected"); return; }
+    summary = `Applied ${steps.length} of ${P.items.length} agent suggestion${P.items.length === 1 ? "" : "s"}`;
+    applySteps(steps, summary, "proposal");
+    showCard("done", `<p class="eyebrow">Done</p><p>${esc(summary)}.</p><div class="actions"><button class="btn" data-act="undo">Undo</button></div>`);
+    T.proposalResolved(steps.length === P.items.length ? "accepted" : "partly accepted");
+    return;
+  }
+  S.pending = null; clearPreview();
+  applySteps(steps, summary, steps[0].op);
+  showCard("done", `<p class="eyebrow">Done</p><p>${esc(summary)}.</p><div class="actions"><button class="btn" data-act="undo">Undo</button></div>`);
+}
+function answer(n) {
+  if (!S.asking) return { kind: "error" };
+  const o = S.asking.options[n - 1];
+  if (!o) { showCard("err", `<p>There's no option ${n}. Pick 1 to ${S.asking.options.length}.</p>`); return { kind: "error" }; }
+  const { intent, forced, role } = S.asking;
+  S.asking = null; clearNumbers();
+  return present(plan(intent, { ...forced, [role]: o.id }));
+}
+function onPoint(x, z) {
+  S.pointer = { x, z }; updatePointer();
+  if (S.awaitingPoint) { const { intent, forced } = S.awaitingPoint; S.awaitingPoint = null; present(plan(intent, forced)); }
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function helpHTML() {
+  return `<p class="eyebrow">What you can say</p><ul class="notes">
+  <li>Add: "put a lamp next to the sofa", "add a plant in the back-right corner", "add a green chair there"</li>
+  <li>Move: "move the chair there", "move the desk chair closer to the table", "push the table back a bit"</li>
+  <li>Turn: "turn the chair to face the table", "turn the sofa 45 degrees left"</li>
+  <li>Change: "make the rug purple", "make the plant bigger", "paint the walls sage"</li>
+  <li>Remove: "remove the plant" (waits for your OK)</li>
+  <li>Ask the agents: "tidy up"</li>
+  <li>Any time: "undo", "stop", "what's in the room"</li></ul><p class="empty">"There" means the spot you last clicked on the floor. "It" or "this" means the furniture you selected.</p>`;
+}
+function traceHTML(tr) {
+  if (!tr || !tr.length) return "";
+  return `<details class="trace"><summary>Agent trace (${tr.length} messages)</summary><ol>${tr.map(m => `<li><span class="who">${esc(m.who)}</span><span>${esc(m.msg)}</span></li>`).join("")}</ol></details>`;
+}
+
+/* ---------------- Panel UI ---------------- */
+function showCard(kind, html) { const c = $("#card"); c.className = "card" + (kind ? " " + kind : ""); c.innerHTML = html; }
+function announce(t) { const s = $("#sr"); s.textContent = ""; setTimeout(() => s.textContent = t, 30); }
+function hint(t) { $("#hint").textContent = t || "Drag to turn the view · click the floor to point · click furniture to select it"; }
+function renderHistory() {
+  const h = $("#history");
+  h.innerHTML = S.history.length ? S.history.slice().reverse().map(x => `<li class="${x.undone ? "undone" : ""}"><span class="t">${x.t}</span><span>${esc(x.text)}${x.undone ? " (undone)" : ""}</span></li>`).join("") : `<li class="empty" style="display:block">No changes yet.</li>`;
+  $("#histcount").textContent = S.history.filter(x => !x.undone).length ? `${S.history.filter(x => !x.undone).length} applied` : "";
+  $("#undo").disabled = !S.undo.length;
+}
+function renderScene() {
+  $("#scenelist").innerHTML = S.objs.map(o => `<li><button data-sel="${o.id}" aria-pressed="${S.selected === o.id}"><b>${esc(cap(nameOf(o)))}${o.color !== CAT[o.type].color ? " · " + esc(o.color) : ""}</b><span>${esc(whereOf(o))}${CAT[o.type].flat ? "" : " · " + esc(facesOf(o))}</span></button></li>`).join("");
+  const j = $("#scenejson"); if (j) j.textContent = JSON.stringify(stateJSON(), null, 2);
+}
+function stateJSON() {
+  return { room: { width_m: 8, depth_m: 6, origin: "center of the floor; x grows to the right, z grows toward the open side", window: "left wall, centered" },
+    walls: S.walls, marked_spot: S.pointer ? { x: +S.pointer.x.toFixed(2), z: +S.pointer.z.toFixed(2) } : null, selected: S.selected,
+    waiting_for: S.pending ? (S.pending.timer ? "preview" : "confirm") : S.asking ? "answer" : S.awaitingPoint ? "point" : null,
+    objects: S.objs.map(o => ({ id: o.id, type: o.type, x: +o.x.toFixed(2), z: +o.z.toFixed(2), rotation_deg: Math.round(o.rot), scale: +o.scale.toFixed(2), color: o.color, where: whereOf(o), faces: CAT[o.type].flat ? null : facesOf(o).replace(/^faces /, "") })) };
+}
+function select(id) { S.selected = S.selected === id ? null : id; renderScene(); sync(); if (S.selected) announce("Selected the " + describe(byId(id)) + ". Say \"it\" to refer to it."); }
+function updatePointer() {
+  $("#readout").textContent = S.pointer ? `Marked spot: ${fromWalls(S.pointer.x, S.pointer.z)}. Say "there" to use it.` : `No spot marked. Click the floor to point, then say "there".`;
+  if (G) { G.pointer.visible = !!S.pointer; if (S.pointer) G.pointer.position.set(S.pointer.x, 0.01, S.pointer.z); }
+  const j = $("#scenejson"); if (j) j.textContent = JSON.stringify(stateJSON(), null, 2);
+}
+
+/* ---------------- 3D ---------------- */
+let G = null;
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function initGL() {
+  if (!window.THREE) { $("#nogl").hidden = false; return; }
+  try {
+    const canvas = $("#c");
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    const scene = new THREE.Scene(); scene.background = new THREE.Color(css("--stage") || "#dfe5ea");
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { scene.background = new THREE.Color(css("--stage") || "#dfe5ea"); });
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f96, 0.75));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(-4, 7, 4); sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6 }); scene.add(sun);
+    const room = new THREE.Group(); scene.add(room);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(8, 6), new THREE.MeshStandardMaterial({ color: 0xcdb79a, roughness: 0.9 }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; room.add(floor);
+    const gridM = new THREE.LineBasicMaterial({ color: 0x9c8a72, transparent: true, opacity: 0.35 }), gp = [];
+    for (let x = -3; x <= 3; x++) gp.push(new THREE.Vector3(x, 0.002, -3), new THREE.Vector3(x, 0.002, 3));
+    for (let z = -2; z <= 2; z++) gp.push(new THREE.Vector3(-4, 0.002, z), new THREE.Vector3(4, 0.002, z));
+    room.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gp), gridM));
+    const wallM = new THREE.MeshStandardMaterial({ color: S.walls, roughness: 0.95 });
+    const back = new THREE.Mesh(new THREE.BoxGeometry(8.1, 2.6, 0.1), wallM); back.position.set(0, 1.3, -3.05); back.receiveShadow = true; room.add(back);
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.6, 6.1), wallM); left.position.set(-4.05, 1.3, 0); left.receiveShadow = true; room.add(left);
+    const win = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.2), new THREE.MeshBasicMaterial({ color: 0xbcd6ef })); win.position.set(-3.99, 1.45, 0); win.rotation.y = Math.PI / 2; room.add(win);
+    const frameM = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    for (const [y, h] of [[0.85, 0.06], [2.05, 0.06]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(0.06, h, 1.72), frameM); f.position.set(-3.97, y, 0); room.add(f); }
+    for (const z of [-0.83, 0, 0.83]) { const f = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.26, 0.05), frameM); f.position.set(-3.97, 1.45, z); room.add(f); }
+    const winLabel = label("window", "#1f4f9a"); winLabel.position.set(-3.8, 2.3, 0); room.add(winLabel);
+    // pointer
+    const pointer = new THREE.Group();
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.26, 40), new THREE.MeshBasicMaterial({ color: 0x2a78d6, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2; pointer.add(ring);
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.7, 8), new THREE.MeshBasicMaterial({ color: 0x2a78d6 })); pin.position.y = 0.35; pointer.add(pin);
+    const pl = label("there", "#2a78d6"); pl.position.y = 0.95; pointer.add(pl);
+    pointer.visible = false; scene.add(pointer);
+    const preview = new THREE.Group(); scene.add(preview);
+    const numbers = new THREE.Group(); scene.add(numbers);
+    G = { renderer, scene, camera, room, floor, wallM, pointer, preview, numbers, meshes: new Map(), yaw: 0.62, pitch: 0.78, radius: 10.2, target: new THREE.Vector3(0, 0.3, -0.4), t0: performance.now() };
+    resize(); new ResizeObserver(resize).observe($("#canvaswrap"));
+    bindPointer(canvas);
+    sync();
+    const loop = () => { animate(); requestAnimationFrame(loop); }; loop();
+  } catch (e) { G = null; $("#nogl").hidden = false; }
+}
+function label(text, bg) {
+  const c = document.createElement("canvas"); c.width = 256; c.height = 96; const x = c.getContext("2d");
+  x.font = "700 52px Atkinson Hyperlegible, Arial, sans-serif"; const w = Math.min(240, x.measureText(text).width + 40);
+  x.fillStyle = bg; roundRect(x, (256 - w) / 2, 14, w, 68, 34); x.fill();
+  x.fillStyle = "#fff"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(text, 128, 50);
+  const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false })); s.scale.set(0.9, 0.34, 1); s.renderOrder = 10; return s;
+}
+function roundRect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+function resize() {
+  if (!G) return; const w = $("#canvaswrap").clientWidth, h = $("#canvaswrap").clientHeight;
+  G.renderer.setSize(w, h, false); G.camera.aspect = w / h; G.camera.updateProjectionMatrix();
+  G.base = fitRadius(); if (!G.userZoom) G.radius = G.base;
+}
+function fitRadius() { const a = G.camera.aspect; return Math.min(19, a < 1.3 ? 10.2 * 1.15 / a : 10.2); }
+function placeCamera() {
+  const { yaw, pitch, radius, target } = G;
+  G.camera.position.set(target.x + radius * Math.sin(yaw) * Math.cos(pitch), target.y + radius * Math.sin(pitch), target.z + radius * Math.cos(yaw) * Math.cos(pitch));
+  G.camera.lookAt(target);
+}
+function animate() {
+  if (!G) return;
+  placeCamera();
+  const t = (performance.now() - G.t0) / 1000;
+  G.preview.children.forEach(c => { if (c.userData.pulse) c.traverse(m => { if (m.material && m.material.opacity !== undefined && m.userData.ghost) m.material.opacity = 0.35 + 0.2 * Math.sin(t * 5); }); });
+  for (const [id, g] of G.meshes) if (g.userData.removing) g.traverse(m => { if (m.material && m.material.emissive) m.material.emissive.setRGB(0.45 + 0.25 * Math.sin(t * 6), 0.05, 0.03); });
+  G.renderer.render(G.scene, G.camera);
+}
+function mat(hex, ghost) {
+  if (ghost) { const m = new THREE.MeshStandardMaterial({ color: hex, transparent: true, opacity: 0.45, depthWrite: false, roughness: 0.6 }); m.userData = {}; return m; }
+  return new THREE.MeshStandardMaterial({ color: hex, roughness: 0.8 });
+}
+function build(type, colorName, ghostHex) {
+  const g = new THREE.Group(), c = CAT[type];
+  const main = ghostHex ? mat(ghostHex, true) : mat(COLORS[colorName] || colorName);
+  const leg = ghostHex ? mat(ghostHex, true) : mat(0x3a2a20);
+  const light = ghostHex ? mat(ghostHex, true) : mat(0xf1efe8);
+  const box = (w, h, d, x, y, z, m = main) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.castShadow = !ghostHex; b.receiveShadow = true; g.add(b); return b; };
+  const cyl = (rt, rb, h, x, y, z, m = main, open) => { const b = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, 20, 1, !!open), m); b.position.set(x, y, z); b.castShadow = !ghostHex; g.add(b); return b; };
+  const legs = (w, d, h, r = 0.025) => { for (const sx of [-1, 1]) for (const sz of [-1, 1]) cyl(r, r, h, sx * (w / 2 - 0.06), h / 2, sz * (d / 2 - 0.06), leg); };
+  if (type === "sofa") { box(c.w, 0.4, c.d, 0, 0.24, 0); box(c.w, 0.5, 0.2, 0, 0.68, -c.d / 2 + 0.1); box(0.18, 0.28, c.d, -c.w / 2 + 0.09, 0.56, 0); box(0.18, 0.28, c.d, c.w / 2 - 0.09, 0.56, 0); legs(c.w, c.d, 0.06, 0.03); }
+  else if (type === "chair") { box(0.56, 0.08, 0.56, 0, 0.46, 0); box(0.56, 0.5, 0.07, 0, 0.75, -0.25); legs(0.56, 0.56, 0.42); }
+  else if (type === "table") { box(c.w, 0.06, c.d, 0, 0.42, 0); legs(c.w, c.d, 0.39, 0.03); }
+  else if (type === "desk") { box(c.w, 0.05, c.d, 0, 0.74, 0); legs(c.w, c.d, 0.72); box(0.4, 0.5, c.d - 0.08, c.w / 2 - 0.24, 0.45, 0); }
+  else if (type === "lamp") { cyl(0.17, 0.17, 0.04, 0, 0.02, 0, leg); cyl(0.018, 0.018, 1.45, 0, 0.74, 0, leg); const sh = cyl(0.12, 0.22, 0.3, 0, 1.5, 0, main, true); sh.material.side = THREE.DoubleSide; if (!ghostHex) { sh.material.emissive = new THREE.Color(0xffe8c0); sh.material.emissiveIntensity = 0.35; } }
+  else if (type === "plant") { cyl(0.2, 0.15, 0.34, 0, 0.17, 0, ghostHex ? main : mat(0x8a5a3c)); const fm = main; for (const [x, y, z, r] of [[0, 0.62, 0, 0.27], [0.1, 0.85, 0.05, 0.2], [-0.08, 0.8, -0.06, 0.18]]) { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), fm); s.position.set(x, y, z); s.castShadow = !ghostHex; g.add(s); } }
+  else if (type === "bookshelf") { box(c.w, 1.8, 0.04, 0, 0.9, -c.d / 2 + 0.02); box(0.04, 1.8, c.d, -c.w / 2 + 0.02, 0.9, 0); box(0.04, 1.8, c.d, c.w / 2 - 0.02, 0.9, 0); for (const y of [0.02, 0.45, 0.9, 1.35, 1.78]) box(c.w, 0.04, c.d, 0, y, 0);
+    if (!ghostHex) { const bc = [0x2a63c4, 0x0b6b66, 0x5b47b8, 0x6b4430, 0x2f7d4a, 0x8fb8e8]; let k = 0; for (const y of [0.04, 0.47, 0.92, 1.37]) { let x = -c.w / 2 + 0.07; while (x < c.w / 2 - 0.12) { const bw = 0.05 + ((k * 37) % 5) * 0.012, bh = 0.26 + ((k * 13) % 4) * 0.03; box(bw, bh, c.d - 0.1, x + bw / 2, y + bh / 2, 0.02, mat(bc[k % bc.length])); x += bw + 0.01; k++; } } } }
+  else if (type === "rug") { box(c.w, 0.012, c.d, 0, 0.006, 0); }
+  g.traverse(m => { if (m.material && ghostHex) m.userData.ghost = true; });
+  return g;
+}
+function sync() {
+  if (!G) return;
+  G.wallM.color.set(S.walls);
+  const keep = new Set(S.objs.map(o => o.id));
+  for (const [id, g] of G.meshes) if (!keep.has(id)) { G.scene.remove(g); G.meshes.delete(id); }
+  for (const o of S.objs) {
+    let g = G.meshes.get(o.id);
+    if (!g || g.userData.color !== o.color) { if (g) G.scene.remove(g); g = build(o.type, o.color); g.userData.color = o.color; g.userData.id = o.id; G.scene.add(g); G.meshes.set(o.id, g); }
+    g.position.set(o.x, 0, o.z); g.rotation.y = rad(o.rot); g.scale.setScalar(o.scale || 1);
+    g.userData.removing = false;
+    const sel = S.selected === o.id;
+    g.traverse(m => { if (m.material && m.material.emissive && !(o.type === "lamp" && m.material.emissiveIntensity === 0.35)) m.material.emissive.setHex(sel ? 0x1f3f7a : 0x000000); });
+  }
+}
+function clearPreview() {
+  if (!G) return;
+  while (G.preview.children.length) G.preview.remove(G.preview.children[0]);
+  for (const [, g] of G.meshes) if (g.userData.removing) { g.userData.removing = false; }
+  sync();
+}
+function showPreview(P) {
+  if (!G) return;
+  clearPreview();
+  const ai = 0x5b47b8;
+  const steps = P.proposal ? P.items.filter(i => i.on).map(i => i.step) : P.steps;
+  for (const st of steps) {
+    if (st.op === "add") { const g = build(st.type, st.color, ai); g.position.set(st.x, 0, st.z); g.rotation.y = rad(st.rot); g.userData.pulse = true; G.preview.add(g); }
+    else if (st.op === "move") {
+      const o = byId(st.id); if (!o) continue;
+      const g = build(o.type, o.color, ai); g.position.set(st.x, 0, st.z); g.rotation.y = rad(st.rot); g.scale.setScalar(st.scale || o.scale); g.userData.pulse = true; G.preview.add(g);
+      if (Math.hypot(st.x - o.x, st.z - o.z) > 0.1) {
+        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(o.x, 0.05, o.z), new THREE.Vector3(st.x, 0.05, st.z)]), new THREE.LineDashedMaterial({ color: ai, dashSize: 0.15, gapSize: 0.1 }));
+        line.computeLineDistances(); G.preview.add(line);
+      }
+    }
+    else if (st.op === "color") { const o = byId(st.id); if (!o) continue; const g = build(o.type, st.color); g.position.set(o.x, 0.002, o.z); g.rotation.y = rad(o.rot); g.scale.setScalar(o.scale * 1.02); G.preview.add(g); }
+    else if (st.op === "remove") { const g = G.meshes.get(st.id); if (g) g.userData.removing = true; }
+    else if (st.op === "walls") G.wallM.color.set(st.color);
+  }
+}
+function showNumbers(ids) {
+  if (!G) return; clearNumbers();
+  ids.forEach((id, i) => { const o = byId(id); if (!o) return; const s = label(String(i + 1), "#1f4f9a"); s.scale.set(0.8, 0.3, 1); s.position.set(o.x, 1.2, o.z); G.numbers.add(s); });
+}
+function clearNumbers() { if (!G) return; while (G.numbers.children.length) G.numbers.remove(G.numbers.children[0]); }
+function bindPointer(canvas) {
+  const ray = new THREE.Raycaster(), v = new THREE.Vector2();
+  let down = null, dragged = false;
+  canvas.addEventListener("pointerdown", e => { down = { x: e.clientX, y: e.clientY, yaw: G.yaw, pitch: G.pitch }; dragged = false; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener("pointermove", e => {
+    if (!down) return; const dx = e.clientX - down.x, dy = e.clientY - down.y;
+    if (Math.hypot(dx, dy) > 6) dragged = true;
+    if (dragged) { G.yaw = Math.max(-1.2, Math.min(1.7, down.yaw - dx * 0.006)); G.pitch = Math.max(0.3, Math.min(1.25, down.pitch + dy * 0.004)); }
+  });
+  canvas.addEventListener("pointerup", e => {
+    if (!down) return; const wasDrag = dragged; down = null; if (wasDrag) return;
+    const r = canvas.getBoundingClientRect(); v.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(v, G.camera);
+    if (S.asking) {
+      const hits = ray.intersectObjects([...G.meshes.values()], true);
+      for (const h of hits) { let n = h.object; while (n && !n.userData.id) n = n.parent; if (n) { const i = S.asking.options.findIndex(o => o.id === n.userData.id); if (i >= 0) { answer(i + 1); return; } } }
+    }
+    const solids = [...G.meshes.entries()].filter(([id]) => { const o = byId(id); return o && !CAT[o.type].flat; }).map(([, g]) => g);
+    const hit = ray.intersectObjects(solids, true)[0];
+    if (hit && !S.awaitingPoint) { let n = hit.object; while (n && !n.userData.id) n = n.parent; if (n) { select(n.userData.id); return; } }
+    const fh = ray.intersectObject(G.floor)[0];
+    if (fh) onPoint(Math.max(ROOM.minX + 0.1, Math.min(ROOM.maxX - 0.1, fh.point.x)), Math.max(ROOM.minZ + 0.1, Math.min(ROOM.maxZ - 0.1, fh.point.z)));
+  });
+  canvas.addEventListener("wheel", e => { e.preventDefault(); G.userZoom = true; G.radius = Math.max(5.5, Math.min(20, G.radius + Math.sign(e.deltaY) * 0.6)); }, { passive: false });
+}
+function viewBy(dyaw, dr) { if (!G) return; G.yaw = Math.max(-1.2, Math.min(1.7, G.yaw + dyaw)); if (dr) G.userZoom = true; G.radius = Math.max(5.5, Math.min(20, G.radius + dr)); }
+
+/* ---------------- Usability test ---------------- */
+const TASKS = [
+  { text: "Add a lamp next to the sofa.", check: () => ofType("lamp").some(l => ofType("sofa").some(s => dist(l, s) <= 1.9)) },
+  { text: "Move the chair by the window to a spot you point to on the floor.", start: () => { const c = ofType("chair").slice().sort((a, b) => dist(a, WINDOW) - dist(b, WINDOW))[0]; return c ? { id: c.id, x: c.x, z: c.z } : null; }, check: s => { const c = s && byId(s.id); return !!c && Math.hypot(c.x - s.x, c.z - s.z) > 0.4; } },
+  { text: "Remove the plant.", start: () => ({ n: ofType("plant").length }), check: s => ofType("plant").length < s.n },
+  { text: "You changed your mind: bring the plant back with undo.", start: () => ({ n: ofType("plant").length }), check: s => S.lastOp === "undo" && ofType("plant").length > s.n },
+  { text: "Ask the agents to tidy up, then accept or reject what they suggest.", proposal: true, check: () => false },
+];
+const T = {
+  on: false, i: -1, task: null, results: [], pid: "P01",
+  ev(k) { if (this.task && !this.task.done) this.task.m[k] = (this.task.m[k] || 0) + 1; },
+  begin() {
+    this.on = true; this.i = -1; this.results = [];
+    resetRoom();
+    this.next();
+  },
+  next() {
+    this.i++;
+    if (this.i >= TASKS.length) return this.finish();
+    const def = TASKS[this.i];
+    this.task = { def, t0: performance.now(), m: { commands: 0, clarifications: 0, notUnderstood: 0, errors: 0, stops: 0, undos: 0 }, start: def.start ? def.start() : null, done: false, outcome: "" };
+    this.render();
+  },
+  after() { if (!this.task || this.task.done) return; if (!this.task.def.proposal && this.task.def.check(this.task.start)) this.complete(true, "completed"); },
+  proposalResolved(how) { if (this.task && !this.task.done && this.task.def.proposal) this.complete(true, how === "none" ? "nothing suggested" : how); },
+  complete(ok, outcome) { const k = this.task; k.done = true; k.ok = ok; k.outcome = outcome; k.secs = (performance.now() - k.t0) / 1000; this.render(); },
+  rate(n) { const k = this.task; this.results.push({ participant: this.pid, task: this.i + 1, instruction: k.def.text, success: k.ok, outcome: k.outcome, seconds: +k.secs.toFixed(1), commands: k.m.commands, clarifying_questions: k.m.clarifications, not_understood: k.m.notUnderstood, other_errors: k.m.errors, stops: k.m.stops, undos: k.m.undos, ease_1_to_7: n }); this.next(); },
+  skip() { this.complete(false, "skipped"); },
+  render() {
+    const el = $("#testcard"); el.hidden = false;
+    const k = this.task;
+    if (!k.done) {
+      el.innerHTML = `<p class="eyebrow">Usability test · ${esc(this.pid)}</p><p class="taskn">Task ${this.i + 1} of ${TASKS.length}</p><p class="task">${esc(k.def.text)}</p><div class="meter" id="tmeter"></div><div class="actions"><button class="btn small" data-test="skip">I'm stuck, skip</button><button class="btn small ghost" data-test="end">End test</button></div>`;
+      this.tick();
+    } else {
+      el.innerHTML = `<p class="eyebrow">Task ${this.i + 1} of ${TASKS.length} · ${k.ok ? "done" : "skipped"}</p><p class="task">How easy was that task?</p><div class="seq" role="group" aria-label="Ease from 1 very difficult to 7 very easy">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="btn small" data-rate="${n}">${n}</button>`).join("")}</div><div class="seqlab"><span>1 Very difficult</span><span>7 Very easy</span></div>`;
+      el.querySelector("[data-rate]").focus();
+    }
+  },
+  tick() {
+    const m = $("#tmeter"); if (!m || !this.task || this.task.done) return;
+    const k = this.task; m.textContent = `${Math.round((performance.now() - k.t0) / 1000)} s · ${k.m.commands} command${k.m.commands === 1 ? "" : "s"} · ${k.m.clarifications} question${k.m.clarifications === 1 ? "" : "s"} · ${k.m.stops} stop${k.m.stops === 1 ? "" : "s"}`;
+    clearTimeout(this._t); this._t = setTimeout(() => this.tick(), 1000);
+  },
+  finish() {
+    this.on = false; this.task = null;
+    const R = this.results, el = $("#testcard");
+    const done = R.filter(r => r.success).length, rated = R.filter(r => r.ease_1_to_7 !== ""), avgE = rated.length ? (rated.reduce((s, r) => s + r.ease_1_to_7, 0) / rated.length).toFixed(1) : "–";
+    el.innerHTML = `<p class="eyebrow">Usability test · ${esc(this.pid)} · finished</p><h2>${done} of ${R.length} tasks completed · average ease ${avgE} of 7</h2>
+    <div class="tablewrap"><table><thead><tr><th>Task</th><th>Result</th><th class="n">Seconds</th><th class="n">Commands</th><th class="n">Questions</th><th class="n">Not understood</th><th class="n">Ease</th></tr></thead><tbody>
+    ${R.map(r => `<tr><td>${r.task}. ${esc(r.instruction)}</td><td>${esc(r.outcome)}</td><td class="n">${r.seconds}</td><td class="n">${r.commands}</td><td class="n">${r.clarifying_questions}</td><td class="n">${r.not_understood}</td><td class="n">${r.ease_1_to_7}</td></tr>`).join("")}</tbody></table></div>
+    <div class="actions"><button class="btn primary" data-test="csv">Download CSV</button><button class="btn" data-test="json">Download JSON</button><button class="btn ghost" data-test="close">Close</button></div><p class="empty">Results stay in this browser until you download them.</p>`;
+    announce(`Test finished. ${done} of ${R.length} tasks completed.`);
+  },
+  download(kind) {
+    const R = this.results; let body, type;
+    if (kind === "csv") { const cols = Object.keys(R[0] || { participant: 1 }); body = cols.join(",") + "\n" + R.map(r => cols.map(c => `"${String(r[c]).replace(/"/g, '""')}"`).join(",")).join("\n"); type = "text/csv"; }
+    else { body = JSON.stringify({ study: "Spatial Director usability test", measures: "completion, time on task, commands, clarifying questions, not-understood requests, stops, undos, Single Ease Question (1-7)", results: R }, null, 2); type = "application/json"; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([body], { type })); a.download = `spatial-director-test-${this.pid}.${kind}`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  },
+};
+function resetRoom() {
+  cancelPending(true);
+  S.objs = JSON.parse(JSON.stringify(INITIAL.objs)); S.walls = INITIAL.walls; S.undo = []; S.history = []; S.selected = null; S.pointer = null; S.lastOp = null;
+  sync(); renderHistory(); renderScene(); updatePointer(); showCard("", "");
+}
+function startTestFlow() {
+  showTab("room");
+  const el = $("#testcard"); el.hidden = false;
+  el.innerHTML = `<p class="eyebrow">Usability test</p><h2>Five short tasks</h2><p>The room resets to its starting layout. Do each task any way you like: type, speak, click. The test notes time, commands, questions and stops, and asks one question after each task.</p>
+  <label for="pid">Participant ID</label><input id="pid" class="mono" value="${esc(T.pid)}" style="min-height:44px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)">
+  <div class="actions"><button class="btn primary" data-test="go">Start</button><button class="btn ghost" data-test="close">Not now</button></div>`;
+  el.scrollIntoView({ block: "nearest" });
+}
+
+/* ---------------- Voice ---------------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false;
+function startMic() {
+  if (!SR) return;
+  rec = new SR(); rec.lang = "en-US"; rec.interimResults = true; rec.maxAlternatives = 1;
+  rec.onresult = e => { let s = ""; for (const r of e.results) s += r[0].transcript; $("#cmd").value = s; if (e.results[e.results.length - 1].isFinal) { stopMic(); submit("spoken"); } };
+  rec.onerror = () => stopMic(); rec.onend = () => { listening = false; $("#mic").setAttribute("aria-pressed", "false"); $("#mic").textContent = "Speak"; };
+  rec.start(); listening = true; $("#mic").setAttribute("aria-pressed", "true"); $("#mic").textContent = "Listening…";
+}
+function stopMic() { if (rec && listening) { try { rec.stop(); } catch (e) {} } listening = false; $("#mic").setAttribute("aria-pressed", "false"); $("#mic").textContent = "Speak"; }
+if (!SR) { $("#mic").disabled = true; $("#mic").title = "Voice needs a browser with speech recognition, such as Chrome, Edge or Safari"; }
+
+/* ---------------- Wiring ---------------- */
+function submit(src) { const v = $("#cmd").value; if (!v.trim()) return; run(v, src); $("#cmd").value = ""; }
+$("#cmdform").addEventListener("submit", e => { e.preventDefault(); submit("typed"); });
+$("#mic").addEventListener("click", () => listening ? stopMic() : startMic());
+$("#stop").addEventListener("click", stopAll);
+$("#undo").addEventListener("click", undo);
+$("#vl").addEventListener("click", () => viewBy(-0.25, 0)); $("#vr").addEventListener("click", () => viewBy(0.25, 0));
+$("#vin").addEventListener("click", () => viewBy(0, -0.8)); $("#vout").addEventListener("click", () => viewBy(0, 0.8));
+$("#vreset").addEventListener("click", () => { if (G) { G.yaw = 0.62; G.pitch = 0.78; G.userZoom = false; G.radius = fitRadius(); } });
+$("#canvaswrap").addEventListener("keydown", e => { if (e.key === "ArrowLeft") { viewBy(-0.15, 0); e.preventDefault(); } if (e.key === "ArrowRight") { viewBy(0.15, 0); e.preventDefault(); } if (e.key === "ArrowUp") { viewBy(0, -0.5); e.preventDefault(); } if (e.key === "ArrowDown") { viewBy(0, 0.5); e.preventDefault(); } });
+document.querySelectorAll("[data-say]").forEach(b => b.addEventListener("click", () => { $("#cmd").value = b.dataset.say; submit("example"); }));
+$("#card").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.act === "confirm") confirm();
+  else if (b.dataset.act === "cancel") { const wasProposal = S.pending && S.pending.plan.proposal; cancelPending(); announce("Cancelled. Nothing changed."); showCard("done", "<p>Cancelled. Nothing changed.</p>"); if (wasProposal) T.proposalResolved("rejected"); }
+  else if (b.dataset.act === "undo") undo();
+  else if (b.dataset.answer) answer(+b.dataset.answer);
+});
+$("#card").addEventListener("change", e => { if (e.target.dataset.item !== undefined && S.pending && S.pending.plan.proposal) { S.pending.plan.items[+e.target.dataset.item].on = e.target.checked; showPreview(S.pending.plan); } });
+$("#scenelist").addEventListener("click", e => { const b = e.target.closest("[data-sel]"); if (!b) return; if (S.asking) { const i = S.asking.options.findIndex(o => o.id === b.dataset.sel); if (i >= 0) { answer(i + 1); return; } } select(b.dataset.sel); });
+$("#testcard").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.rate) T.rate(+b.dataset.rate);
+  const a = b.dataset.test;
+  if (a === "go") { T.pid = ($("#pid").value || "P01").trim().slice(0, 20); T.begin(); }
+  else if (a === "skip") T.skip();
+  else if (a === "end") { const k = T.task; if (k && !k.done) { k.secs = (performance.now() - k.t0) / 1000; T.results.push({ participant: T.pid, task: T.i + 1, instruction: k.def.text, success: false, outcome: "test ended", seconds: +k.secs.toFixed(1), commands: k.m.commands, clarifying_questions: k.m.clarifications, not_understood: k.m.notUnderstood, other_errors: k.m.errors, stops: k.m.stops, undos: k.m.undos, ease_1_to_7: "" }); } T.finish(); }
+  else if (a === "csv") T.download("csv");
+  else if (a === "json") T.download("json");
+  else if (a === "close") { $("#testcard").hidden = true; }
+});
+$("#starttest").addEventListener("click", startTestFlow);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { stopAll(); e.preventDefault(); }
+  else if (e.key === "Enter" && S.pending && !S.pending.timer && document.activeElement !== $("#cmd") && !(document.activeElement && document.activeElement.tagName === "BUTTON")) { confirm(); e.preventDefault(); }
+});
+function showTab(name) {
+  for (const [t, v] of [["room", "#view-room"], ["about", "#view-about"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
+  if (name === "room") resize();
+}
+$("#tab-room").addEventListener("click", () => showTab("room"));
+$("#tab-about").addEventListener("click", () => showTab("about"));
+
+/* ---------------- For agents ---------------- */
+window.SpatialDirector = {
+  run: text => run(String(text), "agent"),
+  point: (x, z) => { const p = { x: Math.max(ROOM.minX, Math.min(ROOM.maxX, +x)), z: Math.max(ROOM.minZ, Math.min(ROOM.maxZ, +z)) }; onPoint(p.x, p.z); return { marked: p, waiting_for: stateJSON().waiting_for }; },
+  confirm: () => { const had = !!S.pending; confirm(); return had ? "applied" : "nothing waiting"; },
+  answer: n => answer(+n),
+  stop: () => { stopAll(); return "stopped"; },
+  undo: () => { undo(); return "undone"; },
+  state: () => stateJSON(),
+  reset: () => { resetRoom(); return "reset"; },
+};
+
+renderHistory(); renderScene(); updatePointer();
+initGL();
+})();
+</script>
+</body>
+</html>
