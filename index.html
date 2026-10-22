@@ -209,6 +209,7 @@ footer p { max-width: 90ch; margin-bottom: 6px; }
 .artlabels { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
 .artlabels p { margin: 4px 0 0; font-size: .875rem; }
 .traits li.mv { background: var(--accent-soft); border-color: var(--accent); font-weight: 700; }
+.floorpicks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
 ul.looks { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 8px; }
 ul.looks li { display: grid; gap: 4px; justify-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .hqchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
@@ -593,7 +594,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           </select>
         </label>
         <label>Floor
-          <select id="floor"><option value="style">Style default</option><option value="wood">Wood plank</option><option value="herringbone">Herringbone wood (classic)</option><option value="concrete">Polished concrete</option><option value="carpet">Corporate carpet tile</option><option value="cork">Natural cork (sustainable)</option></select>
+          <select id="floor"><option value="style">Style default</option><option value="wood">Wood plank</option><option value="herringbone">Herringbone wood (classic)</option><option value="concrete">Polished concrete</option><option value="carpet">Corporate carpet tile</option><option value="cork">Natural cork (sustainable)</option><option value="walnut">Dark walnut plank</option><option value="deco">Black-and-white marble (Art Deco)</option><option value="greencarpet">Library-green wool carpet</option></select>
         </label>
         <div class="viewmode" role="group" aria-label="View">
           <button class="btn small" type="button" data-view="plan" aria-pressed="false">Floor plan</button>
@@ -2192,6 +2193,9 @@ const FLOORS = {
   concrete:    { label: "Polished concrete", tint: "#d8d8d4" },
   carpet:      { label: "Corporate carpet tile", tint: "#8f949a" },
   cork:        { label: "Natural cork (sustainable)", tint: "#c89a64" },
+  walnut:      { label: "Dark walnut plank", tint: "#6b4430", kind: "wood" },
+  deco:        { label: "Black-and-white marble (Art Deco)", tint: "#ffffff" },
+  greencarpet: { label: "Library-green wool carpet", tint: "#4f6b4a", kind: "carpet" },
 };
 let floorPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:floor")); return FLOORS[v] ? v : "style"; } catch (e) { return "style"; } })();
 let artGroup = null;
@@ -2269,7 +2273,7 @@ function texFloor(kind, tint) {
 }
 function applyShell() {
   const G = SD.G, st = STYLES[S.style] || STYLES.modern; if (!G) return;
-  const fk = floorPick === "style" ? st.floor : floorPick;
+  const fk = floorPick === "style" ? st.floor : (FLOORS[floorPick].kind || floorPick);
   texFloor(fk, floorPick === "style" ? st.floorTint : FLOORS[floorPick].tint);
   drawArt(G, !!st.art || floorPick === "__never");
   if (G.slatM) G.slatM.color.setHex(st.slat);
@@ -2902,13 +2906,16 @@ function parts() {
   if (sameBrand(paintP.sus)) paintP.sus = { ...paintP.sus, name: `${pc[2]} ${pc[3]} in ${paintP.sus.name}` };
   else paintP.sus = { ...named, name: `${pc[2]} ${pc[3]}, zero-VOC line`, maker: "Benjamin Moore Natura or Sherwin-Williams Harmony", sus_claim: "Zero-VOC paint lowers indoor air pollutants." };
   out.push({ ...paintP, note: `${STYLES[S.style].paint[0][1]} ${STYLES[S.style].paint[0][2]} ${STYLES[S.style].paint[0][3]}, 2 coats` });
-  { const fk = floorPick === "style" ? (st.floor === "deco" ? "concrete" : st.floor) : floorPick, sq = Math.round(tk.floor * SQFT), ip = PR.rug && PR.rug.sus;
+  { const fk = floorPick === "style" ? st.floor : floorPick, sq = Math.round(tk.floor * SQFT), ip = PR.rug && PR.rug.sus;
     const G = (name, maker, q, claim) => ({ name, maker, url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
     const FL = {
       carpet: [ip ? { ...ip, sus_claim: null } : G("Commercial carpet tile", "Interface", "Interface carpet tile"), G("Wool carpet tile, natural fiber", "Ask for CRI Green Label Plus certification", "wool carpet tile commercial", "Natural, renewable fiber. CRI Green Label Plus tests carpet for low emissions.")],
       cork: [G("Cork plank flooring", "Cork flooring maker", "cork plank flooring", null), G("Cork plank flooring, FSC-certified", "Cork flooring maker", "FSC cork flooring", "Cork is harvested from the bark, so the tree keeps growing.")],
       wood: [G("Engineered oak plank flooring", "Flooring maker", "engineered oak plank flooring"), G("FSC-certified or reclaimed wood flooring", "Flooring maker", "FSC certified reclaimed wood flooring", "FSC certification traces wood to responsibly managed forests.")],
       herringbone: [G("Engineered oak herringbone flooring", "Flooring maker", "engineered oak herringbone flooring"), G("Reclaimed oak herringbone flooring", "Flooring maker", "reclaimed oak herringbone flooring", "Reclaimed wood keeps existing timber in use.")],
+      walnut: [G("Engineered walnut plank flooring", "Flooring maker", "engineered walnut plank flooring"), G("FSC-certified walnut flooring", "Flooring maker", "FSC certified walnut flooring", "FSC certification traces wood to responsibly managed forests.")],
+      deco: [G("Black and white marble tile, checkerboard", "Stone supplier", "black white marble checkerboard floor tile"), G("Black and white porcelain tile with recycled content", "Tile maker", "recycled content porcelain checkerboard tile", "Porcelain lines with recycled content reuse factory waste.")],
+      greencarpet: [G("Green wool broadloom carpet", "Carpet maker", "green wool carpet commercial"), G("Green wool carpet, CRI Green Label Plus", "Carpet maker", "green wool carpet green label plus", "Natural, renewable fiber. CRI Green Label Plus tests carpet for low emissions.")],
       concrete: [G("Polished concrete, existing slab", "Flooring contractor", "concrete floor polishing"), G("Polished existing slab with a low-VOC sealer", "Flooring contractor", "low VOC concrete sealer", "Polishing the existing slab adds almost no new material.")],
     }[fk];
     if (FL) out.push({ key: "bb:floor-" + fk, label: "Flooring, " + (FLOORS[fk] ? FLOORS[fk].label.toLowerCase() : fk), qty: sq, unit: "sq ft", base: FL[0], sus: FL[1], note: `${sq} sq ft room` }); }
@@ -3085,6 +3092,17 @@ Object.assign(window.SpatialDirector, {
 $("#floor").value = floorPick;
 $("#floor").addEventListener("change", e => { floorPick = e.target.value; store.set("floor", floorPick); applyShell();
   post("style", "parts", floorPick === "style" ? "Back to the style's own floor." : `Floor set to ${FLOORS[floorPick].label.toLowerCase()}.`, floorPick === "cork" ? "good" : ""); runBudget(); });
+
+/* Gatsby gets quick floor picks */
+function renderFloorPicks() {
+  let el = $("#floorpicks");
+  if (!el) { el = document.createElement("div"); el.id = "floorpicks"; el.className = "floorpicks"; $(".studio-selects").appendChild(el); }
+  if (S.style !== "gatsby") { el.innerHTML = ""; return; }
+  el.innerHTML = `<span class="eyebrow">Gatsby floors</span>` + ["herringbone", "walnut", "deco", "greencarpet", "cork"].map(k =>
+    `<button type="button" class="chip${(floorPick === k || (floorPick === "style" && k === "herringbone")) ? " on" : ""}" data-floor="${k}">${esc(FLOORS[k].label)}</button>`).join("");
+}
+document.addEventListener("click", e => { const t = e.target.closest("[data-floor]"); if (!t) return; $("#floor").value = t.dataset.floor; $("#floor").dispatchEvent(new Event("change")); renderFloorPicks(); });
+window.addEventListener("sd:synced", renderFloorPicks); $("#floor").addEventListener("change", renderFloorPicks); renderFloorPicks();
 
 /* ---------------- Wiring ---------------- */
 $("#space").addEventListener("change", e => applyDesign(e.target.value, S.style));

@@ -57,7 +57,7 @@ Text opens at 150% for readability. The A− / A+ control beside the tabs sets i
 - **"Looks like" styles.** Thirteen company looks in the Design style list, such as "Looks like LinkedIn New York (Alabaster and bronze)" and "Looks like Qualcomm executive suite (Ocean-view executive suite)". Install puts a look in the room, or straight into the space it suits best; Undo takes it back.
 - **Art and Style agent.** Labels each interior's design movement, materials, mood and named art (for example Jim Campbell's LED artwork at Salesforce Tower, or the flip-disc sculpture at Intuit), from the linked sources. It also labels 14 more tech offices from the Office Snapshots collection, from their published photos, each with an "Install this look" button.
 - **Gatsby is now a classic library.** Dark wood paneling, leather, extra lamps, framed art, deep greens and browns, and a herringbone floor.
-- **Floor choice.** Style default, wood plank, herringbone, polished concrete, corporate carpet tile, or natural cork. The choice adds a flooring line, with a sustainable option, to Build & Budget.
+- **Floor choice.** Style default, wood plank, herringbone, dark walnut, black-and-white marble, polished concrete, corporate carpet tile, library-green wool carpet, or natural cork. Gatsby shows its floors as quick picks. The choice adds a flooring line, with a sustainable option, to Build & Budget.
 
 ## Version 2.1: executive inspirations, final renders, Build & Budget
 
