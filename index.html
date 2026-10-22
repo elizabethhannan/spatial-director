@@ -180,6 +180,175 @@ footer p { max-width: 90ch; margin-bottom: 6px; }
   footer { padding-bottom: 180px; }
 }
 </style>
+<style id="soft-ui">
+/* Soft UI (neumorphic) layer. Surfaces are lifted from one shared base color with paired light and dark shadows; wells and pressed states are inset.
+   Accessibility guard: text keeps 4.5:1 or better, and every control also keeps a thin edge so it doesn't rely on shadow alone. */
+:root {
+  --nm-base: #e4e9ef; --nm-well: #dae0e7; --nm-hi: rgba(255,255,255,.95); --nm-lo: rgba(146,160,182,.62);
+  --nm-edge: rgba(70,86,108,.20); --nm-ctl-edge: rgba(52,66,86,.42);
+  --bg: var(--nm-base); --surface: var(--nm-base); --surface-2: var(--nm-well); --line: rgba(70,86,108,.22);
+  --ink: #111924; --ink-2: #364350; --ink-3: #4f5c68; --stage: #d6dde5;
+  --radius: 18px;
+  --nm-raise: 7px 7px 16px var(--nm-lo), -7px -7px 16px var(--nm-hi);
+  --nm-raise-sm: 3px 3px 8px var(--nm-lo), -3px -3px 8px var(--nm-hi);
+  --nm-inset: inset 3px 3px 7px var(--nm-lo), inset -3px -3px 7px var(--nm-hi);
+  --nm-inset-sm: inset 2px 2px 4px var(--nm-lo), inset -2px -2px 4px var(--nm-hi);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --nm-base: #222932; --nm-well: #1c222a; --nm-hi: rgba(56,66,80,.75); --nm-lo: rgba(8,11,15,.72);
+    --nm-edge: rgba(200,212,226,.10); --nm-ctl-edge: rgba(200,212,226,.30);
+    --ink: #eaeff3; --ink-2: #c3cdd6; --ink-3: #a3afba; --stage: #1d232b; --line: rgba(200,212,226,.14);
+  }
+}
+:root[data-theme="dark"] {
+  --nm-base: #222932; --nm-well: #1c222a; --nm-hi: rgba(56,66,80,.75); --nm-lo: rgba(8,11,15,.72);
+  --nm-edge: rgba(200,212,226,.10); --nm-ctl-edge: rgba(200,212,226,.30);
+  --ink: #eaeff3; --ink-2: #c3cdd6; --ink-3: #a3afba; --stage: #1d232b; --line: rgba(200,212,226,.14);
+}
+body { background: var(--nm-base); }
+
+/* Header and tabs: one continuous soft surface; the tab list is a well, the current tab is lifted */
+.top, .tabbar, nav.tabs { background: var(--nm-base) !important; border: 0 !important; box-shadow: none; }
+.tabbar, nav.tabs { padding-block: 4px 12px; }
+.tabbar .tabs, nav.tabs .wrap { gap: 6px; }
+.tabbar .tabs > .tab:first-of-type, nav.tabs .wrap > .tab:first-of-type { margin-left: 0; }
+.tab { border: 0 !important; border-radius: 14px; padding: 10px 18px; margin-block: 4px; transition: box-shadow .15s, color .15s; }
+.tab:hover { color: var(--ink); box-shadow: var(--nm-raise-sm); }
+.tab[aria-selected="true"] { color: var(--accent) !important; box-shadow: var(--nm-inset); background: var(--nm-base); }
+.tag { background: var(--nm-base) !important; border: 1px solid var(--nm-edge) !important; box-shadow: var(--nm-inset-sm); color: var(--ink-2) !important; }
+
+/* Lifted surfaces */
+.card, .panel, .block, .cmdbar, .controls, .kpi-card, .queue, .detail, .a2a, .canvaswrap, .about pre, .mc, .banner {
+  background: var(--nm-base) !important; border: 1px solid var(--nm-edge) !important; box-shadow: var(--nm-raise) !important; border-radius: var(--radius) !important;
+}
+.card.plan { box-shadow: var(--nm-raise), inset 4px 0 0 var(--ai) !important; }
+.card.ask { box-shadow: var(--nm-raise), inset 4px 0 0 var(--accent) !important; }
+.card.err { box-shadow: var(--nm-raise), inset 4px 0 0 var(--warn) !important; }
+.card.done, .card.test { box-shadow: var(--nm-raise), inset 4px 0 0 var(--good) !important; }
+.canvaswrap { background: var(--stage) !important; }
+.banner { border-left: 0 !important; }
+
+/* Wells (inset): KPI strips, evidence, traces, tables, meters */
+.kpis, .evidence, .says, .note, .result, .table-scroll, .tablewrap, .trace ol, .decide, .stages, .meter .track, .conf .bar, .rrow .trk, .band-bar, .countdown {
+  background: var(--nm-well); box-shadow: var(--nm-inset-sm); border-color: var(--nm-edge) !important;
+}
+.kpis, .evidence, .table-scroll, .tablewrap, .says, .note, .result, .decide { border-radius: 14px; }
+.table-scroll, .tablewrap { padding: 4px; }
+table th, table td { border-bottom-color: var(--line) !important; }
+
+/* Items inside a surface: flat until chosen, then pressed in */
+.qitem, .esc, .opt, .scene button, .kpi .in { border-radius: 14px; transition: box-shadow .15s; }
+.qitem:hover, .esc:hover, .opt:hover, .scene button:hover { background: var(--nm-base) !important; box-shadow: var(--nm-raise-sm); }
+.qitem[aria-current="true"], .esc[aria-current="true"], .scene button[aria-pressed="true"], .kpi[aria-pressed="true"] .in, table.board tbody tr[aria-selected="true"] {
+  background: var(--nm-well) !important; box-shadow: var(--nm-inset) !important; border-color: var(--accent) !important;
+}
+.opt { background: var(--nm-base) !important; border: 1px solid var(--nm-ctl-edge) !important; box-shadow: var(--nm-raise-sm); }
+.opt.rec { border-color: var(--accent) !important; }
+.opt:active { box-shadow: var(--nm-inset) !important; }
+
+/* Controls: raised, pressed when active */
+.btn, .chip, .seg button, .viewctl .btn, .opts .btn, .seq .btn {
+  background: var(--nm-base) !important; border: 1px solid var(--nm-ctl-edge) !important; box-shadow: var(--nm-raise-sm); border-radius: 12px !important; color: var(--ink);
+  transition: box-shadow .12s, transform .12s;
+}
+.btn:hover, .chip:hover { box-shadow: var(--nm-raise); }
+.btn:active, .chip:active, .btn[aria-pressed="true"], .mic[aria-pressed="true"] { box-shadow: var(--nm-inset) !important; transform: translateY(1px); }
+.btn.primary { background: var(--accent) !important; color: var(--accent-ink) !important; border-color: var(--accent) !important; box-shadow: var(--nm-raise-sm), inset 1px 1px 0 rgba(255,255,255,.25); }
+.btn.ai { background: var(--ai) !important; color: #fff !important; border-color: var(--ai) !important; }
+.btn.danger, .btn.stop.on { color: var(--crit) !important; border-color: var(--crit) !important; }
+.btn[disabled] { box-shadow: none !important; opacity: .55; }
+.chip { border-radius: 999px !important; }
+.stop { border-radius: 12px !important; box-shadow: var(--nm-raise-sm), inset 1px 1px 0 rgba(255,255,255,.25); }
+.stop:active { box-shadow: inset 3px 3px 7px rgba(0,0,0,.35) !important; }
+.seg { background: var(--nm-well) !important; box-shadow: var(--nm-inset-sm); border-radius: 14px !important; padding: 4px !important; gap: 4px !important; }
+.seg button { box-shadow: none; border-color: transparent !important; background: transparent !important; }
+.seg button[aria-pressed="true"] { background: var(--nm-base) !important; box-shadow: var(--nm-raise-sm) !important; color: var(--accent) !important; border-color: var(--nm-ctl-edge) !important; }
+
+/* Fields: inset */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea, .cmdrow input, .field select, .field input, .field textarea {
+  background: var(--nm-well) !important; border: 1px solid var(--nm-ctl-edge) !important; box-shadow: var(--nm-inset) !important; border-radius: 12px !important; color: var(--ink);
+}
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+.reasons label { border-radius: 12px; background: var(--nm-base); box-shadow: var(--nm-raise-sm); border-color: var(--nm-ctl-edge) !important; }
+.reasons label:has(input:checked) { box-shadow: var(--nm-inset) !important; }
+
+/* Status pills keep their colors (they carry meaning); just soften the edge */
+.pill, .conf { box-shadow: var(--nm-raise-sm); }
+
+/* Focus stays loud: soft UI must never hide where you are */
+:focus-visible { outline: 3px solid var(--focus) !important; outline-offset: 3px !important; }
+.foot, footer { border-top: 0 !important; }
+@media (prefers-reduced-motion: reduce) { .btn, .chip, .tab, .qitem, .esc { transition: none !important; } }
+@media (forced-colors: active) { .card, .panel, .block, .btn, .tab, input { border: 1px solid CanvasText !important; } }
+.btn.stop:not(.on) { background: var(--crit) !important; color: #fff !important; border-color: var(--crit) !important; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.stop:not(.on) { color: #2a0b08 !important; } }
+:root[data-theme="dark"] .btn.stop:not(.on) { color: #2a0b08 !important; }
+</style>
+<style id="motion">
+/* Motion and depth layer (2026–27): a slow ambient light field behind soft-glass surfaces, a highlight that follows the pointer,
+   staged entrances, spring presses and view transitions. Everything here switches off with the Motion toggle or the system's reduced-motion setting. */
+:root { --aur-1: rgba(42,120,214,.20); --aur-2: rgba(11,107,102,.16); --aur-3: rgba(91,71,184,.16); --glass: color-mix(in srgb, var(--nm-base) 80%, transparent); --spot: rgba(255,255,255,.55); --ease-spring: cubic-bezier(.34,1.56,.64,1); --ease-out: cubic-bezier(.16,1,.3,1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --aur-1: rgba(57,135,229,.22); --aur-2: rgba(25,158,112,.14); --aur-3: rgba(167,151,255,.18); --spot: rgba(160,190,230,.14); } }
+:root[data-theme="dark"] { --aur-1: rgba(57,135,229,.22); --aur-2: rgba(25,158,112,.14); --aur-3: rgba(167,151,255,.18); --spot: rgba(160,190,230,.14); }
+
+body { position: relative; isolation: isolate; }
+body::before {
+  content: ""; position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38vmax 30vmax at 18% 22%, var(--aur-1), transparent 70%),
+    radial-gradient(34vmax 28vmax at 82% 30%, var(--aur-3), transparent 70%),
+    radial-gradient(40vmax 30vmax at 55% 88%, var(--aur-2), transparent 70%);
+  animation: aurora 38s ease-in-out infinite alternate;
+}
+@keyframes aurora { 0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); } 50% { transform: translate3d(3vmax,-2vmax,0) rotate(6deg) scale(1.05); } 100% { transform: translate3d(-3vmax,2vmax,0) rotate(-5deg) scale(1.02); } }
+
+/* Soft glass: the lifted surfaces let the light field through and carry a pointer-following highlight */
+.card, .panel, .block, .cmdbar, .controls, .kpi-card, .queue, .detail, .a2a, .mc, .banner, .about pre {
+  background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), var(--spot), transparent 42%), var(--glass) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.25); backdrop-filter: blur(18px) saturate(1.25);
+}
+.top, .tabbar, nav.tabs { background: transparent !important; }
+.tabbar, nav.tabs { position: sticky; top: 0; z-index: 15; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); background: color-mix(in srgb, var(--nm-base) 70%, transparent) !important; }
+
+/* Staged entrance and scroll reveal */
+.m-reveal { opacity: 0; transform: translateY(14px) scale(.985); }
+.m-reveal.m-in { opacity: 1; transform: none; transition: opacity .6s var(--ease-out), transform .7s var(--ease-out); transition-delay: calc(var(--i, 0) * 55ms); }
+
+/* Spring press, ripple, lift */
+.btn, .chip, .tab, .opt, .qitem, .esc, .seg button, .stop { position: relative; overflow: hidden; transition: transform .35s var(--ease-spring), box-shadow .2s, background-color .2s, color .2s !important; }
+.btn:active, .chip:active, .opt:active, .stop:active, .seg button:active { transform: scale(.965) !important; transition-duration: .08s !important; }
+.qitem:hover, .esc:hover, .opt:hover { transform: translateY(-2px); }
+.m-ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .18; transform: scale(0); animation: ripple .6s var(--ease-out) forwards; }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+.tab[aria-selected="true"] { animation: tabpop .45s var(--ease-spring); }
+@keyframes tabpop { 0% { transform: scale(.94); } 100% { transform: none; } }
+
+/* Live feedback: new rows and changed values glow briefly */
+.m-flash { animation: flash 1.1s var(--ease-out); }
+@keyframes flash { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 100% { box-shadow: 0 0 0 14px transparent; } }
+.countdown i { background: linear-gradient(90deg, var(--ai), var(--accent)) !important; }
+
+/* View transitions between tabs */
+::view-transition-old(root) { animation: vt-out .22s var(--ease-out) both; }
+::view-transition-new(root) { animation: vt-in .42s var(--ease-out) both; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+
+/* Motion switch */
+.m-toggle { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: .8125rem; font-weight: 700; color: var(--ink-2); background: var(--nm-base); border: 1px solid var(--nm-ctl-edge); border-radius: 999px; padding: 4px 12px 4px 6px; cursor: pointer; box-shadow: var(--nm-raise-sm); min-height: 32px; }
+.m-toggle .knob { width: 30px; height: 18px; border-radius: 999px; background: var(--nm-well); box-shadow: var(--nm-inset-sm); position: relative; }
+.m-toggle .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink-3); transition: transform .35s var(--ease-spring), background .2s; }
+.m-toggle[aria-pressed="true"] .knob::after { transform: translateX(12px); background: var(--accent); }
+
+/* Off switch: the toggle, or the system setting */
+html[data-motion="off"] body::before { animation: none; }
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
+html[data-motion="off"] .m-reveal { opacity: 1; transform: none; }
+html[data-motion="off"] .qitem:hover, html[data-motion="off"] .esc:hover, html[data-motion="off"] .opt:hover { transform: none; }
+html[data-motion="off"]::view-transition-old(root), html[data-motion="off"]::view-transition-new(root) { animation: none; }
+@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+</style>
 </head>
 <body>
 <a class="skip" href="#cmd">Skip to the command box</a>
@@ -1333,6 +1502,109 @@ window.SpatialDirector = {
 
 renderHistory(); renderScene(); updatePointer();
 initGL();
+})();
+</script>
+<script id="motion-js">
+(() => {
+  "use strict";
+  const root = document.documentElement;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let pref = null; try { pref = localStorage.getItem("motion"); } catch (e) {}
+  const on = () => root.dataset.motion !== "off";
+  root.dataset.motion = pref || (reduced.matches ? "off" : "on");
+
+  // Motion switch, placed with the page's tags
+  const tgl = document.createElement("button");
+  tgl.type = "button"; tgl.className = "m-toggle";
+  tgl.innerHTML = '<span class="knob" aria-hidden="true"></span><span>Motion</span>';
+  const sync = () => { tgl.setAttribute("aria-pressed", String(on())); tgl.title = on() ? "Motion is on. Turn it off." : "Motion is off. Turn it on."; };
+  tgl.addEventListener("click", () => { root.dataset.motion = on() ? "off" : "on"; try { localStorage.setItem("motion", root.dataset.motion); } catch (e) {} sync(); if (on()) reveal(true); });
+  sync();
+  (document.querySelector(".top .tags") || document.querySelector(".top .wrap") || document.body).appendChild(tgl);
+
+  // Staged entrance + scroll reveal
+  const SURF = ".card, .panel, .block, .cmdbar, .controls, .kpi-card, .queue, .detail, .a2a, .canvaswrap, .chips, .kpis, .about section";
+  const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("m-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" }) : null;
+  function reveal(all) {
+    let i = 0;
+    document.querySelectorAll(SURF).forEach(el => {
+      if (el.dataset.mSeen || el.closest(".m-reveal:not(:scope)") || el.closest("[hidden]")) return;
+      el.dataset.mSeen = "1";
+      if (!on() || !io) return;
+      el.classList.add("m-reveal"); el.style.setProperty("--i", Math.min(i++, 10));
+      io.observe(el);
+    });
+  }
+  reveal();
+  document.addEventListener("click", () => setTimeout(reveal, 60), true);
+
+  // Pointer-following highlight on surfaces
+  let raf = 0, last = null;
+  document.addEventListener("pointermove", e => {
+    last = e; if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0; if (!on() || !last) return;
+      const el = last.target.closest && last.target.closest(".card, .panel, .block, .cmdbar, .controls, .kpi-card, .queue, .detail, .a2a, .mc, .banner");
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", (last.clientX - r.left) + "px"); el.style.setProperty("--my", (last.clientY - r.top) + "px");
+    });
+  }, { passive: true });
+  document.addEventListener("pointerout", e => { const el = e.target.closest && e.target.closest(".card, .panel, .block, .cmdbar, .controls, .kpi-card, .queue, .detail, .a2a, .mc, .banner"); if (el && !el.contains(e.relatedTarget)) { el.style.removeProperty("--mx"); el.style.removeProperty("--my"); } }, { passive: true });
+
+  // Ripple on press
+  document.addEventListener("pointerdown", e => {
+    if (!on()) return;
+    const b = e.target.closest(".btn, .chip, .tab, .opt, .stop, .seg button, .m-toggle"); if (!b) return;
+    const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2, s = document.createElement("span");
+    s.className = "m-ripple"; s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+    b.appendChild(s); setTimeout(() => s.remove(), 650);
+  }, { passive: true });
+
+  // View transitions when switching tabs
+  if (document.startViewTransition) {
+    let replaying = false;
+    document.addEventListener("click", e => {
+      const t = e.target.closest('[role="tab"]');
+      if (!t || replaying || !on() || t.getAttribute("aria-selected") === "true") return;
+      e.stopImmediatePropagation(); e.preventDefault();
+      document.startViewTransition(() => { replaying = true; t.click(); replaying = false; });
+    }, true);
+  }
+
+  // Count-up for headline numbers the first time they appear
+  const NUM = ".kpi .val, .meter .big, .outcome .big";
+  const counted = new WeakSet();
+  const cio = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { cio.unobserve(e.target); countUp(e.target); } }), {}) : null;
+  function countUp(el) {
+    if (!on() || counted.has(el)) return; counted.add(el);
+    const node = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.nodeValue)); if (!node) return;
+    const txt = node.nodeValue, m = txt.match(/-?[\d,]*\.?\d+/); if (!m) return;
+    const target = parseFloat(m[0].replace(/,/g, "")), dec = (m[0].split(".")[1] || "").length, comma = m[0].includes(",");
+    if (!isFinite(target) || target === 0) return;
+    const t0 = performance.now(), dur = 900;
+    let written = txt;
+    const step = now => {
+      if (node.nodeValue !== written) return; // the app re-rendered it: stop
+      const k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+      let v = (target * ease).toFixed(dec); if (comma) v = Number(v).toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      written = k < 1 ? txt.replace(m[0], v) : txt; node.nodeValue = written;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const watchNums = () => document.querySelectorAll(NUM).forEach(el => { if (!counted.has(el) && cio && !el.dataset.mWatch) { el.dataset.mWatch = "1"; cio.observe(el); } });
+  watchNums(); document.addEventListener("click", () => setTimeout(watchNums, 80), true);
+
+  // Flash rows and cards the app adds while you work
+  const mo = new MutationObserver(ms => {
+    if (!on()) return;
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if (n.matches && n.matches(".history li:first-child, .esc, .result, .logged, .trace li:last-child")) { n.classList.remove("m-flash"); void n.offsetWidth; n.classList.add("m-flash"); }
+    }
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 </body>
