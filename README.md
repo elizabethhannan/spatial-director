@@ -49,6 +49,8 @@ Here the human outcome is confidence: you always know what's about to change, an
 
 Every preview shows what was understood (action, object, place in meters from the walls), a confidence level with its reason, and the agent trace.
 
+Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
+
 ## Version 2.0: from idea to a room you can build
 
 Version 2.0 turns the prototype into a planning tool for executive spaces: C-suite offices, front door lobbies and reception areas, and corporate dining. Ten more agents join the original three. Each hands its work to the next, and each handoff appears in the Agent team feed and on the agent network map.

@@ -37,7 +37,7 @@
   --focus: #6aa8f0; --stage: #1a222b; color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; font-size: 16px; }
+html { -webkit-text-size-adjust: 100%; --ts: 1.5; font-size: calc(16px * var(--ts)); }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 1rem; line-height: 1.45; }
 button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
@@ -192,6 +192,11 @@ footer p { max-width: 90ch; margin-bottom: 6px; }
   .layout { padding-bottom: 420px; }
   footer { padding-bottom: 440px; }
 }
+
+.planrow input[type=file] { max-width: 100%; min-width: 0; }
+.textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
+.textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
+.textsize .btn { min-width: 40px; }
 </style>
 <style id="soft-ui">
 /* Soft UI (neumorphic) layer. Surfaces are lifted from one shared base color with paired light and dark shadows; wells and pressed states are inset.
@@ -427,7 +432,7 @@ aside.panel.m-reveal { opacity: 1 !important; transform: none !important; }
 .bcard h3 { margin: 0; font-size: 1.0625rem; }
 .netwrap { background: var(--surface-2); border-radius: 12px; }
 #net { width: 100%; height: auto; display: block; }
-#net text { font: 700 12px var(--font-mono, monospace); fill: var(--ink); }
+#net text { font: 700 .75rem var(--font-mono, monospace); fill: var(--ink); }
 #net .edge { stroke: var(--ink-3); stroke-opacity: .45; stroke-width: 1.6; }
 #net .edge.hot { stroke: var(--ai); stroke-opacity: 1; stroke-width: 2.6; }
 #net .node { fill: var(--surface); stroke-width: 3; }
@@ -488,6 +493,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <button class="tab" role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build it for real</button>
     <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
     <span class="spacer"></span>
+    <div class="textsize" role="group" aria-label="Text size"><button class="btn small" id="ts-down" aria-label="Smaller text">A−</button><span id="ts-val" aria-live="polite">150%</span><button class="btn small" id="ts-up" aria-label="Larger text">A+</button></div>
     <button class="btn small" id="starttest">Run the usability test</button>
   </div>
 </nav>
@@ -2560,6 +2566,22 @@ setTimeout(wait, 200);
     }
   });
   mo.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<script id="textsize-js">
+(() => {
+  const steps = [1, 1.25, 1.5, 1.75, 2, 2.5];
+  let i = 2;
+  try { const v = parseFloat(localStorage.getItem("sd-text-scale")); if (steps.includes(v)) i = steps.indexOf(v); } catch (e) {}
+  const set = () => {
+    document.documentElement.style.setProperty("--ts", steps[i]);
+    const out = document.getElementById("ts-val"); if (out) out.textContent = Math.round(steps[i] * 100) + "%";
+    try { localStorage.setItem("sd-text-scale", steps[i]); } catch (e) {}
+    window.dispatchEvent(new Event("resize"));
+  };
+  document.getElementById("ts-down").addEventListener("click", () => { if (i > 0) { i--; set(); } });
+  document.getElementById("ts-up").addEventListener("click", () => { if (i < steps.length - 1) { i++; set(); } });
+  set();
 })();
 </script>
 </body>
