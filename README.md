@@ -51,6 +51,14 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.2: curated executive looks, Art and Style agent, floors
+
+- **Curated executive inspirations.** LinkedIn New York (M Moser Associates), Nvidia Voyager (Gensler, with One Workplace), Dropbox (Rapt Studio), Salesforce Tower guest reception, Microsoft's Executive Briefing Center (Unispace), Slack (Studio O+A), Google Bay View (STUDIOS Architecture interiors), Adobe Founders Tower (Gensler), Qualcomm's executive suite and Intuit Petah Tikva (Axelrod Architects with Gensler). Each shows the spaces to explore, what stands out, and a "See the photos" link to the photographed interiors at the source. Photos are linked, not copied.
+- **"Looks like" styles.** Thirteen company looks in the Design style list, such as "Looks like LinkedIn New York (Alabaster and bronze)" and "Looks like Qualcomm executive suite (Ocean-view executive suite)". Install puts a look in the room, or straight into the space it suits best; Undo takes it back.
+- **Art and Style agent.** Labels each interior's design movement, materials, mood and named art (for example Jim Campbell's LED artwork at Salesforce Tower, or the flip-disc sculpture at Intuit), from the linked sources. It also labels 14 more tech offices from the Office Snapshots collection, from their published photos, each with an "Install this look" button.
+- **Gatsby is now a classic library.** Dark wood paneling, leather, extra lamps, framed art, deep greens and browns, and a herringbone floor.
+- **Floor choice.** Style default, wood plank, herringbone, polished concrete, corporate carpet tile, or natural cork. The choice adds a flooring line, with a sustainable option, to Build & Budget.
+
 ## Version 2.1: executive inspirations, final renders, Build & Budget
 
 - **Executive inspirations.** Eleven tech headquarters (Apple Park, Salesforce Tower and its Ohana Floor, Nvidia Endeavor and Voyager, Google Bay View, Meta MPK 20 and 21, Amazon's Spheres, Microsoft Redmond, Airbnb, Adobe Founders Tower, Uber and LinkedIn), each with its architect, reported cost where one is published, design traits and source links. The Style agent names a style for each, eight of them new executive styles. Install puts it in the room; Undo takes it back.
