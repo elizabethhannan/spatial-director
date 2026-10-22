@@ -26,6 +26,6 @@ The page exposes `window.SpatialDirector`:
 
 ## Rules for changes to this repo
 
-- Keep the "Self-initiated concept" and "Simulated room" labels visible.
+- Keep the "Self-initiated concept" and "Simulated office" labels visible.
 - HXO appears only as its name and core sentence, word for word.
 - Keep the noindex and noai robots tags.

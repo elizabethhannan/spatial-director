@@ -1,10 +1,10 @@
 # Spatial Director
 
-Direct a 3D room by typing or speaking and pointing: "put a lamp there." Three agents read the request, place it and check the layout, and you see what they understood before anything changes.
+Direct a 3D studio office by typing or speaking and pointing: "put a lamp there." The space is a high-end design office: polished concrete, floor-to-ceiling glass with a dusk view, a walnut slat wall, linear pendants and designer lounge furniture. Text is set at twice the usual size for readability. Three agents read the request, place it and check the layout, and you see what they understood before anything changes.
 
 **Live prototype:** https://elizabethhannan.github.io/spatial-director/  
 **Designer:** Elizabeth Hannan · designer and builder · 2026  
-**Status:** Self-initiated concept with a simulated room. Nothing you do leaves your browser.
+**Status:** Self-initiated concept with a simulated office. Nothing you do leaves your browser.
 
 ## The challenge
 
