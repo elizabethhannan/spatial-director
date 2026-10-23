@@ -51,6 +51,11 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.6: install an artist's work
+
+- Choose an artist in the Inspiration card, then **Install this piece** under any of their photos, or **Install their work**. The piece hangs on a free wall in the 3D room: framed for paintings, photography and advisors' collections, as a glowing lightbox for light, digital and kinetic art, and as a larger panel for installations and sculpture. Photos come from Wikimedia Commons with their photographers' credit; artists without a free photo get a labeled placeholder.
+- Each installed piece adds an **Artwork: <artist>** line to Build & Budget and the invoice, priced "by quote" with a link to the artist, and a sustainable option asking for reclaimed or low-impact materials. Undo takes the piece and the line back out.
+
 ## Version 2.5: artist picker, more ceilings, lighting design
 
 - **Artist picker.** An Artist dropdown in the Inspiration card lists all 31 studios, makers, art advisors and artists with a photo each, grouped and sorted by fit for the room. Choosing one opens a gallery of credited photos of their work, their website and Instagram, and a button to add an artwork spot to the room.

@@ -289,7 +289,8 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 .artopt span.m { font-size: .8125rem; color: var(--ink-2); }
 .artopt .fit { font-size: .6875rem; font-weight: 700; color: var(--good); }
 .artgallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0; }
-.artgallery figure { margin: 0; }
+.artgallery figure { margin: 0; display: grid; gap: 4px; }
+.artgallery figure .btn { justify-self: start; }
 .artgallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
 .artgallery figcaption { font-size: .6875rem; color: var(--ink-3); overflow-wrap: anywhere; }
 #artistcard { display: block; }
@@ -584,7 +585,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.5</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.6</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -1985,14 +1986,14 @@ function build(type, colorName, ghostHex) {
     for (const x of [-c.w / 3, 0, c.w / 3]) for (const z of [-1, 1]) { cyl(0.16, 0.16, 0.06, x, 0.76, z * (c.d / 2 + 0.22), M(0x3a3d40, { roughness: 0.6 }), 20); cyl(0.02, 0.02, 0.74, x, 0.37, z * (c.d / 2 + 0.22), steel, 8); }
   } else if (type === "painting") {
     const fr = M(col, { roughness: 0.5 });
-    box(c.w + 0.1, 0.82, c.d, 0, 1.6, 0, fr);
+    box(c.w + 0.1, 0.82, c.d, 0, 1.6, 0, fr).name = "artframe";
     let tex = null;
     if (!gh) { const cv = document.createElement("canvas"); cv.width = 384; cv.height = 288; const x = cv.getContext("2d");
       const gr = x.createLinearGradient(0, 0, 0, 288); gr.addColorStop(0, "#d8c7a2"); gr.addColorStop(1, "#8a6a44"); x.fillStyle = gr; x.fillRect(0, 0, 384, 288);
       const pal = ["#4f6b45", "#6b4430", "#2f3a35", "#a8875a"]; let s = 5; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
       for (let i = 0; i < 5; i++) { x.fillStyle = pal[i % 4]; x.globalAlpha = 0.6; x.beginPath(); x.moveTo(0, 170 + i * 22); for (let k = 0; k <= 384; k += 32) x.lineTo(k, 150 + i * 24 - r() * 40); x.lineTo(384, 288); x.lineTo(0, 288); x.fill(); }
       tex = new THREE.CanvasTexture(cv); tex.encoding = THREE.sRGBEncoding; }
-    const p = new THREE.Mesh(new THREE.PlaneGeometry(c.w - 0.04, 0.72), gh ? main : new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 })); p.position.set(0, 1.6, c.d / 2 + 0.002); g.add(p);
+    const p = new THREE.Mesh(new THREE.PlaneGeometry(c.w - 0.04, 0.72), gh ? main : new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 })); p.position.set(0, 1.6, c.d / 2 + 0.002); p.name = "artcanvas"; g.add(p);
   } else if (type === "rug") {
     box(c.w, 0.012, c.d, 0, 0.006, 0, M(col, { roughness: 1 }));
     if (!gh) { const inner = mat(new THREE.Color(col).offsetHSL(0, 0, 0.05).getHex(), false, { roughness: 1 }); box(c.w - 0.22, 0.013, c.d - 0.22, 0, 0.0065, 0, inner); }
@@ -2007,7 +2008,8 @@ function sync() {
   for (const [id, g] of G.meshes) if (!keep.has(id)) { G.scene.remove(g); G.meshes.delete(id); }
   for (const o of S.objs) {
     let g = G.meshes.get(o.id);
-    if (!g || g.userData.color !== o.color) { if (g) G.scene.remove(g); g = build(o.type, o.color); g.userData.color = o.color; g.userData.id = o.id; G.scene.add(g); G.meshes.set(o.id, g); }
+    const artKey = o.art ? o.art.src + o.art.mode : "";
+    if (!g || g.userData.color !== o.color || g.userData.art !== artKey) { if (g) G.scene.remove(g); g = build(o.type, o.color); g.userData.color = o.color; g.userData.art = artKey; if (o.art && window.__applyArt) window.__applyArt(g, o); g.userData.id = o.id; G.scene.add(g); G.meshes.set(o.id, g); }
     g.position.set(o.x, 0, o.z); g.rotation.y = rad(o.rot); g.scale.setScalar(o.scale || 1);
     g.userData.removing = false;
     const sel = S.selected === o.id;
@@ -3253,7 +3255,14 @@ function parts() {
   if (n("bookshelf")) out.push(part("shelving", "Shelving", n("bookshelf"), "each", "bookshelf"));
   if (n("bench")) out.push(part("bench", "Bench", n("bench"), "each", "bench"));
   if (n("plant")) out.push(part("plant", "Plants and planters", n("plant"), "each", "plant"));
-  for (const [t, label] of Object.entries(NEWTYPES)) { const k = n(t); if (!k) continue;
+  { const byArtist = {}; for (const o of S.objs) if (o.type === "painting" && o.art) (byArtist[o.art.artist] = byArtist[o.art.artist] || []).push(o);
+    for (const [name, list] of Object.entries(byArtist)) { const a = list[0].art;
+      const q = (nm, claim) => ({ name: nm, maker: name, url: a.site, price_usd: null, price_note: "Quote from the artist", warranty: null, warranty_url: null, retailer: name, amazon_query: name + " art", sus_claim: claim || null, sus_source_url: null, quote: true });
+      out.push({ key: "bb:art-" + name.replace(/\W+/g, "-"), label: "Artwork: " + name, qty: list.length, unit: "each",
+        base: q(`${a.medium} by ${name}, commissioned for this room`),
+        sus: q(`The same commission in reclaimed or low-impact materials`, "Ask the artist about reclaimed or recycled materials, low-VOC finishes and efficient LED drivers."),
+        note: `Shown in the room with a photo of their work: ${a.credit}` }); } }
+  for (const [t, label] of Object.entries(NEWTYPES)) { const k = t === "painting" ? S.objs.filter(o => o.type === t && !o.art).length : n(t); if (!k) continue;
     const p = part(RESEARCH_KEY[t] || "_" + t, label, k, "each", t); if (t === "taskchair") p.match = ["chair", "Frame and seat in"]; out.push(p); }
   { const ck = ceilPick === "auto" ? (SPACES[S.space] && SPACES[S.space].ceiling) || "none" : ceilPick; const sq = Math.round(tk.floor * SQFT);
     const G2 = (name, q, claim) => ({ name, maker: "Millwork or ceiling contractor", url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
@@ -3335,7 +3344,7 @@ function renderWarranty(P) {
 }
 function invoiceRows(P) {
   return P.map((p, i) => { const x = pick(p), q = qtyOf(p, x), buy = withTag(x.url || amazon(x.amazon_query || x.name));
-    return { no: i + 1, label: p.label, product: x.name, maker: x.maker, sus: useSus({ key: p.key }), qty: q, unit: plural(q, unitOf(p, x)), price: x.price_usd, total: x.price_usd != null ? x.price_usd * q : null, buy, amz: amazonFor(x.amazon_query || x.name) }; });
+    return { no: i + 1, label: p.label, product: x.name, maker: x.maker, sus: useSus({ key: p.key }), quote: !!x.quote, qty: q, unit: plural(q, unitOf(p, x)), price: x.price_usd, total: x.price_usd != null ? x.price_usd * q : null, buy, amz: amazonFor(x.amazon_query || x.name) }; });
 }
 function renderInvoice(P) {
   const rows = invoiceRows(P), sub = rows.reduce((s, r) => s + (r.total || 0), 0), unpriced = rows.filter(r => r.total == null).length;
@@ -3344,7 +3353,7 @@ function renderInvoice(P) {
     <div class="credit">Prices${CHECKED ? ` checked ${esc(CHECKED)}` : ""} from each retailer's page; they change, and checkout shows the current price.</div></div>
     <div class="tablewrap"><table class="inv"><thead><tr><th>#</th><th>Item</th><th>Product</th><th class="n">Qty</th><th class="n">Unit price</th><th class="n">Total</th><th class="noprint">Buy</th></tr></thead><tbody>
     ${rows.map(r => `<tr><td>${r.no}</td><td>${esc(r.label)}${r.sus ? ` <span class="pill sus">Sustainable</span>` : ""}</td><td>${esc(r.product)}<br><span class="credit">${esc(r.maker || "")}</span></td>
-      <td class="n">${r.qty} ${esc(r.unit)}</td><td class="n">${r.price != null ? money(r.price) : "at retailer"}</td><td class="n">${r.total != null ? money(r.total) : "—"}</td>
+      <td class="n">${r.qty} ${esc(r.unit)}</td><td class="n">${r.price != null ? money(r.price) : r.quote ? "by quote" : "at retailer"}</td><td class="n">${r.total != null ? money(r.total) : "—"}</td>
       <td class="noprint"><a href="${esc(r.buy)}" target="_blank" rel="noopener sponsored">Buy</a> · <a href="${esc(r.amz)}" target="_blank" rel="noopener sponsored">Amazon</a></td></tr>`).join("")}
     </tbody><tfoot><tr><td colspan="5">Subtotal, priced items</td><td class="n">${money(sub)}</td><td class="noprint"></td></tr>
       <tr><td colspan="7" class="credit">${unpriced ? `${unpriced} made-to-order or quote-only item${unpriced > 1 ? "s are" : " is"} not in the subtotal. ` : ""}Sales tax, shipping and installation are added at checkout or by the installer.</td></tr></tfoot></table></div>
@@ -3487,7 +3496,7 @@ function finalRenders4k() {
 }
 
 /* In the room: search, then show it, add it, or shop for it */
-function addType(type) {
+function addType(type, extra) {
   const c = CAT[type], solid = S.objs.filter(o => o.type !== "rug").map(footprint);
   const fits = (x, z, rot) => { const f = footprint({ type, x, z, rot, scale: 1 }); return x - f.hx > ROOM.minX - 0.01 && x + f.hx < ROOM.maxX + 0.01 && z - f.hz > ROOM.minZ - 0.01 && z + f.hz < ROOM.maxZ + 0.01 &&
     !solid.some(o => Math.abs(o.x - x) < o.hx + f.hx + 0.05 && Math.abs(o.z - z) < o.hz + f.hz + 0.05); };
@@ -3496,11 +3505,13 @@ function addType(type) {
   else outer: for (let z = -2.2; z <= 2.4; z += 0.4) for (let x = -3.2; x <= 3.4; x += 0.4) if (fits(x, z, 0)) { spot = [x, z, 0]; break outer; }
   if (!spot) { SD.showCard("err", `<p>There's no free space for a ${esc(c.label)}. Remove or move something first.</p>`); return; }
   S.undo.push(SD.snap());
-  const o = SD.mk(type, spot[0], spot[1], spot[2]); o.color = STYLES[S.style].pal[type] || c.color; S.objs.push(o); S.selected = o.id;
-  S.history.push({ t: SD.clockStr(), text: `Added a ${c.label}`, undone: false });
+  const o = SD.mk(type, spot[0], spot[1], spot[2]); o.color = STYLES[S.style].pal[type] || c.color; if (extra) Object.assign(o, extra); S.objs.push(o); S.selected = o.id;
+  S.history.push({ t: SD.clockStr(), text: extra && extra.art ? `Installed artwork by ${extra.art.artist}` : `Added a ${c.label}`, undone: false });
   SD.sync(); SD.renderHistory(); SD.renderScene();
-  SD.showCard("done", `<p class="eyebrow">Added</p><p>A ${esc(c.label)}, ${esc(SD.whereOf(o))}. Say "move the ${esc(c.label)} there" to place it, or Undo.</p>`);
-  post("director", "layout", `The person added a ${c.label} from search.`);
+  SD.showCard("done", extra && extra.art ? `<p class="eyebrow">Installed</p><p>Artwork by ${esc(extra.art.artist)}, ${esc(SD.whereOf(o))}. It's on the invoice. Say "move the wall painting there" to place it, or Undo.</p>`
+    : `<p class="eyebrow">Added</p><p>A ${esc(c.label)}, ${esc(SD.whereOf(o))}. Say "move the ${esc(c.label)} there" to place it, or Undo.</p>`);
+  post(extra && extra.art ? "art" : "director", extra && extra.art ? "invoice" : "layout", extra && extra.art ? `Installed ${extra.art.artist}'s work in the room; adding the commission to the invoice.` : `The person added a ${c.label} from search.`);
+  return o;
 }
 function roomSearch(q) {
   const s = q.trim().toLowerCase(); if (!s) { $("#rqresults").innerHTML = ""; return; }
@@ -3749,6 +3760,39 @@ Object.assign(window.SpatialDirector, {
   agentLog: () => LOG.slice(),
 });
 
+/* ---------------- Artwork installs: an artist's piece in the room ---------------- */
+const artImgs = {};
+const artMode = m => /light|led|digital|media|interactive|programmable|kinetic|flip/i.test(m) ? "lightbox" : /paint|photograph|landscape|print|advis|collection|art$/i.test(m) ? "frame" : "panel";
+function placeholderArt(a) {
+  const c = document.createElement("canvas"); c.width = 640; c.height = 420; const x = c.getContext("2d");
+  const g = x.createLinearGradient(0, 0, 640, 420); g.addColorStop(0, "#22406e"); g.addColorStop(1, "#0b6b66"); x.fillStyle = g; x.fillRect(0, 0, 640, 420);
+  x.fillStyle = "rgba(255,255,255,.12)"; for (let i = 0; i < 9; i++) { x.beginPath(); x.arc(80 + i * 60, 210 + 90 * Math.sin(i), 70 + i * 6, 0, Math.PI * 2); x.fill(); }
+  x.fillStyle = "#fff"; x.font = "700 46px Arial"; x.textAlign = "center"; x.fillText(a.name.replace(/ \(.*\)/, ""), 320, 200); x.font = "26px Arial"; x.fillText("Commissioned work", 320, 250);
+  return c.toDataURL("image/png");
+}
+window.__applyArt = (g, o) => {
+  const cv = g.getObjectByName("artcanvas"), fr = g.getObjectByName("artframe"); if (!cv || !window.THREE) return;
+  const mode = o.art.mode;
+  if (fr) fr.visible = mode === "frame";
+  const ld = new THREE.TextureLoader(); ld.setCrossOrigin("anonymous");
+  ld.load(o.art.src, t => {
+    t.encoding = THREE.sRGBEncoding;
+    const img = t.image, ar = img.width / img.height, target = (CAT.painting.w - 0.04) / 0.72;
+    if (ar > target) { t.repeat.set(target / ar, 1); t.offset.set((1 - target / ar) / 2, 0); } else { t.repeat.set(1, ar / target); t.offset.set(0, (1 - ar / target) / 2); }
+    cv.material = new THREE.MeshStandardMaterial(mode === "lightbox" ? { map: t, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.85, roughness: 0.4 } : { map: t, roughness: 0.8 });
+    if (mode === "lightbox") cv.userData.glow = true;
+  }, undefined, () => {});
+};
+function installArtwork(name, k) {
+  const a = ARTISTS.find(x => x.name === name); if (!a) return;
+  const im = (artImgs[name] || [])[k];
+  const mode = artMode(a.medium);
+  const art = { artist: a.name, medium: a.medium, site: a.site, mode, src: im ? im.src : placeholderArt(a),
+    credit: im ? `${im.artist || "Unknown"}, ${im.license || "see source"}, Wikimedia Commons` : "placeholder; see the artist's website for the work", page: im ? im.page : a.site };
+  const o = addType("painting", { art, scale: mode === "frame" ? 1 : 1.3 });
+  if (o) { runBudget(); renderInsp(false); }
+}
+
 /* ---------------- Artist picker in the Inspiration card ---------------- */
 const artName = a => a.name.replace(/ \(.*\)/, "");
 let artLoaded = false, pickedArtist = null;
@@ -3773,13 +3817,14 @@ async function showArtist(name) {
     <div><p class="eyebrow">Artist</p><h3>${esc(a.name)}</h3><p>${esc(a.medium)}</p>
       <p><b>Fits:</b> ${esc(fitRooms.join(", ") || "any room")}${a.fits.includes(S.space) ? " · <b>fits this room</b>" : ""}</p>
       <div class="btnrow"><a class="btn small primary" href="${esc(a.site)}" target="_blank" rel="noopener">${esc(a.siteLabel || "Website")}</a>${ig}
-        <button class="btn small" type="button" id="artadd">Add an artwork spot to the room</button>
+        <button class="btn small" type="button" id="artadd">Install their work in the room</button>
         <button class="btn small" type="button" id="artmore">See all artists for this room</button></div>
       <p class="credit">Photos are credited examples from Wikimedia Commons. The artist's website and Instagram have their full, current portfolio.</p></div>`;
   post("art", "find", `The person is looking at ${a.name}: ${a.medium}.`);
   let imgs = []; try { imgs = await commonsSearch(a.commons || artName(a), 6); } catch (e) {}
   const gal = $("#artgal"); if (!gal || pickedArtist !== name) return;
-  gal.innerHTML = imgs.length ? imgs.slice(0, 3).map(i => `<figure><a href="${esc(i.page)}" target="_blank" rel="noopener"><img src="${esc(i.src)}" alt="${esc(i.title)}" loading="lazy"></a><figcaption>${esc(i.artist || "Unknown")} · ${esc(i.license || "")}</figcaption></figure>`).join("")
+  artImgs[name] = imgs.slice(0, 3);
+  gal.innerHTML = imgs.length ? imgs.slice(0, 3).map((i, k) => `<figure><button class="btn small" type="button" data-artinstall="${k}">Install this piece</button><a href="${esc(i.page)}" target="_blank" rel="noopener"><img src="${esc(i.src)}" alt="${esc(i.title)}" loading="lazy"></a><figcaption>${esc(i.artist || "Unknown")} · ${esc(i.license || "")}</figcaption></figure>`).join("")
     : `<p class="credit">No free photos found for ${esc(a.name)}. Their website and Instagram show the work.</p>`;
 }
 $("#artbtn").addEventListener("click", () => openArtList($("#artlist").hidden));
@@ -3790,7 +3835,8 @@ $("#artlist").addEventListener("keydown", e => { const opts = [...$("#artlist").
   if (e.key === "ArrowUp") { e.preventDefault(); (opts[i - 1] || opts[opts.length - 1]).focus(); } });
 document.addEventListener("click", e => { if (!$("#artlist").hidden && !e.target.closest(".artistpick")) openArtList(false); });
 $("#artistcard").addEventListener("click", e => { const t = e.target.closest("button"); if (!t) return;
-  if (t.id === "artadd") addType("painting");
+  if (t.id === "artadd") installArtwork(pickedArtist, 0);
+  if (t.dataset.artinstall != null) installArtwork(pickedArtist, +t.dataset.artinstall);
   if (t.id === "artmore") { SD.showTab("budget"); setTimeout(() => { const el = $("#artists"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 60); } });
 
 /* Lighting choice */
