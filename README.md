@@ -51,6 +51,12 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.9: art and sculpture in the room
+
+- Five art pieces join the room, the "Put here" menu (new "Art and sculpture" group), search and the invoice: sculpture on a plinth, glass chandelier, art glass wall, suspended net sculpture and LED art wall. The UX agent suggests a statement piece for open floor in lobbies, offices, lounges and halls, and glass or LED art walls near the back wall.
+- Installing an artist now places the right kind of piece: Bocci, Lasvit and David Weeks hang a glass chandelier, Janet Echelman a suspended net sculpture, Casasempere, SOLARO, Studio DRIFT, Snarkitecture and Pliessnig a sculpture, light and media artists an LED art wall, and painters and photographers a framed piece. Each still adds its own "by quote" artwork line to the invoice.
+- Hanging pieces don't block the accessible route check, and can be clicked for options. The blue spot marker clears once something is placed.
+
 ## Version 2.8: the UX agent
 
 - **Choices where you click.** Click or tap the floor and a "Put here" menu opens on the spot. The UX agent ranks the six best pieces for that spot (wall pieces near a wall, a chair and lamp beside a desk, the room type's essentials), with everything else grouped below; it nudges a placement to clear overlaps and says by how much. If a piece is selected, "Move it here" is one tap.

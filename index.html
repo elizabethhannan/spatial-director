@@ -601,7 +601,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.8</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.9</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -1007,6 +1007,11 @@ const CAT = {
   stage:      { w: 4.0, d: 1.4, label: "stage", syn: ["stage", "podium", "platform"], color: "walnut" },
   seatrow:    { w: 3.6, d: 0.6, label: "row of auditorium seats", syn: ["auditorium seats", "seat row", "row of seats", "theater seats"], color: "navy" },
   highbar:    { w: 1.8, d: 0.6, label: "high table with stools", syn: ["high table", "bar table", "bar"], color: "oak" },
+  sculpture:  { w: 0.8, d: 0.8, label: "sculpture", syn: ["sculpture", "statue", "plinth"], color: "white" },
+  chandelier: { w: 1.4, d: 1.4, label: "glass chandelier", syn: ["glass chandelier", "chandelier", "pendant cluster", "light installation"], color: "white", flat: true, overhead: true },
+  glasswall:  { w: 2.4, d: 0.1, label: "art glass wall", syn: ["art glass wall", "glass art wall", "glass wall art", "glass wall"], color: "teal", wall: true },
+  netsculpture: { w: 2.6, d: 2.6, label: "suspended net sculpture", syn: ["suspended net sculpture", "net sculpture", "hanging sculpture", "suspended sculpture"], color: "lavender", flat: true, overhead: true },
+  ledwall:    { w: 2.4, d: 0.08, label: "LED art wall", syn: ["led art wall", "led wall", "light art wall", "digital art wall", "media wall"], color: "blue", wall: true },
   painting:   { w: 1.1, d: 0.06, label: "wall painting", syn: ["wall painting", "painting", "artwork", "wall art", "picture", "art"], color: "oak", wall: true },
 };
 const COLORS = { ivory: "#e7e2d6", stone: "#c9c5bd", marble: "#f3f1ed", leaf: "#3f6b45", oak: "#b08a5e", navy: "#22406e", blue: "#2a63c4", "light blue": "#8fb8e8", teal: "#0b6b66", green: "#2f7d4a", sage: "#8aa58a", purple: "#5b47b8", lavender: "#a99ad8",
@@ -2002,6 +2007,43 @@ function build(type, colorName, ghostHex) {
     box(c.w, 0.05, c.d, 0, 1.05, 0, M(col, { roughness: 0.4 }));
     for (const s of [-1, 1]) { box(0.06, 1.02, 0.06, s * (c.w / 2 - 0.2), 0.51, 0, steel); box(0.06, 0.03, c.d - 0.1, s * (c.w / 2 - 0.2), 0.015, 0, steel); }
     for (const x of [-c.w / 3, 0, c.w / 3]) for (const z of [-1, 1]) { cyl(0.16, 0.16, 0.06, x, 0.76, z * (c.d / 2 + 0.22), M(0x3a3d40, { roughness: 0.6 }), 20); cyl(0.02, 0.02, 0.74, x, 0.37, z * (c.d / 2 + 0.22), steel, 8); }
+  } else if (type === "sculpture") {
+    box(0.6, 0.95, 0.6, 0, 0.475, 0, M(0xf0efeb, { roughness: 0.6 }));
+    box(0.64, 0.03, 0.64, 0, 0.965, 0, M(0xdedcd6, { roughness: 0.4 }));
+    const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(0.2, 0.065, 140, 14, 2, 3), gh ? main : mat(col, false, { roughness: 0.25, metalness: 0.55 }));
+    knot.position.set(0, 1.33, 0); knot.castShadow = !gh; g.add(knot);
+  } else if (type === "chandelier") {
+    const glassM = gh ? main : new THREE.MeshStandardMaterial({ color: COLORS[colorName] || col, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.55, emissive: 0xfff0dc, emissiveIntensity: 0.25 });
+    const coreM = gh ? main : glow(new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffeed6, emissiveIntensity: 1.6 }));
+    const cab = new THREE.MeshBasicMaterial({ color: 0x333333 }), rr = rnd(21);
+    box(0.5, 0.03, 0.5, 0, 2.89, 0, M(0x2a2b2d));
+    for (let i = 0; i < 19; i++) { const a = rr() * Math.PI * 2, rad = Math.sqrt(rr()) * 0.6, x = Math.cos(a) * rad, z = Math.sin(a) * rad, y = 1.95 + rr() * 0.75, r = 0.07 + rr() * 0.05;
+      const cb = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 2.9 - y, 4), cab); cb.position.set(x, (2.9 + y) / 2, z); g.add(cb);
+      const sph = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), glassM); sph.position.set(x, y, z); g.add(sph);
+      const core = new THREE.Mesh(new THREE.SphereGeometry(r * 0.35, 10, 8), coreM); core.position.set(x, y, z); g.add(core); }
+    if (!gh) { const pl = new THREE.PointLight(0xffecd2, 0.35, 5, 2); pl.position.set(0, 2.1, 0); g.add(pl); }
+  } else if (type === "glasswall") {
+    const fr = M(0x17191c, { roughness: 0.35, metalness: 0.6 });
+    box(c.w, 0.05, c.d, 0, 0.35, 0, fr); box(c.w, 0.05, c.d, 0, 2.55, 0, fr);
+    const tones = [0x0b6b66, 0x2a63c4, 0x5b47b8, 0x8fb8e8, 0x3f6b45, 0xa99ad8, 0x22406e, 0x55704a], rr = rnd(5);
+    for (let i = 0; i < 6; i++) for (let j = 0; j < 4; j++) {
+      const m = gh ? main : new THREE.MeshStandardMaterial({ color: tones[(i * 3 + j) % tones.length], roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.72, emissive: tones[(i + j) % tones.length], emissiveIntensity: 0.18 });
+      const p = box(c.w / 6 - 0.03, 2.2 / 4 - 0.03, 0.03, -c.w / 2 + c.w / 12 + i * c.w / 6, 0.375 + 2.2 / 8 + j * 2.2 / 4, (rr() - 0.5) * 0.04, m); p.castShadow = false; }
+  } else if (type === "netsculpture") {
+    const netM = gh ? main : new THREE.MeshStandardMaterial({ color: COLORS[colorName] || col, wireframe: true, transparent: true, opacity: 0.85, emissive: COLORS[colorName] || col, emissiveIntensity: 0.35 });
+    for (const [r, h, y, rot] of [[1.15, 0.85, 2.4, 0], [0.8, 0.65, 2.15, 0.6], [0.5, 0.5, 1.95, 1.2]]) {
+      const n = new THREE.Mesh(new THREE.ConeGeometry(r, h, 28, 8, true), netM); n.position.set(0, y, 0); n.rotation.set(Math.PI, rot, 0); g.add(n); }
+    const cab = new THREE.MeshBasicMaterial({ color: 0x555555 });
+    for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3, cb = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.5, 4), cab); cb.position.set(Math.cos(a) * 1.1, 2.82, Math.sin(a) * 1.1); g.add(cb); }
+  } else if (type === "ledwall") {
+    let tex = null;
+    if (!gh) { const cv = document.createElement("canvas"); cv.width = 512; cv.height = 256; const x = cv.getContext("2d");
+      const gr = x.createLinearGradient(0, 0, 512, 256); gr.addColorStop(0, "#22406e"); gr.addColorStop(0.5, "#5b47b8"); gr.addColorStop(1, "#0b6b66"); x.fillStyle = gr; x.fillRect(0, 0, 512, 256);
+      for (let i = 0; i < 64; i++) for (let j = 0; j < 32; j++) { const v = 0.5 + 0.5 * Math.sin(i * 0.35 + j * 0.5); x.fillStyle = `rgba(255,255,255,${(v * 0.55).toFixed(2)})`; x.beginPath(); x.arc(i * 8 + 4, j * 8 + 4, 2.2 * v + 0.4, 0, Math.PI * 2); x.fill(); }
+      tex = new THREE.CanvasTexture(cv); tex.encoding = THREE.sRGBEncoding; }
+    box(c.w + 0.06, 1.46, c.d, 0, 1.65, 0, M(0x111214, { roughness: 0.3 }));
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(c.w, 1.4), gh ? main : glow(new THREE.MeshStandardMaterial({ map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.9 })));
+    scr.position.set(0, 1.65, c.d / 2 + 0.002); scr.name = "artcanvas"; g.add(scr);
   } else if (type === "painting") {
     const fr = M(col, { roughness: 0.5 });
     box(c.w + 0.1, 0.82, c.d, 0, 1.6, 0, fr).name = "artframe";
@@ -2083,7 +2125,7 @@ function bindPointer(canvas) {
       const hits = ray.intersectObjects([...G.meshes.values()], true);
       for (const h of hits) { let n = h.object; while (n && !n.userData.id) n = n.parent; if (n) { const i = S.asking.options.findIndex(o => o.id === n.userData.id); if (i >= 0) { answer(i + 1); return; } } }
     }
-    const solids = [...G.meshes.entries()].filter(([id]) => { const o = byId(id); return o && !CAT[o.type].flat; }).map(([, g]) => g);
+    const solids = [...G.meshes.entries()].filter(([id]) => { const o = byId(id); return o && (!CAT[o.type].flat || CAT[o.type].overhead); }).map(([, g]) => g);
     const hit = ray.intersectObjects(solids, true)[0];
     if (hit && !S.awaitingPoint && !S.moveId) { let n = hit.object; while (n && !n.userData.id) n = n.parent; if (n) { if (S.selected !== n.userData.id) select(n.userData.id); window.dispatchEvent(new CustomEvent("sd:objclick", { detail: { id: n.userData.id, cx: e.clientX, cy: e.clientY } })); return; } }
     const fh = ray.intersectObject(G.floor)[0];
@@ -2691,7 +2733,7 @@ function footprint(o) { const c = CAT[o.type], w = c.w * (o.scale || 1), d = c.d
   const cs = Math.abs(Math.cos(r)), sn = Math.abs(Math.sin(r)); return { x: o.x, z: o.z, hx: cs * w / 2 + sn * d / 2, hz: sn * w / 2 + cs * d / 2 }; }
 function sceneCheck() {
   const step = 0.1, nx = 80, nz = 60, R = CLEAR / 2;
-  const solid = S.objs.filter(o => o.type !== "rug");
+  const solid = S.objs.filter(o => !CAT[o.type].flat);
   const fps = solid.map(footprint);
   const free = new Uint8Array(nx * nz), seen = new Uint8Array(nx * nz);
   for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
@@ -3276,14 +3318,14 @@ function parts() {
   if (n("bookshelf")) out.push(part("shelving", "Shelving", n("bookshelf"), "each", "bookshelf"));
   if (n("bench")) out.push(part("bench", "Bench", n("bench"), "each", "bench"));
   if (n("plant")) out.push(part("plant", "Plants and planters", n("plant"), "each", "plant"));
-  { const byArtist = {}; for (const o of S.objs) if (o.type === "painting" && o.art) (byArtist[o.art.artist] = byArtist[o.art.artist] || []).push(o);
+  { const byArtist = {}; for (const o of S.objs) if (o.art) (byArtist[o.art.artist] = byArtist[o.art.artist] || []).push(o);
     for (const [name, list] of Object.entries(byArtist)) { const a = list[0].art;
       const q = (nm, claim) => ({ name: nm, maker: name, url: a.site, price_usd: null, price_note: "Quote from the artist", warranty: null, warranty_url: null, retailer: name, amazon_query: name + " art", sus_claim: claim || null, sus_source_url: null, quote: true });
       out.push({ key: "bb:art-" + name.replace(/\W+/g, "-"), label: "Artwork: " + name, qty: list.length, unit: "each",
         base: q(`${a.medium} by ${name}, commissioned for this room`),
         sus: q(`The same commission in reclaimed or low-impact materials`, "Ask the artist about reclaimed or recycled materials, low-VOC finishes and efficient LED drivers."),
         note: `Shown in the room with a photo of their work: ${a.credit}` }); } }
-  for (const [t, label] of Object.entries(NEWTYPES)) { const k = t === "painting" ? S.objs.filter(o => o.type === t && !o.art).length : n(t); if (!k) continue;
+  for (const [t, label] of Object.entries(NEWTYPES)) { const k = S.objs.filter(o => o.type === t && !o.art).length; if (!k) continue;
     const p = part(RESEARCH_KEY[t] || "_" + t, label, k, "each", t); if (t === "taskchair") p.match = ["chair", "Frame and seat in"]; out.push(p); }
   { const ck = ceilPick === "auto" ? (SPACES[S.space] && SPACES[S.space].ceiling) || "none" : ceilPick; const sq = Math.round(tk.floor * SQFT);
     const G2 = (name, q, claim) => ({ name, maker: "Millwork or ceiling contractor", url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
@@ -3486,7 +3528,14 @@ Object.assign(CATALOG, {
   highbar:    { base: P("Bar-height table with stools", "Office furniture maker", "", "bar height table with stools office"), sus: P("Bar table in reclaimed wood", "Millwork shop", "", "reclaimed wood bar height table") },
   painting:   { base: P("Original painting from an artist", "Artist of your choice", "", "original landscape painting large"), sus: P("Original painting on a reused or FSC frame", "Local artist", "", "original painting local artist", "Buying from a local artist keeps shipping short.") },
 });
-const NEWTYPES = { standing: "Standing desk", taskchair: "Ergonomic chairs", door: "Doors", window: "Window walls", partition: "Partition walls", toilet: "Toilets", vanity: "Vanities",
+Object.assign(CATALOG, {
+  sculpture:    { base: P("Commissioned sculpture on a plinth", "Sculptor or art advisor", "", "contemporary sculpture pedestal"), sus: P("Sculpture in reclaimed or recycled material", "Local sculptor", "", "recycled material sculpture", "Reclaimed metal, wood or stone keeps material in use.") },
+  chandelier:   { base: P("Blown-glass pendant chandelier", "Glass lighting studio", "", "blown glass pendant chandelier cluster"), sus: P("Glass chandelier with LED sources and dimming", "Glass lighting studio", "", "LED blown glass chandelier", "LED sources use far less energy than incandescent and last for years.") },
+  glasswall:    { base: P("Art glass wall, colored laminated glass", "Architectural glass studio", "", "art glass wall panel colored laminated"), sus: P("Art glass wall with recycled-content glass", "Architectural glass studio", "", "recycled glass art wall panel", "Recycled-content glass reuses cullet instead of raw sand.") },
+  netsculpture: { base: P("Suspended net sculpture, commissioned", "Installation artist", "", "suspended net sculpture installation"), sus: P("Suspended sculpture in recycled fiber", "Installation artist", "", "recycled fiber suspended sculpture") },
+  ledwall:      { base: P("LED art wall with generative content", "Digital art studio or AV integrator", "", "LED art wall generative installation"), sus: P("LED art wall on schedules and daylight dimming", "AV integrator", "", "energy efficient LED video wall", "Scheduling and dimming cut energy use when the space is empty.") },
+});
+const NEWTYPES = { sculpture: "Sculpture", chandelier: "Glass chandelier", glasswall: "Art glass wall", netsculpture: "Suspended net sculpture", ledwall: "LED art wall", standing: "Standing desk", taskchair: "Ergonomic chairs", door: "Doors", window: "Window walls", partition: "Partition walls", toilet: "Toilets", vanity: "Vanities",
   shower: "Shower", urinal: "Urinals", stall: "Restroom stalls", counter: "Kitchen run", island: "Kitchen island", fridge: "Refrigerator", boardtable: "Board table",
   screen: "Presentation screen", stage: "Stage and lectern", seatrow: "Auditorium seat rows", highbar: "High tables", painting: "Wall paintings" };
 const RESEARCH_KEY = { taskchair: "desk_chair" };
@@ -3518,7 +3567,7 @@ function finalRenders4k() {
 
 /* In the room: search, then show it, add it, or shop for it */
 function addType(type, extra) {
-  const c = CAT[type], solid = S.objs.filter(o => o.type !== "rug").map(footprint);
+  const c = CAT[type], solid = S.objs.filter(o => c.flat ? CAT[o.type].flat && o.type !== "rug" : !CAT[o.type].flat).map(footprint);
   const fits = (x, z, rot) => { const f = footprint({ type, x, z, rot, scale: 1 }); return x - f.hx > ROOM.minX - 0.01 && x + f.hx < ROOM.maxX + 0.01 && z - f.hz > ROOM.minZ - 0.01 && z + f.hz < ROOM.maxZ + 0.01 &&
     !solid.some(o => Math.abs(o.x - x) < o.hx + f.hx + 0.05 && Math.abs(o.z - z) < o.hz + f.hz + 0.05); };
   let spot = null;
@@ -3810,7 +3859,12 @@ function installArtwork(name, k) {
   const mode = artMode(a.medium);
   const art = { artist: a.name, medium: a.medium, site: a.site, mode, src: im ? im.src : placeholderArt(a),
     credit: im ? `${im.artist || "Unknown"}, ${im.license || "see source"}, Wikimedia Commons` : "placeholder; see the artist's website for the work", page: im ? im.page : a.site };
-  const o = addType("painting", { art, scale: mode === "frame" ? 1 : 1.3 });
+  const m = a.medium + " " + a.name;
+  const type = /net sculpture/i.test(m) ? "netsculpture" : /glass lighting|bespoke glass|sculptural lighting/i.test(m) ? "chandelier"
+    : /ceramic sculpture|monumental sculpture|steam-bent|sculptural environments|kinetic sculpture|stone desks/i.test(m) ? "sculpture"
+    : /led light|media walls|programmable|digital art|responsive art|light and space/i.test(m) ? "ledwall" : "painting";
+  const o = type === "painting" ? addType("painting", { art, scale: mode === "frame" ? 1 : 1.3 }) : addType(type, { art });
+  if (o && type !== "painting") post("art", "layout", `Installed ${a.name}'s work as a ${CAT[type].label}; the photo stays in the artist card.`);
   if (o) { runBudget(); renderInsp(false); }
 }
 
@@ -3870,7 +3924,7 @@ const hint = t => { const h = $("#hint"); if (h) h.textContent = t || "Click the
 AGENTS.ux = { name: "UX", job: "Opens choices where you click, ranks what fits that spot, and watches for friction" };
 const GROUPS_CAT = [
   ["Seating", ["sofa", "chair", "taskchair", "bench", "seatrow"]], ["Tables and desks", ["desk", "standing", "table", "dining", "boardtable", "highbar", "reception"]],
-  ["Storage and kitchen", ["bookshelf", "counter", "island", "fridge"]], ["Lighting, plants and art", ["lamp", "plant", "painting", "rug"]],
+  ["Storage and kitchen", ["bookshelf", "counter", "island", "fridge"]], ["Art and sculpture", ["painting", "sculpture", "chandelier", "glasswall", "netsculpture", "ledwall"]], ["Lighting, plants and rugs", ["lamp", "plant", "rug"]],
   ["Bath and restroom", ["vanity", "toilet", "shower", "urinal", "stall"]], ["Walls, doors and AV", ["door", "window", "partition", "screen", "stage"]]];
 const SPACE_PICKS = { lobby: ["reception", "bench", "sofa", "plant", "painting", "chair"], csuite: ["desk", "chair", "sofa", "lamp", "bookshelf", "plant"],
   execoffice: ["standing", "taskchair", "sofa", "lamp", "painting", "plant"], meeting: ["boardtable", "taskchair", "screen", "plant", "painting", "bookshelf"],
@@ -3881,7 +3935,8 @@ function rankFor(x, z) {
   const why = [], picks = [];
   const add = (list, reason) => { let used = false; for (const t of list) if (CAT[t] && !picks.includes(t)) { picks.push(t); used = true; } if (used && reason) why.push(reason); };
   const near = t => S.objs.filter(o => o.type === t).some(o => Math.hypot(o.x - x, o.z - z) < 1.6);
-  if (z - ROOM.minZ < 0.7) add(["painting", "screen", "bookshelf", "door"], "near the back wall");
+  if (z - ROOM.minZ < 0.7) add(["painting", "glasswall", "ledwall", "screen", "bookshelf", "door"], "near the back wall");
+  else if (["lobby", "csuite", "execoffice", "social", "auditorium", "dining"].includes(S.space) && !S.objs.some(o => ["sculpture", "chandelier", "netsculpture"].includes(o.type) && Math.hypot(o.x - x, o.z - z) < 1.8)) add(S.space === "auditorium" || S.space === "social" ? ["netsculpture", "chandelier", "sculpture"] : ["sculpture", "chandelier"], "open floor for a statement piece");
   else if (ROOM.maxX - x < 0.7) add(["window", "door", "painting", "plant"], "near the open side");
   if (near("desk") || near("standing")) add(["taskchair", "lamp", "plant"], "next to a desk");
   if (near("sofa") || near("table")) add(["lamp", "chair", "table", "rug"], "by the lounge");
@@ -3915,10 +3970,11 @@ function placeAt(type, x, z) {
   const moved = Math.hypot(sp[0] - x, sp[1] - z) > 0.05;
   SD.showCard("done", `<p class="eyebrow">Added</p><p>A ${esc(c.label)}, ${esc(SD.whereOf(o))}.${moved ? " I nudged it " + Math.hypot(sp[0] - x, sp[1] - z).toFixed(1) + " m so it doesn't overlap anything." : ""} Click it for more options, or Undo.</p>`);
   post("ux", "layout", `Placed a ${c.label} where the person clicked${moved ? ", nudged " + Math.hypot(sp[0] - x, sp[1] - z).toFixed(1) + " m to clear an overlap" : ""}.`);
-  ux.placed++;
+  ux.placed++; clearMark();
 }
 let menuEl = null, ux = { opened: 0, cancels: 0, placed: 0, tipped: {} };
-function closeMenu(cancelled) { if (menuEl) { menuEl.remove(); menuEl = null; if (cancelled) { ux.cancels++; frictionCheck(); } } }
+function clearMark() { S.pointer = null; const G = SD.G; if (G && G.pointer) G.pointer.visible = false; const ro = document.querySelector('#readout'); if (ro) ro.textContent = 'No spot marked. Click the floor to choose what goes there.'; }
+function closeMenu(cancelled) { if (menuEl) { menuEl.remove(); menuEl = null; if (cancelled) { ux.cancels++; frictionCheck(); clearMark(); } } }
 function openMenu(html, cx, cy) {
   closeMenu(false);
   const wrap = $("#canvaswrap"), r = wrap.getBoundingClientRect();
