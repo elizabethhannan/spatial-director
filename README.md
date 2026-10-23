@@ -51,6 +51,12 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.5: artist picker, more ceilings, lighting design
+
+- **Artist picker.** An Artist dropdown in the Inspiration card lists all 31 studios, makers, art advisors and artists with a photo each, grouped and sorted by fit for the room. Choosing one opens a gallery of credited photos of their work, their website and Instagram, and a button to add an artwork spot to the room.
+- **Ceilings.** Adds wavy wood baffles and a drop ceiling with acoustic tile and LED troffers to coffers and slats.
+- **Lighting design.** Recessed LED high hats, track spotlights aimed at walls and art, and crown molding with an LED cove, alone or combined. Each adds its fixtures and quantities to Build & Budget with an ENERGY STAR or controls-based sustainable option, and a lighting designer to the trades.
+
 ## Version 2.4: every room of a headquarters
 
 - **Room types.** Executive office with a private bath (standing desk, ergonomic chair, doors, window wall, vanity, toilet and shower), meeting room and boardroom (board table, screen, carved wood coffered ceiling), auditorium-style meeting hall (stage, lectern, screen, rows of seats), social hall and hangout, lunch room with a kitchen (counter, island, refrigerator), and women's and men's restrooms (stalls, urinals, vanities), alongside the C-suite office, lobby and corporate dining.

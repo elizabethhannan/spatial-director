@@ -262,7 +262,7 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 .affform input, .bb-region select { min-height: 40px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit; font-size: .9375rem; }
 .bb-region { min-width: 0; max-width: 100%; display: grid; gap: 4px; font-size: .8125rem; font-weight: 700; color: var(--ink-2); }
 .bbapprove { min-width: min(14rem, 100%); }
-#style, #space, #floor, #ceiling, #finalpick, #region { max-width: 100%; min-width: 0; }
+#style, #space, #floor, #ceiling, #lighting, #finalpick, #region { max-width: 100%; min-width: 0; }
 .studio-selects label { min-width: 0; max-width: 100%; }
 .affform label { min-width: 0; max-width: 100%; }
 .affform input { width: 100%; max-width: 18rem; box-sizing: border-box; }
@@ -273,6 +273,27 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
   body.print-invoice #view-budget { display: block !important; }
   body.print-invoice .bcard { border: 0; padding: 0; }
 }
+.roomsearch input { width: 0; }
+.panel .block { min-width: 0; }
+.artistpick { position: relative; margin-top: 10px; }
+.artistpick > label { display: block; font-size: .8125rem; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; }
+#artbtn { width: 100%; justify-content: space-between; text-align: left; }
+#artlist { position: absolute; z-index: 30; left: 0; right: 0; top: 100%; margin-top: 4px; max-height: 26rem; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px; box-shadow: 0 12px 30px rgba(10,15,25,.18); }
+#artlist .agh { font-size: .75rem; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; margin: 8px 4px 4px; }
+.artopt { display: grid; grid-template-columns: 4rem minmax(0, 1fr); gap: 10px; align-items: center; width: 100%; text-align: left; padding: 6px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer; }
+.artopt:hover, .artopt:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.artopt .tn { width: 4rem; height: 3rem; border-radius: 8px; background: var(--surface-2); overflow: hidden; display: grid; place-items: center; font-size: .625rem; color: var(--ink-3); }
+.artopt .tn .mono { font-size: 1rem; color: var(--accent); }
+.artopt .tn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.artopt b { display: block; font-size: .9375rem; }
+.artopt span.m { font-size: .8125rem; color: var(--ink-2); }
+.artopt .fit { font-size: .6875rem; font-weight: 700; color: var(--good); }
+.artgallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0; }
+.artgallery figure { margin: 0; }
+.artgallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
+.artgallery figcaption { font-size: .6875rem; color: var(--ink-3); overflow-wrap: anywhere; }
+#artistcard { display: block; }
+@media (max-width: 600px) { .artgallery { grid-template-columns: 1fr 1fr; } }
 .textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
 .textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
 .textsize .btn { min-width: 40px; }
@@ -563,7 +584,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.4</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.5</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -590,6 +611,11 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           <button class="btn primary" type="submit">Search</button>
         </div>
       </form>
+      <div class="artistpick">
+        <label id="artlabel">Artist</label>
+        <button class="btn" type="button" id="artbtn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="artlabel artbtn">Choose an artist, studio or art advisor</button>
+        <div id="artlist" role="listbox" aria-labelledby="artlabel" hidden></div>
+      </div>
       <div class="studio-selects">
         <label>Space
           <select id="space">
@@ -618,7 +644,10 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
           </select>
         </label>
         <label>Ceiling
-          <select id="ceiling"><option value="auto">Room default</option><option value="none">Open</option><option value="coffers">Carved wood coffers</option><option value="slats">Wood slat ceiling</option></select>
+          <select id="ceiling"><option value="auto">Room default</option><option value="none">Open</option><option value="coffers">Carved wood coffers</option><option value="slats">Wood slat ceiling</option><option value="wavy">Wavy wood baffles</option><option value="drop">Drop ceiling, acoustic tile</option></select>
+        </label>
+        <label>Lighting
+          <select id="lighting"><option value="hats-cove">High hats + cove light</option><option value="hats">Recessed LED high hats</option><option value="spots">Track spotlights</option><option value="spots-cove">Spotlights + cove light</option><option value="cove">Crown molding cove light</option><option value="pendants">Pendants only</option></select>
         </label>
         <label>Floor
           <select id="floor"><option value="style">Style default</option><option value="wood">Wood plank</option><option value="herringbone">Herringbone wood (classic)</option><option value="concrete">Polished concrete</option><option value="carpet">Corporate carpet tile</option><option value="cork">Natural cork (sustainable)</option><option value="walnut">Dark walnut plank</option><option value="deco">Black-and-white marble (Art Deco)</option><option value="greencarpet">Library-green wool carpet</option></select>
@@ -648,6 +677,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <p class="readout" id="readout">No spot marked. Click the floor to point, then say "there".</p>
 
     <section class="insp-card" id="inspcard" aria-live="polite"></section>
+    <section class="insp-card" id="artistcard" aria-live="polite" hidden></section>
   </section>
 
   <aside class="panel" aria-label="Commands">
@@ -2458,8 +2488,39 @@ const FLOORS = {
   greencarpet: { label: "Library-green wool carpet", tint: "#4f6b4a", kind: "carpet" },
 };
 let floorPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:floor")); return FLOORS[v] ? v : "style"; } catch (e) { return "style"; } })();
-let artGroup = null, ceilGroups = {};
-let ceilPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:ceiling")); return ["auto", "none", "coffers", "slats"].includes(v) ? v : "auto"; } catch (e) { return "auto"; } })();
+let artGroup = null, ceilGroups = {}, lightGroups = {};
+let lightPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:lighting")); return ["hats-cove", "hats", "spots", "spots-cove", "cove", "pendants"].includes(v) ? v : "hats-cove"; } catch (e) { return "hats-cove"; } })();
+const HATS = []; for (let x = -3; x <= 3.01; x += 1.5) for (let z = -2.2; z <= 2.21; z += 1.47) HATS.push([x, z]);
+function lightPart(kind, G) {
+  if (lightGroups[kind]) return lightGroups[kind];
+  const g = new THREE.Group(), glowM = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff1de, emissiveIntensity: 1.6 }), trim = new THREE.MeshStandardMaterial({ color: 0xe9e9e6, roughness: 0.4 }), blk = new THREE.MeshStandardMaterial({ color: 0x17191c, roughness: 0.35, metalness: 0.6 });
+  if (kind === "hats") {
+    HATS.forEach(([x, z], i) => { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.02, 24), trim); r.position.set(x, 2.885, z); g.add(r);
+      const l = new THREE.Mesh(new THREE.CircleGeometry(0.075, 24), glowM); l.rotation.x = Math.PI / 2; l.position.set(x, 2.873, z); g.add(l);
+      if (i % 2 === 0) { const p = new THREE.PointLight(0xfff0dc, 0.22, 4.2, 2); p.position.set(x, 2.7, z); g.add(p); } });
+  } else if (kind === "spots") {
+    for (const z of [-1.9, 0.6]) { const tr = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.04, 0.05), blk); tr.position.set(0, 2.86, z); g.add(tr);
+      for (let x = -2.7; x <= 2.71; x += 1.35) { const can = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.065, 0.18, 16), blk); can.position.set(x, 2.76, z); can.rotation.x = z < 0 ? 0.55 : -0.35; g.add(can);
+        const lens = new THREE.Mesh(new THREE.CircleGeometry(0.05, 16), glowM); lens.position.set(x, 2.67, z + (z < 0 ? -0.05 : 0.03)); lens.rotation.x = Math.PI / 2; g.add(lens); } }
+    for (const x of [-2.7, 0, 2.7]) { const sp = new THREE.SpotLight(0xfff0dc, 0.55, 7, 0.55, 0.6, 1.5); sp.position.set(x, 2.75, -1.9); sp.target.position.set(x, 1.2, -3); g.add(sp); g.add(sp.target); }
+  } else if (kind === "cove") {
+    const mold = new THREE.MeshStandardMaterial({ color: 0xf0eee8, roughness: 0.6 });
+    const crown = (w, x, z, rotY) => { const c = new THREE.Group();
+      const a = new THREE.Mesh(new THREE.BoxGeometry(w, 0.14, 0.16), mold); a.position.set(0, 2.6, 0.08); c.add(a);
+      const lip = new THREE.Mesh(new THREE.BoxGeometry(w, 0.05, 0.05), mold); lip.position.set(0, 2.69, 0.16); c.add(lip);
+      const strip = new THREE.Mesh(new THREE.BoxGeometry(w - 0.1, 0.015, 0.03), glowM); strip.position.set(0, 2.68, 0.1); c.add(strip);
+      c.position.set(x, 0, z); c.rotation.y = rotY; g.add(c); };
+    crown(8.0, 0, -3.0, 0);
+    for (const x of [-2.6, 0, 2.6]) { const p = new THREE.PointLight(0xffe9cf, 0.2, 3.2, 2); p.position.set(x, 2.78, -2.75); g.add(p); }
+  }
+  g.visible = false; G.scene.add(g); lightGroups[kind] = g; return g;
+}
+function drawLighting(G, pick) {
+  if (!window.THREE || !G) return;
+  const want = { "hats-cove": ["hats", "cove"], hats: ["hats"], spots: ["spots"], "spots-cove": ["spots", "cove"], cove: ["cove"], pendants: [] }[pick] || [];
+  for (const k of ["hats", "spots", "cove"]) { const g = lightPart(k, G); g.visible = want.includes(k); }
+}
+let ceilPick = (() => { try { const v = JSON.parse(localStorage.getItem("sd2:ceiling")); return ["auto", "none", "coffers", "slats", "wavy", "drop"].includes(v) ? v : "auto"; } catch (e) { return "auto"; } })();
 function drawCeiling(G, kind, st) {
   if (!window.THREE) return;
   for (const [k, g] of Object.entries(ceilGroups)) { g.userData.want = k === kind; g.visible = false; }
@@ -2473,6 +2534,22 @@ function drawCeiling(G, kind, st) {
     for (let x = -3.5; x < 4; x += 1) for (let z = -2.5; z < 3; z += 1) { B(0.6, 0.03, 0.03, x, Y + 0.02, z - 0.3); B(0.6, 0.03, 0.03, x, Y + 0.02, z + 0.3); B(0.03, 0.03, 0.6, x - 0.3, Y + 0.02, z); B(0.03, 0.03, 0.6, x + 0.3, Y + 0.02, z); }
   } else if (kind === "slats") {
     for (let x = -3.95; x <= 3.95; x += 0.16) B(0.07, 0.07, 6, x, Y, 0);
+  } else if (kind === "wavy") {
+    const N = 50, Mz = 60, geo = new THREE.BoxGeometry(0.05, 0.12, 0.11), im = new THREE.InstancedMesh(geo, m, N * Mz), d = new THREE.Object3D(); let i = 0;
+    for (let a = 0; a < N; a++) { const x = -3.92 + a * 0.16;
+      for (let b = 0; b < Mz; b++) { const z = -3 + (b + 0.5) * 0.1, ph = z * 1.15 + x * 0.55;
+        d.position.set(x, Y - 0.2 - 0.17 * Math.sin(ph), z); d.rotation.set(-0.17 * 1.15 * Math.cos(ph), 0, 0); d.updateMatrix(); im.setMatrixAt(i++, d.matrix); } }
+    im.castShadow = true; g.add(im);
+  } else if (kind === "drop") {
+    const cv = document.createElement("canvas"); cv.width = 512; cv.height = 512; const x = cv.getContext("2d");
+    x.fillStyle = "#f2f1ed"; x.fillRect(0, 0, 512, 512);
+    let sd = 3; const r = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    for (let k = 0; k < 9000; k++) { const v = 200 + Math.floor(r() * 40); x.fillStyle = `rgba(${v},${v},${v - 4},.5)`; x.fillRect(r() * 512, r() * 512, 1.5, 1.5); }
+    x.fillStyle = "#d9dadc"; for (let k = 0; k <= 512; k += 256) { x.fillRect(k - 5, 0, 10, 512); x.fillRect(0, k - 5, 512, 10); }
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(8 / 1.22, 6 / 1.22); t.encoding = THREE.sRGBEncoding;
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(8, 6), new THREE.MeshStandardMaterial({ map: t, roughness: 0.95 })); pl.rotation.x = Math.PI / 2; pl.position.y = 2.75; g.add(pl);
+    const tro = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff6ea, emissiveIntensity: 1.1 });
+    for (let xx = -3.05; xx <= 3.1; xx += 2.44) for (let zz = -1.83; zz <= 1.9; zz += 1.83) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.02, 1.18), tro); b.position.set(xx, 2.74, zz); g.add(b); }
   }
   g.userData.want = true; ceilGroups[kind] = g; G.scene.add(g);
   if (!drawCeiling.loop) { drawCeiling.loop = true; const tick = () => { const GG = SD.G; if (GG) { const low = GG.pitch < 0.5; for (const [k, gg] of Object.entries(ceilGroups)) gg.userData.low = low; for (const gg of Object.values(ceilGroups)) if (gg.userData.want) gg.visible = !!(low || gg.userData.force); } requestAnimationFrame(tick); }; tick(); }
@@ -2554,6 +2631,7 @@ function applyShell() {
   const fk = floorPick === "style" ? st.floor : (FLOORS[floorPick].kind || floorPick);
   texFloor(fk, floorPick === "style" ? st.floorTint : FLOORS[floorPick].tint);
   drawArt(G, !!st.art || floorPick === "__never");
+  drawLighting(G, lightPick);
   drawCeiling(G, ceilPick === "auto" ? (SPACES[S.space] && SPACES[S.space].ceiling) || "none" : ceilPick, st);
   if (G.slatM) G.slatM.color.setHex(st.slat);
   if (G.backingM) G.backingM.color.setHex(st.backing);
@@ -3181,6 +3259,11 @@ function parts() {
     const G2 = (name, q, claim) => ({ name, maker: "Millwork or ceiling contractor", url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
     if (ck === "coffers") out.push({ key: "bb:ceil-coffers", label: "Carved wood coffered ceiling", qty: sq, unit: "sq ft", base: G2("Carved wood coffered ceiling, stained", "wood coffered ceiling system"), sus: G2("Coffered ceiling in FSC-certified or reclaimed wood", "reclaimed wood coffered ceiling", "FSC certification traces wood to responsibly managed forests.") });
     if (ck === "slats") out.push({ key: "bb:ceil-slats", label: "Wood slat ceiling", qty: sq, unit: "sq ft", base: G2("Linear wood slat ceiling panels", "wood slat ceiling panels"), sus: G2("Wood slat ceiling, FSC-certified, with acoustic backing", "FSC wood slat acoustic ceiling", "FSC certification traces wood to responsibly managed forests.") }); }
+  { const L = { "hats-cove": ["hats", "cove"], hats: ["hats"], spots: ["spots"], "spots-cove": ["spots", "cove"], cove: ["cove"], pendants: [] }[lightPick] || [];
+    const G3 = (name, q, claim, maker) => ({ name, maker: maker || "Lighting maker", url: "", price_usd: null, price_note: "", warranty: null, warranty_url: null, retailer: "", amazon_query: q, sus_claim: claim || null, sus_source_url: null });
+    if (L.includes("hats")) out.push({ key: "bb:light-hats", label: "Recessed LED high hats", qty: HATS.length, unit: "each", base: G3("6-inch LED recessed downlight, 3000K, CRI 90+, dimmable", "6 inch LED recessed downlight 3000K CRI 90 dimmable"), sus: G3("ENERGY STAR certified LED downlight on occupancy and daylight controls", "ENERGY STAR LED recessed downlight", "ENERGY STAR certified fixtures meet efficiency and quality limits; sensors dim lights in empty or daylit rooms.") });
+    if (L.includes("spots")) out.push({ key: "bb:light-spots", label: "Track spotlights for art and walls", qty: 10, unit: "each", base: G3("LED track head, adjustable beam, CRI 90+", "LED track lighting head adjustable beam CRI 90"), sus: G3("ENERGY STAR or DLC-listed LED track heads", "ENERGY STAR LED track light", "Listed LED fixtures use far less energy than halogen track lights.") }, { key: "bb:light-track", label: "Track rails", qty: 2, unit: "each", base: G3("8 ft lighting track rail", "8 ft lighting track rail black"), sus: G3("Track rail in recycled aluminum", "recycled aluminum lighting track") });
+    if (L.includes("cove")) out.push({ key: "bb:light-cove", label: "Crown molding with LED cove light", qty: 27, unit: "ft", base: G3("Paint-grade crown molding with LED tape light, 2700K", "crown molding LED cove light kit"), sus: G3("FSC or recycled-content molding with dimmable LED tape on a timer", "recycled crown molding LED tape dimmable", "Dimming and timers cut energy use; recycled or FSC molding reduces new material.") }); }
   // Finishes. Feature wall is the plaster on the back wall (the takeoff's paintable area).
   const wallSqft = tk.wall * SQFT, w = PR.wallpaper || {};
   const wpUnits = p => { if (!p || !p.coverage_sqft) return 1; let q = Math.ceil(wallSqft * 1.15 / p.coverage_sqft); if (p.increment) q = Math.ceil(q / p.increment) * p.increment; return Math.max(q, p.min_qty || 1); };
@@ -3308,7 +3391,8 @@ function renderTrades(P) {
     ["Upholsterer or custom furniture maker", "Custom couch in the approved fabric", has("couch")],
     ["Wallcovering installer", "Feature-wall wallpaper", has("wallpaper")],
     ["Painter", "Walls in the specified colors", has("paint")],
-    ["Electrician", "Pendants, floor-lamp outlets and controls", true],
+    ["Electrician", "Recessed lights, track, cove lighting, outlets and controls", true],
+    ["Lighting designer", "Lighting layout, color temperature and controls", lightPick !== "pendants"],
     ["Plumber", "Pantry faucet", has("faucet")],
     ["Tile setter", "Pantry wall tile", has("tile")],
     ["Flooring installer", "Rug, carpet tile or wood floor", has("rug")],
@@ -3664,6 +3748,55 @@ Object.assign(window.SpatialDirector, {
   readiness: () => runReady(),
   agentLog: () => LOG.slice(),
 });
+
+/* ---------------- Artist picker in the Inspiration card ---------------- */
+const artName = a => a.name.replace(/ \(.*\)/, "");
+let artLoaded = false, pickedArtist = null;
+function renderArtList() {
+  const sp = S.space;
+  $("#artlist").innerHTML = GROUPS.map(([g, title]) => { const list = ARTISTS.filter(a => a.group === g).sort((x, y) => (y.fits.includes(sp) ? 1 : 0) - (x.fits.includes(sp) ? 1 : 0));
+    return `<div class="agh">${esc(title)}</div>` + list.map(a => `<button type="button" role="option" class="artopt" data-artist="${esc(a.name)}" aria-selected="${pickedArtist === a.name}">
+      <span class="tn" data-thumbq="${esc(a.commons || artName(a))}">…</span><span><b>${esc(a.name)}</b><span class="m">${esc(a.medium)}</span>${a.fits.includes(sp) ? `<br><span class="fit">Fits your ${esc(SPACES[sp].label.toLowerCase())}</span>` : ""}</span></button>`).join(""); }).join("");
+  $("#artlist").querySelectorAll("[data-thumbq]").forEach(async el => { const t = await thumbFor(el.dataset.thumbq); el.innerHTML = t ? `<img src="${esc(t.src)}" alt="">` : `<b class="mono">${esc(el.closest(".artopt").dataset.artist.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase())}</b>`; });
+}
+function openArtList(open) {
+  $("#artlist").hidden = !open; $("#artbtn").setAttribute("aria-expanded", String(open));
+  if (open) { renderArtList(); const f = $("#artlist .artopt"); if (f) f.focus(); }
+}
+async function showArtist(name) {
+  const a = ARTISTS.find(x => x.name === name); if (!a) return;
+  pickedArtist = name; $("#artbtn").textContent = `Artist: ${a.name}`;
+  const card = $("#artistcard"); card.hidden = false;
+  const ig = a.ig ? `<a class="btn small" href="${esc(a.ig)}" target="_blank" rel="noopener">Instagram</a>` : `<a class="btn small" href="${esc(gq("site:instagram.com " + artName(a)))}" target="_blank" rel="noopener">Find on Instagram</a>`;
+  const fitRooms = a.fits.filter(k => SPACES[k]).map(k => SPACES[k].label.toLowerCase());
+  card.innerHTML = `<div><div class="artgallery" id="artgal"><p class="credit">Finding photos of their work…</p></div></div>
+    <div><p class="eyebrow">Artist</p><h3>${esc(a.name)}</h3><p>${esc(a.medium)}</p>
+      <p><b>Fits:</b> ${esc(fitRooms.join(", ") || "any room")}${a.fits.includes(S.space) ? " · <b>fits this room</b>" : ""}</p>
+      <div class="btnrow"><a class="btn small primary" href="${esc(a.site)}" target="_blank" rel="noopener">${esc(a.siteLabel || "Website")}</a>${ig}
+        <button class="btn small" type="button" id="artadd">Add an artwork spot to the room</button>
+        <button class="btn small" type="button" id="artmore">See all artists for this room</button></div>
+      <p class="credit">Photos are credited examples from Wikimedia Commons. The artist's website and Instagram have their full, current portfolio.</p></div>`;
+  post("art", "find", `The person is looking at ${a.name}: ${a.medium}.`);
+  let imgs = []; try { imgs = await commonsSearch(a.commons || artName(a), 6); } catch (e) {}
+  const gal = $("#artgal"); if (!gal || pickedArtist !== name) return;
+  gal.innerHTML = imgs.length ? imgs.slice(0, 3).map(i => `<figure><a href="${esc(i.page)}" target="_blank" rel="noopener"><img src="${esc(i.src)}" alt="${esc(i.title)}" loading="lazy"></a><figcaption>${esc(i.artist || "Unknown")} · ${esc(i.license || "")}</figcaption></figure>`).join("")
+    : `<p class="credit">No free photos found for ${esc(a.name)}. Their website and Instagram show the work.</p>`;
+}
+$("#artbtn").addEventListener("click", () => openArtList($("#artlist").hidden));
+$("#artlist").addEventListener("click", e => { const b = e.target.closest("[data-artist]"); if (!b) return; openArtList(false); $("#artbtn").focus(); showArtist(b.dataset.artist); });
+$("#artlist").addEventListener("keydown", e => { const opts = [...$("#artlist").querySelectorAll(".artopt")], i = opts.indexOf(document.activeElement);
+  if (e.key === "Escape") { openArtList(false); $("#artbtn").focus(); }
+  if (e.key === "ArrowDown") { e.preventDefault(); (opts[i + 1] || opts[0]).focus(); }
+  if (e.key === "ArrowUp") { e.preventDefault(); (opts[i - 1] || opts[opts.length - 1]).focus(); } });
+document.addEventListener("click", e => { if (!$("#artlist").hidden && !e.target.closest(".artistpick")) openArtList(false); });
+$("#artistcard").addEventListener("click", e => { const t = e.target.closest("button"); if (!t) return;
+  if (t.id === "artadd") addType("painting");
+  if (t.id === "artmore") { SD.showTab("budget"); setTimeout(() => { const el = $("#artists"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 60); } });
+
+/* Lighting choice */
+$("#lighting").value = lightPick;
+$("#lighting").addEventListener("change", e => { lightPick = e.target.value; store.set("lighting", lightPick); applyShell();
+  post("style", "parts", { "hats-cove": "Lighting: recessed LED high hats with a crown molding cove.", hats: "Lighting: recessed LED high hats.", spots: "Lighting: track spotlights on walls and art.", "spots-cove": "Lighting: track spotlights with a crown molding cove.", cove: "Lighting: crown molding cove light.", pendants: "Lighting: pendants only." }[lightPick]); runBudget(); });
 
 renderFeed(); drawNet(); renderComments(); syncControls();
 let tries = 0;
