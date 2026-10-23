@@ -297,6 +297,19 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 @media (max-width: 600px) { .artgallery { grid-template-columns: 1fr 1fr; } }
 .themebtn { margin-right: 8px; white-space: nowrap; }
 .themebtn .ic { display: inline-block; width: 1em; text-align: center; margin-right: 4px; }
+.ctxmenu { position: absolute; z-index: 40; width: min(24rem, calc(100% - 16px)); max-height: min(30rem, calc(100% - 16px)); overflow: auto; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 10px; box-shadow: 0 14px 34px rgba(10,15,25,.28); }
+.ctxmenu .ctxhead { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.ctxmenu .ctxhead b { font-size: 1rem; }
+.ctxmenu .why { font-size: .75rem; color: var(--ink-3); margin: 2px 0 8px; }
+.ctxgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.ctxgrid .btn { justify-content: flex-start; text-align: left; min-height: 40px; font-size: .875rem; }
+.ctxgrid .btn.top { border-color: var(--accent); }
+.ctxmenu details { margin-top: 8px; }
+.ctxmenu summary { cursor: pointer; font-weight: 700; font-size: .875rem; }
+.ctxmenu .grp { font-size: .6875rem; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; margin: 8px 0 4px; }
+.ctxmenu .sw-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.ctxmenu .sw-row button { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0; }
+.ctxmenu .danger { color: var(--crit); }
 .textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
 .textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
 .textsize .btn { min-width: 40px; }
@@ -588,7 +601,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.7</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.8</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -678,7 +691,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       </div>
       <div class="nogl" id="nogl" hidden><p>The 3D view could not start in this browser. Everything else still works: type commands, and the room is listed in words under "In the room".</p></div>
     </div>
-    <p class="hint" id="hint">Drag to turn the view · click the floor to point · click furniture to select it</p>
+    <p class="hint" id="hint">Click the floor to choose what goes there · click furniture for options · drag to turn the view</p>
     <p class="readout" id="readout">No spot marked. Click the floor to point, then say "there".</p>
 
     <section class="insp-card" id="inspcard" aria-live="polite"></section>
@@ -881,7 +894,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <p>Spatial AI lets people change a 3D space by speaking and pointing, as in Bolt's "put that there" (1980). The hard part isn't understanding the words. It's making sure the person knows what the system thinks "that" and "there" mean before it acts, and that they can stop it or take it back. Guidelines for human-AI interaction ask systems to make clear what they can do, to support efficient correction, and to narrow the scope of what they do when in doubt (Amershi et al., 2019). Mixed-initiative design adds that an agent should weigh the cost of acting against the cost of asking (Horvitz, 1999). This room puts those rules into practice.</p>
   </section>
   <section>
-    <h2>Twenty-two agents, one contract</h2>
+    <h2>Twenty-three agents, one contract</h2>
     <p>Every agent works in the open: its messages appear under "Agent trace" on each preview and in the Agent team feed, and lines light up on the agent network map when one hands work to another. Anything that changes the room, the shopping list or money waits for you.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Agent</th><th>Its job</th><th>What it may not do</th></tr></thead>
@@ -891,6 +904,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
         <tr><td>Spatial agent</td><td>Works out where "there", "next to the sofa" or "the corner" is, in meters</td><td>Use a spot you haven't marked; if you say "there" with nothing marked, it asks you to point</td></tr>
         <tr><td>Layout checker</td><td>Checks for overlaps and walls, and nudges a placement when needed</td><td>Nudge anything without saying how far and why</td></tr>
         <tr><td>Director</td><td>Runs the three agents above for every spoken or typed request</td><td>Skip the preview or the undo</td></tr>
+        <tr><td>UX</td><td>Opens a menu where you click: what fits that spot, ranked, or what you can do with a piece; watches for friction and offers tips</td><td>Place, change or remove anything without your click; removals need a second confirm</td></tr>
         <tr><th colspan="3">Designing the space</th></tr>
         <tr><td>Inspiration</td><td>Finds the headquarters you name, its sources and credited photos</td><td>Change the room; it suggests, you install</td></tr>
         <tr><td>Art and Style</td><td>Labels each interior's movement, materials, mood and art, with sources</td><td>Present its own reading of a photo as a fact; those labels are marked</td></tr>
@@ -1653,7 +1667,7 @@ function traceHTML(tr) {
 /* ---------------- Panel UI ---------------- */
 function showCard(kind, html) { const c = $("#card"); c.className = "card" + (kind ? " " + kind : ""); c.innerHTML = html; }
 function announce(t) { const s = $("#sr"); s.textContent = ""; setTimeout(() => s.textContent = t, 30); }
-function hint(t) { $("#hint").textContent = t || "Drag to turn the view · click the floor to point · click furniture to select it"; }
+function hint(t) { $("#hint").textContent = t || "Click the floor to choose what goes there · click furniture for options · drag to turn the view"; }
 function renderHistory() {
   const h = $("#history");
   h.innerHTML = S.history.length ? S.history.slice().reverse().map(x => `<li class="${x.undone ? "undone" : ""}"><span class="t">${x.t}</span><span>${esc(x.text)}${x.undone ? " (undone)" : ""}</span></li>`).join("") : `<li class="empty" style="display:block">No changes yet.</li>`;
@@ -2071,10 +2085,13 @@ function bindPointer(canvas) {
     }
     const solids = [...G.meshes.entries()].filter(([id]) => { const o = byId(id); return o && !CAT[o.type].flat; }).map(([, g]) => g);
     const hit = ray.intersectObjects(solids, true)[0];
-    if (hit && !S.awaitingPoint) { let n = hit.object; while (n && !n.userData.id) n = n.parent; if (n) { select(n.userData.id); return; } }
+    if (hit && !S.awaitingPoint && !S.moveId) { let n = hit.object; while (n && !n.userData.id) n = n.parent; if (n) { if (S.selected !== n.userData.id) select(n.userData.id); window.dispatchEvent(new CustomEvent("sd:objclick", { detail: { id: n.userData.id, cx: e.clientX, cy: e.clientY } })); return; } }
     const fh = ray.intersectObject(G.floor)[0];
-    if (fh) onPoint(Math.max(ROOM.minX + 0.1, Math.min(ROOM.maxX - 0.1, fh.point.x)), Math.max(ROOM.minZ + 0.1, Math.min(ROOM.maxZ - 0.1, fh.point.z)));
+    const wasAwaiting = !!S.awaitingPoint;
+    if (fh) { const px = Math.max(ROOM.minX + 0.1, Math.min(ROOM.maxX - 0.1, fh.point.x)), pz = Math.max(ROOM.minZ + 0.1, Math.min(ROOM.maxZ - 0.1, fh.point.z));
+      onPoint(px, pz); if (!wasAwaiting) window.dispatchEvent(new CustomEvent("sd:floorclick", { detail: { x: px, z: pz, cx: e.clientX, cy: e.clientY } })); }
   });
+  canvas.addEventListener("contextmenu", e => e.preventDefault());
   canvas.addEventListener("wheel", e => { e.preventDefault(); G.userZoom = true; G.radius = Math.max(5.5, Math.min(20, G.radius + Math.sign(e.deltaY) * 0.6)); }, { passive: false });
 }
 function viewBy(dyaw, dr) { if (!G) return; G.yaw = Math.max(-1.2, Math.min(1.7, G.yaw + dyaw)); if (dr) G.userZoom = true; G.radius = Math.max(5.5, Math.min(20, G.radius + dr)); }
@@ -3847,6 +3864,137 @@ $("#artistcard").addEventListener("click", e => { const t = e.target.closest("bu
 $("#lighting").value = lightPick;
 $("#lighting").addEventListener("change", e => { lightPick = e.target.value; store.set("lighting", lightPick); applyShell();
   post("style", "parts", { "hats-cove": "Lighting: recessed LED high hats with a crown molding cove.", hats: "Lighting: recessed LED high hats.", spots: "Lighting: track spotlights on walls and art.", "spots-cove": "Lighting: track spotlights with a crown molding cove.", cove: "Lighting: crown molding cove light.", pendants: "Lighting: pendants only." }[lightPick]); runBudget(); });
+
+/* ---------------- UX agent: choices where you click ---------------- */
+const hint = t => { const h = $("#hint"); if (h) h.textContent = t || "Click the floor to choose what goes there · click furniture for options · drag to turn the view"; };
+AGENTS.ux = { name: "UX", job: "Opens choices where you click, ranks what fits that spot, and watches for friction" };
+const GROUPS_CAT = [
+  ["Seating", ["sofa", "chair", "taskchair", "bench", "seatrow"]], ["Tables and desks", ["desk", "standing", "table", "dining", "boardtable", "highbar", "reception"]],
+  ["Storage and kitchen", ["bookshelf", "counter", "island", "fridge"]], ["Lighting, plants and art", ["lamp", "plant", "painting", "rug"]],
+  ["Bath and restroom", ["vanity", "toilet", "shower", "urinal", "stall"]], ["Walls, doors and AV", ["door", "window", "partition", "screen", "stage"]]];
+const SPACE_PICKS = { lobby: ["reception", "bench", "sofa", "plant", "painting", "chair"], csuite: ["desk", "chair", "sofa", "lamp", "bookshelf", "plant"],
+  execoffice: ["standing", "taskchair", "sofa", "lamp", "painting", "plant"], meeting: ["boardtable", "taskchair", "screen", "plant", "painting", "bookshelf"],
+  auditorium: ["seatrow", "stage", "screen", "plant", "door", "lamp"], social: ["sofa", "highbar", "chair", "table", "plant", "lamp"],
+  lunch: ["dining", "chair", "island", "counter", "fridge", "plant"], dining: ["dining", "chair", "bench", "plant", "lamp", "painting"],
+  restrooms: ["vanity", "stall", "urinal", "toilet", "plant", "door"], studio: ["sofa", "chair", "table", "lamp", "plant", "desk"] };
+function rankFor(x, z) {
+  const why = [], picks = [];
+  const add = (list, reason) => { let used = false; for (const t of list) if (CAT[t] && !picks.includes(t)) { picks.push(t); used = true; } if (used && reason) why.push(reason); };
+  const near = t => S.objs.filter(o => o.type === t).some(o => Math.hypot(o.x - x, o.z - z) < 1.6);
+  if (z - ROOM.minZ < 0.7) add(["painting", "screen", "bookshelf", "door"], "near the back wall");
+  else if (ROOM.maxX - x < 0.7) add(["window", "door", "painting", "plant"], "near the open side");
+  if (near("desk") || near("standing")) add(["taskchair", "lamp", "plant"], "next to a desk");
+  if (near("sofa") || near("table")) add(["lamp", "chair", "table", "rug"], "by the lounge");
+  if (near("dining") || near("boardtable")) add(["chair", "taskchair", "lamp"], "by a table");
+  add(SPACE_PICKS[S.space] || SPACE_PICKS.studio, "right for this " + SPACES[S.space].label.toLowerCase());
+  return { top: picks.slice(0, 6), why: why.slice(0, 2) };
+}
+function solidFp(ignoreId) { return S.objs.filter(o => o.id !== ignoreId && !CAT[o.type].flat).map(footprint); }
+function fitsAt(type, x, z, rot, scale, ignoreId) {
+  const f = footprint({ type, x, z, rot, scale: scale || 1 });
+  if (x - f.hx < ROOM.minX - 0.01 || x + f.hx > ROOM.maxX + 0.01 || z - f.hz < ROOM.minZ - 0.01 || z + f.hz > ROOM.maxZ + 0.01) return false;
+  if (CAT[type].flat) return true;
+  return !solidFp(ignoreId).some(o => Math.abs(o.x - x) < o.hx + f.hx + 0.03 && Math.abs(o.z - z) < o.hz + f.hz + 0.03);
+}
+function spotFor(type, x, z, ignoreId, scale) {
+  const c = CAT[type]; let rot = 0, along = null;
+  if (c.wall) { if (ROOM.maxX - x < z - ROOM.minZ && ROOM.maxX - x < 1.2) { x = ROOM.maxX - 0.06; rot = -90; along = "z"; } else { z = ROOM.minZ + 0.05; along = "x"; } }
+  if (fitsAt(type, x, z, rot, scale, ignoreId)) return [x, z, rot];
+  for (let r = 0.2; r <= 1.8; r += 0.2) for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6;
+    const nx = along === "z" ? x : x + (along === "x" ? (k % 2 ? r : -r) : r * Math.cos(a)), nz = along === "x" ? z : z + (along === "z" ? (k % 2 ? r : -r) : r * Math.sin(a));
+    if (fitsAt(type, nx, nz, rot, scale, ignoreId)) return [nx, nz, rot]; }
+  return null;
+}
+function commit(text, fn) { S.undo.push(SD.snap()); fn(); S.history.push({ t: SD.clockStr(), text, undone: false }); SD.sync(); SD.renderHistory(); SD.renderScene(); SD.announce(text + ". You can undo it."); }
+function placeAt(type, x, z) {
+  const sp = spotFor(type, x, z); const c = CAT[type];
+  if (!sp) { SD.showCard("err", `<p>There's no room for a ${esc(c.label)} there. Try another spot, or move something first.</p>`); post("ux", "you", `No free space for a ${c.label} at that spot; suggested another spot.`, "warn"); return; }
+  const st = STYLES[S.style], ALIAS = { standing: "desk", boardtable: "dining", counter: "reception", island: "reception", vanity: "reception", door: "bookshelf", stage: "desk", highbar: "table", seatrow: "sofa", taskchair: "chair", painting: "desk" };
+  let o;
+  commit(`Added a ${c.label}`, () => { o = SD.mk(type, sp[0], sp[1], sp[2]); o.color = ["window", "partition", "stall", "shower"].includes(type) ? st.walls : st.pal[type] || st.pal[ALIAS[type]] || c.color; S.objs.push(o); S.selected = o.id; });
+  const moved = Math.hypot(sp[0] - x, sp[1] - z) > 0.05;
+  SD.showCard("done", `<p class="eyebrow">Added</p><p>A ${esc(c.label)}, ${esc(SD.whereOf(o))}.${moved ? " I nudged it " + Math.hypot(sp[0] - x, sp[1] - z).toFixed(1) + " m so it doesn't overlap anything." : ""} Click it for more options, or Undo.</p>`);
+  post("ux", "layout", `Placed a ${c.label} where the person clicked${moved ? ", nudged " + Math.hypot(sp[0] - x, sp[1] - z).toFixed(1) + " m to clear an overlap" : ""}.`);
+  ux.placed++;
+}
+let menuEl = null, ux = { opened: 0, cancels: 0, placed: 0, tipped: {} };
+function closeMenu(cancelled) { if (menuEl) { menuEl.remove(); menuEl = null; if (cancelled) { ux.cancels++; frictionCheck(); } } }
+function openMenu(html, cx, cy) {
+  closeMenu(false);
+  const wrap = $("#canvaswrap"), r = wrap.getBoundingClientRect();
+  menuEl = document.createElement("div"); menuEl.className = "ctxmenu"; menuEl.setAttribute("role", "dialog"); menuEl.setAttribute("aria-label", "Choices for this spot");
+  menuEl.innerHTML = html; wrap.appendChild(menuEl);
+  const w = menuEl.offsetWidth, h = menuEl.offsetHeight;
+  menuEl.style.left = Math.max(8, Math.min(r.width - w - 8, cx - r.left + 10)) + "px";
+  menuEl.style.top = Math.max(8, Math.min(r.height - h - 8, cy - r.top + 10)) + "px";
+  const f = menuEl.querySelector("button"); if (f) f.focus();
+  ux.opened++;
+}
+const btn = (label, attrs, cls) => `<button type="button" class="btn small ${cls || ""}" ${attrs}>${esc(label)}</button>`;
+function floorMenu(x, z, cx, cy) {
+  if (S.moveId) { const o = SD.byId(S.moveId), sp = o && spotFor(o.type, x, z, o.id, o.scale);
+    S.moveId = null; hint();
+    if (!o) return;
+    if (!sp) { SD.showCard("err", `<p>The ${esc(CAT[o.type].label)} doesn't fit there. Click Move again and pick another spot.</p>`); return; }
+    commit(`Moved the ${CAT[o.type].label}`, () => { o.x = sp[0]; o.z = sp[1]; if (CAT[o.type].wall) o.rot = sp[2]; });
+    post("ux", "layout", `Moved the ${CAT[o.type].label} to where the person clicked.`); return; }
+  const R = rankFor(x, z), sel = S.selected && SD.byId(S.selected);
+  const all = GROUPS_CAT.map(([g, ts]) => `<p class="grp">${esc(g)}</p><div class="ctxgrid">${ts.filter(t => CAT[t]).map(t => btn(cap(CAT[t].label), `data-put="${t}"`)).join("")}</div>`).join("");
+  openMenu(`<div class="ctxhead"><b>Put here</b>${btn("Close", 'data-close="1"')}</div>
+    <p class="why">UX agent suggests${R.why.length ? ": " + esc(R.why.join(", ")) : ""}</p>
+    <div class="ctxgrid">${R.top.map(t => btn(cap(CAT[t].label), `data-put="${t}"`, "top")).join("")}</div>
+    ${sel ? `<div class="ctxgrid" style="margin-top:6px">${btn("Move the " + CAT[sel.type].label + " here", 'data-movehere="1"')}</div>` : ""}
+    <details><summary>Everything else</summary>${all}</details>`, cx, cy);
+  menuEl.dataset.x = x; menuEl.dataset.z = z;
+  post("ux", "director", `Opened choices at ${SD.whereOf({ type: "chair", x, z, rot: 0, scale: 1 })}: ${R.top.map(t => CAT[t].label).join(", ")}.`);
+}
+const SWATCHES = ["ivory", "white", "stone", "oak", "walnut", "chocolate", "charcoal", "black", "navy", "blue", "light blue", "teal", "green", "sage", "emerald", "olive", "purple", "lavender", "terracotta", "rust"];
+function objMenu(id, cx, cy) {
+  const o = SD.byId(id); if (!o) return; const c = CAT[o.type];
+  openMenu(`<div class="ctxhead"><b>${esc(cap(c.label))}</b>${btn("Close", 'data-close="1"')}</div>
+    <p class="why">${esc(SD.whereOf(o))}${o.art ? " · artwork by " + esc(o.art.artist) : ""}</p>
+    <div class="ctxgrid">${btn("Move", 'data-act="move"')}${btn("Turn 90°", 'data-act="turn"')}${btn("Bigger", 'data-act="bigger"')}${btn("Smaller", 'data-act="smaller"')}${btn("Duplicate", 'data-act="dup"')}
+      <a class="btn small" href="${esc(gshop((o.art ? o.art.artist + " " : "") + o.color + " " + c.label + " " + STYLES[S.style].short))}" target="_blank" rel="noopener">Find it to buy</a>
+      ${btn("Remove", 'data-act="remove"', "danger")}</div>
+    <p class="grp">Color</p><div class="sw-row">${SWATCHES.map(k => `<button type="button" data-color="${esc(k)}" title="${esc(k)}" aria-label="${esc(k)}" style="background:${COLORS[k]}"></button>`).join("")}</div>`, cx, cy);
+  menuEl.dataset.id = id;
+}
+window.addEventListener("sd:floorclick", e => { const d = e.detail; floorMenu(d.x, d.z, d.cx, d.cy); });
+window.addEventListener("sd:objclick", e => { const d = e.detail; objMenu(d.id, d.cx, d.cy); });
+$("#canvaswrap").addEventListener("click", e => {
+  if (!menuEl || !menuEl.contains(e.target)) return;
+  const t = e.target.closest("button"); if (!t) return;
+  const x = +menuEl.dataset.x, z = +menuEl.dataset.z, id = menuEl.dataset.id, o = id && SD.byId(id);
+  if (t.dataset.close) { closeMenu(true); return; }
+  if (t.dataset.put) { closeMenu(false); placeAt(t.dataset.put, x, z); return; }
+  if (t.dataset.movehere) { const sel = SD.byId(S.selected); closeMenu(false); if (sel) { S.moveId = sel.id; floorMenu(x, z); } return; }
+  if (t.dataset.color && o) { closeMenu(false); commit(`Made the ${CAT[o.type].label} ${t.dataset.color}`, () => { o.color = t.dataset.color; }); return; }
+  if (!o) return;
+  const a = t.dataset.act;
+  if (a === "move") { closeMenu(false); S.moveId = o.id; hint(`Click where the ${CAT[o.type].label} should go · Esc to cancel`); SD.showCard("", `<p class="eyebrow">Move</p><p>Click the floor where the ${esc(CAT[o.type].label)} should go.</p>`); return; }
+  if (a === "turn") { closeMenu(false); commit(`Turned the ${CAT[o.type].label}`, () => { o.rot = ((o.rot + 90 + 180) % 360) - 180; }); return; }
+  if (a === "bigger" || a === "smaller") { const ns = Math.max(0.6, Math.min(1.6, (o.scale || 1) * (a === "bigger" ? 1.15 : 1 / 1.15)));
+    closeMenu(false); if (a === "bigger" && !fitsAt(o.type, o.x, o.z, o.rot, ns, o.id)) { SD.showCard("err", `<p>A bigger ${esc(CAT[o.type].label)} would overlap something. Move it first.</p>`); return; }
+    commit(`Made the ${CAT[o.type].label} ${a}`, () => { o.scale = ns; }); return; }
+  if (a === "dup") { closeMenu(false); const extra = o.art ? { art: o.art, scale: o.scale } : null; const sp = spotFor(o.type, o.x + 0.9, o.z, null, o.scale);
+    if (!sp) { SD.showCard("err", `<p>No room for another ${esc(CAT[o.type].label)} nearby.</p>`); return; }
+    commit(`Duplicated the ${CAT[o.type].label}`, () => { const n = SD.mk(o.type, sp[0], sp[1], sp[2] || o.rot); n.color = o.color; n.scale = o.scale; if (extra) n.art = extra.art; S.objs.push(n); S.selected = n.id; }); runBudget(); return; }
+  if (a === "remove") { if (t.dataset.sure) { closeMenu(false); commit(`Removed the ${CAT[o.type].label}`, () => { S.objs = S.objs.filter(x => x.id !== o.id); S.selected = null; }); runBudget(); return; }
+    t.dataset.sure = "1"; t.textContent = "Confirm remove"; return; }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") { if (menuEl) closeMenu(true); if (S.moveId) { S.moveId = null; hint(); } } });
+document.addEventListener("pointerdown", e => { if (menuEl && !menuEl.contains(e.target) && e.target.id !== "c") closeMenu(true); });
+$("#canvaswrap").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === "ContextMenu") && e.target === $("#canvaswrap")) { e.preventDefault();
+  const G = SD.G, p = S.pointer || { x: 0, z: 0 }, r = $("#canvaswrap").getBoundingClientRect(); let cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  if (G && window.THREE) { const v = new THREE.Vector3(p.x, 0, p.z).project(G.camera); cx = r.left + (v.x + 1) / 2 * r.width; cy = r.top + (1 - v.y) / 2 * r.height; }
+  floorMenu(p.x, p.z, cx, cy); } });
+function frictionCheck() {
+  const tip = (k, text) => { if (ux.tipped[k]) return; ux.tipped[k] = true; post("ux", "you", text, "warn"); };
+  if (ux.cancels >= 2 && ux.placed === 0) tip("cancel", "Not finding the right piece? Open \"Everything else\" in the menu, or type what you want in \"In the room\" search.");
+  const recent = S.history.slice(-4); if (recent.length === 4 && recent.every(h => h.undone)) tip("undo", "Several undos in a row. Turn on \"Ask me before every change\" to preview each change first.");
+}
+window.addEventListener("sd:synced", frictionCheck);
+setTimeout(() => post("ux", "you", "Click the floor to choose what goes there, or click a piece for options. Right-click works too; on a keyboard, focus the room and press Enter."), 1800);
 
 renderFeed(); drawNet(); renderComments(); syncControls();
 let tries = 0;

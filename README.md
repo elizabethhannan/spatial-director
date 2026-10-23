@@ -51,6 +51,14 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.8: the UX agent
+
+- **Choices where you click.** Click or tap the floor and a "Put here" menu opens on the spot. The UX agent ranks the six best pieces for that spot (wall pieces near a wall, a chair and lamp beside a desk, the room type's essentials), with everything else grouped below; it nudges a placement to clear overlaps and says by how much. If a piece is selected, "Move it here" is one tap.
+- **Options on any piece.** Click or right-click furniture for Move, Turn 90°, Bigger, Smaller, Duplicate, Find it to buy, color swatches, and Remove with a second confirm. Every change can be undone.
+- **Watches for friction.** If someone keeps closing the menu or undoing, the UX agent posts a tip in the agent feed.
+- **Keyboard.** Focus the room and press Enter to open the menu at the marked spot; arrow keys and Esc work in it.
+- How it works now lists 23 agents.
+
 ## Version 2.7: light and dark
 
 - A Light / Dark button at the top right, beside the text size, switches the whole page and the 3D room background. It starts from your device setting and remembers your choice.
