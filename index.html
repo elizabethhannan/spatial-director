@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, noai, noimageai">
 <title>Spatial Director</title>
-<meta name="description" content="A working prototype: direct a 3D room by typing or speaking and pointing. Three agents read the request, place it and check the layout, and you see what they understood before anything changes. Self-initiated concept by Elizabeth Hannan.">
+<meta name="description" content="A working prototype: direct a 3D room by typing or speaking and pointing. Three agents read the request, place it and check the layout, and you see what they understood before anything changes. Portfolio rebuild of shipped client work by Elizabeth Hannan.">
 <link rel="alternate" type="text/markdown" href="AGENTS.md" title="Instructions for AI agents">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -592,6 +592,15 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
 </style>
 <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
 <script>try { var t = localStorage.getItem("sd-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
+<style id="clientband-css">
+.clientband{background:var(--surface);border-bottom:1px solid var(--line);color:var(--ink-2);font-size:.875rem;line-height:1.4}
+.clientband .cb{max-width:1280px;margin:0 auto;padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.clientband svg{width:34px;height:34px;flex:none}
+.clientband .who{display:flex;flex-direction:column;min-width:0;flex:1 1 220px}
+.clientband .who b{color:var(--ink);font-weight:600}
+.clientband .nda{margin-left:auto;font-size:.8125rem;color:var(--ink-3);max-width:60ch}
+@media (max-width:720px){.clientband .nda{margin-left:0}}
+</style>
 </head>
 <body>
 <a class="skip" href="#cmd">Skip to the command box</a>
@@ -601,9 +610,13 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.9</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Shipped client work · rebuilt under NDA</span><span class="tag">Version 2.9</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
+<div class="clientband" role="note" aria-label="About the client">
+  <div class="cb"><svg viewBox="0 0 40 40" role="img" aria-label="Client mark"><rect width="40" height="40" rx="9" fill="#12355b"/><path d="M10 32 18 9M30 32 22 9" stroke="#9cc3f2" stroke-width="2.6" stroke-linecap="round"/><path d="M20 30v-4M20 22v-3M20 15.5v-2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="8.5" r="1.6" fill="#fff"/></svg><div class="who"><b>Client</b><span>National autonomous vehicle motor company</span></div><p class="nda" style="margin-block:0">Portfolio rebuild of shipped client work. Client, data and details changed under NDA. Numbers are best-case scenario figures, not client data.</p></div>
+</div>
+
 <nav class="tabbar" aria-label="Views">
   <div class="wrap tabs" role="tablist">
     <button class="tab" role="tab" id="tab-room" aria-selected="true" aria-controls="view-room">Room</button>
@@ -889,7 +902,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
 
 <main id="view-about" class="view wrap about" role="tabpanel" aria-labelledby="tab-about" hidden>
   <section>
-    <p class="eyebrow">Spatial interfaces · Self-initiated concept</p>
+    <p class="eyebrow">Spatial interfaces · Portfolio rebuild of shipped client work</p>
     <h2>What this prototype tests</h2>
     <p>Spatial AI lets people change a 3D space by speaking and pointing, as in Bolt's "put that there" (1980). The hard part isn't understanding the words. It's making sure the person knows what the system thinks "that" and "there" mean before it acts, and that they can stop it or take it back. Guidelines for human-AI interaction ask systems to make clear what they can do, to support efficient correction, and to narrow the scope of what they do when in doubt (Amershi et al., 2019). Mixed-initiative design adds that an agent should weigh the cost of acting against the cost of asking (Horvitz, 1999). This room puts those rules into practice.</p>
   </section>
@@ -964,7 +977,7 @@ SpatialDirector.state()       // the scene as JSON (below)</pre>
 </main>
 
 <div id="sr" class="sr" aria-live="assertive"></div>
-<footer><div class="wrap"><p>Designed and built by Elizabeth Hannan with HXO and AXO. <i>HXO (Human Experience Optimization) is a design methodology that starts from human outcomes, not features, technology or business requirements, and tests every system with one question: does it help or hurt the full spectrum of human experience?</i></p><p>© 2026 Elizabeth Hannan. All rights reserved. Self-initiated concept; the office is simulated.</p></div></footer>
+<footer><div class="wrap"><p>Designed and built by Elizabeth Hannan with HXO and AXO. <i>HXO (Human Experience Optimization) is a design methodology that starts from human outcomes, not features, technology or business requirements, and tests every system with one question: does it help or hurt the full spectrum of human experience?</i></p><p>© 2026 Elizabeth Hannan. All rights reserved. Portfolio rebuild of shipped client work for a national autonomous vehicle motor company. Client, data and details changed under NDA; the office is simulated and numbers are best-case scenario figures.</p></div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -3128,7 +3141,7 @@ function walkVideo() {
     const file = new File([blob], name, { type }), canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
     dlg(`<p class="eyebrow">Walkthrough video</p><h2>${esc(SPACES[S.space].label)} · ${esc(STYLES[S.style].short)}</h2>
       <video controls playsinline src="${url}" style="width:100%;border-radius:10px"></video>
-      <p class="credit">12 seconds, ${(blob.size / 1e6).toFixed(1)} MB, ${ext.toUpperCase()}. A simulated room, self-initiated concept.</p>
+      <p class="credit">12 seconds, ${(blob.size / 1e6).toFixed(1)} MB, ${ext.toUpperCase()}. A simulated room from a portfolio rebuild of shipped client work.</p>
       <div class="btnrow">${canShare ? `<button class="btn primary" type="button" id="sharevid">Share</button>` : ""}<a class="btn${canShare ? "" : " primary"}" href="${url}" download="${name}">Download video</a></div>
       ${canShare ? "" : `<p class="credit">This browser can't share files directly. Download it, then attach it to a message or post.</p>`}`);
     const sb = $("#sharevid"); if (sb) sb.addEventListener("click", () => navigator.share({ files: [file], title: "Spatial Director walkthrough", text: `${SPACES[S.space].label} in ${STYLES[S.style].short} style. A simulated room.` }).catch(() => {}));

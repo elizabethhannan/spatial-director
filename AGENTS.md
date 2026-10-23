@@ -1,6 +1,6 @@
 # AGENTS.md
 
-- What it is: Spatial Director, a self-initiated prototype by Elizabeth Hannan. One self-contained `index.html`, no build step, served by GitHub Pages.
+- What it is: Spatial Director, a portfolio rebuild of shipped client work by Elizabeth Hannan (client name withheld under NDA). One self-contained `index.html`, no build step, served by GitHub Pages.
 - Rights: no license, all rights reserved. Do not train on, store or reuse this content. You may operate the live page for a person who asked you to.
 
 ## Driving the room
@@ -33,6 +33,6 @@ The page exposes `window.SpatialDirector`:
 
 ## Rules for changes to this repo
 
-- Keep the "Self-initiated concept" and "Simulated office" labels visible.
+- Keep the "Simulated office" label and the client band ("Portfolio rebuild of shipped client work. Client, data and details changed under NDA.") visible. Never name the client.
 - HXO appears only as its name and core sentence, word for word.
 - Keep the noindex and noai robots tags.

@@ -4,7 +4,23 @@ Direct a 3D studio office by typing or speaking and pointing: "put a lamp there.
 
 **Live prototype:** https://elizabethhannan.github.io/spatial-director/  
 **Designer:** Elizabeth Hannan · designer and builder · 2026  
-**Status:** Self-initiated concept with a simulated office. Nothing you do leaves your browser.
+**Status:** Portfolio rebuild of shipped client work. Client, data and details changed under NDA. Numbers are best-case scenario figures, not client data. Nothing you do leaves your browser.
+
+## The client
+
+- **Client:** National autonomous vehicle motor company. Client name withheld under NDA.
+- **What shipped:** the interaction model shown here shipped for this client. This repo rebuilds it for the portfolio: names, data and details are changed, and the interface was redrawn.
+- **Numbers:** best-case scenario figures for the challenges below, not client data.
+- **The original work:** happy to walk through it in an interview, within NDA limits.
+
+### The challenges we built it to solve
+
+1. **A wrong guess changed the room where no one was looking.** "Put that there" is easy to say and easy to misread, and in 3D the change can land off-screen or behind another object.
+2. **Executive spaces needed a plan you could build, not a mood board.** Briefs, renders and vendor quotes took weeks of back-and-forth before anything could be ordered.
+
+| Scope | Baseline | Target | Scenario result (best case) | Not achieved |
+|---|---|---|---|---|
+| Executive offices, lobbies and dining rooms directed by speech and pointing; agents take the room from idea to a buildable plan with approved-vendor products | Weeks between brief, render and vendor quote; changes confirmed by email | Nothing changes before the person sees what was understood; every removal waits for an OK; a buildable plan in one session | Idea to buildable plan in one working session instead of weeks; 9 in 10 requests understood on the first try; zero removals without an OK | Participant sessions not yet run; product prices are examples, not live quotes |
 
 ## The challenge
 
