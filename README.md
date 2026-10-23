@@ -51,6 +51,10 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 2.7: light and dark
+
+- A Light / Dark button at the top right, beside the text size, switches the whole page and the 3D room background. It starts from your device setting and remembers your choice.
+
 ## Version 2.6: install an artist's work
 
 - Choose an artist in the Inspiration card, then **Install this piece** under any of their photos, or **Install their work**. The piece hangs on a free wall in the 3D room: framed for paintings, photography and advisors' collections, as a glowing lightbox for light, digital and kinetic art, and as a larger panel for installations and sculpture. Photos come from Wikimedia Commons with their photographers' credit; artists without a free photo get a labeled placeholder.

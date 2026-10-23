@@ -295,6 +295,8 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 .artgallery figcaption { font-size: .6875rem; color: var(--ink-3); overflow-wrap: anywhere; }
 #artistcard { display: block; }
 @media (max-width: 600px) { .artgallery { grid-template-columns: 1fr 1fr; } }
+.themebtn { margin-right: 8px; white-space: nowrap; }
+.themebtn .ic { display: inline-block; width: 1em; text-align: center; margin-right: 4px; }
 .textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
 .textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
 .textsize .btn { min-width: 40px; }
@@ -576,6 +578,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
 @media (max-width: 900px) { .build-grid { grid-template-columns: 1fr; } .insp-card { grid-template-columns: 1fr; } }
 </style>
 <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+<script>try { var t = localStorage.getItem("sd-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
 </head>
 <body>
 <a class="skip" href="#cmd">Skip to the command box</a>
@@ -585,7 +588,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.6</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Self-initiated concept</span><span class="tag">Version 2.7</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <nav class="tabbar" aria-label="Views">
@@ -595,6 +598,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
     <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
     <button class="tab" role="tab" id="tab-budget" aria-selected="false" aria-controls="view-budget">Build &amp; Budget</button>
     <span class="spacer"></span>
+    <button class="btn small themebtn" type="button" id="themebtn" aria-pressed="false">Dark</button>
     <div class="textsize" role="group" aria-label="Text size"><button class="btn small" id="ts-down" aria-label="Smaller text">A−</button><span id="ts-val" aria-live="polite">150%</span><button class="btn small" id="ts-up" aria-label="Larger text">A+</button></div>
     <button class="btn small" id="starttest">Run the usability test</button>
   </div>
@@ -3952,6 +3956,24 @@ setTimeout(wait, 200);
     }
   });
   mo.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<script id="theme-js">
+(() => {
+  const root = document.documentElement, btn = document.getElementById("themebtn");
+  const sys = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  const cur = () => root.getAttribute("data-theme") || sys();
+  const paint = () => {
+    const dark = cur() === "dark";
+    btn.innerHTML = dark ? '<span class="ic" aria-hidden="true">☀</span>Light' : '<span class="ic" aria-hidden="true">☾</span>Dark';
+    btn.setAttribute("aria-label", dark ? "Switch to light background" : "Switch to dark background");
+    btn.setAttribute("aria-pressed", String(dark));
+    const SD = window.__SD, G = SD && SD.G;
+    if (G && window.THREE) { const v = getComputedStyle(root).getPropertyValue("--stage").trim() || (dark ? "#1d232b" : "#dfe5ea"); G.scene.background = new THREE.Color(v); }
+  };
+  btn.addEventListener("click", () => { const next = cur() === "dark" ? "light" : "dark"; root.setAttribute("data-theme", next); try { localStorage.setItem("sd-theme", next); } catch (e) {} paint(); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paint);
+  paint(); setTimeout(paint, 1500);
 })();
 </script>
 <script id="textsize-js">
