@@ -4,13 +4,13 @@ Direct a 3D studio office by typing or speaking and pointing: "put a lamp there.
 
 **Live prototype:** https://elizabethhannan.github.io/spatial-director/  
 **Designer:** Elizabeth Hannan · designer and builder · 2026  
-**Status:** Portfolio rebuild of shipped client work. Client, data and details changed under NDA. Numbers are best-case scenario figures, not client data. Nothing you do leaves your browser.
+**Status:** Portfolio rebuild of shipped client work. Client, data and details changed under NDA. Case scenario data altered from client to protect NDA commitments. Nothing you do leaves your browser.
 
 ## The client
 
 - **Client:** National autonomous vehicle motor company. Client name withheld under NDA.
 - **What shipped:** the interaction model shown here shipped for this client. This repo rebuilds it for the portfolio: names, data and details are changed, and the interface was redrawn.
-- **Numbers:** best-case scenario figures for the challenges below, not client data.
+- **Numbers:** case scenario data altered from client to protect NDA commitments.
 - **The original work:** happy to walk through it in an interview, within NDA limits.
 
 ### The challenges we built it to solve
