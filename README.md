@@ -67,6 +67,10 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Logo and icon
+
+The Spatial Director mark is a small isometric room with the blue "there" pointer and a lavender spark for the agents, on a navy-to-teal tile. It sits at the top right of the page and is the browser tab icon. Files: `brand/icon.svg`, `brand/logo.svg`, `brand/icon-512.png`, `brand/apple-touch-icon.png`.
+
 ## Version 2.9: art and sculpture in the room
 
 - Five art pieces join the room, the "Put here" menu (new "Art and sculpture" group), search and the invoice: sculpture on a plinth, glass chandelier, art glass wall, suspended net sculpture and LED art wall. The UX agent suggests a statement piece for open floor in lobbies, offices, lounges and halls, and glass or LED art walls near the back wall.

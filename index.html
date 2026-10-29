@@ -7,6 +7,8 @@
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="bingbot" content="noindex, nofollow, noarchive">
 <title>Spatial Director</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22 role=%22img%22 aria-labelledby=%22t%22%3E%3Ctitle id=%22t%22%3ESpatial Director%3C/title%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22#22406e%22/%3E%3Cstop offset=%221%22 stop-color=%22#0b6b66%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22url%28#g%29%22/%3E%3Cpolygon points=%2212,40 32,29 32,11 12,22%22 fill=%22#ffffff%22 fill-opacity=%22.16%22/%3E%3Cpolygon points=%2232,29 52,40 52,22 32,11%22 fill=%22#ffffff%22 fill-opacity=%22.08%22/%3E%3Cpolygon points=%2212,40 32,29 52,40 32,51%22 fill=%22#ffffff%22 fill-opacity=%22.26%22/%3E%3Cpath d=%22M12 22 L32 11 L52 22 M32 11 V29 M12 22 V40 L32 51 L52 40 V22 M12 40 L32 29 L52 40%22 fill=%22none%22 stroke=%22#ffffff%22 stroke-width=%222%22 stroke-linejoin=%22round%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2235%22 cy=%2242%22 rx=%226.5%22 ry=%223.6%22 fill=%22none%22 stroke=%22#8fb8e8%22 stroke-width=%222.4%22/%3E%3Cpath d=%22M35 42 V31%22 stroke=%22#8fb8e8%22 stroke-width=%222%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%2235%22 cy=%2230%22 r=%222.6%22 fill=%22#8fb8e8%22/%3E%3Cpath d=%22M50 6 L51.6 10.4 L56 12 L51.6 13.6 L50 18 L48.4 13.6 L44 12 L48.4 10.4 Z%22 fill=%22#c9bdf2%22/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
 <meta name="description" content="A working prototype: direct a 3D room by typing or speaking and pointing. Three agents read the request, place it and check the layout, and you see what they understood before anything changes. Portfolio rebuild of shipped client work by Elizabeth Hannan.">
 <link rel="alternate" type="text/markdown" href="AGENTS.md" title="Instructions for AI agents">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +54,18 @@ p { margin: 0; }
 .wrap { max-width: 1480px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .top { background: var(--surface); border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; padding-block: 14px; }
+.top .brand { order: 1; flex: 1 1 28rem; min-width: 0; }
+.top .sdlogo { order: 2; margin-left: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; border-radius: 14px; padding: 4px; }
+.top .tags { order: 3; }
+.sdlogo .mark { width: 3.25rem; height: 3.25rem; flex: none; filter: drop-shadow(0 4px 10px rgba(11, 30, 60, .22)); }
+.sdlogo .word { display: grid; line-height: 1.05; font-family: var(--font-display); font-weight: 700; letter-spacing: .14em; font-size: .9375rem; }
+.sdlogo .word span:first-child { color: #22406e; }
+.sdlogo .word span:last-child { color: #0b6b66; }
+:root[data-theme="dark"] .sdlogo .word span:first-child { color: #8fb8e8; }
+:root[data-theme="dark"] .sdlogo .word span:last-child { color: #6fd0c3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sdlogo .word span:first-child { color: #8fb8e8; } :root:not([data-theme="light"]) .sdlogo .word span:last-child { color: #6fd0c3; } }
+.sdlogo:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 640px) { .top .sdlogo { order: 0; margin-left: auto; } .sdlogo .mark { width: 2.5rem; height: 2.5rem; } .sdlogo .word { font-size: .8125rem; } }
 .brand h1 { font-size: 1.5rem; }
 .brand p { color: var(--ink-2); max-width: 70ch; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
@@ -608,6 +622,20 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
 <a class="skip" href="#cmd">Skip to the command box</a>
 <header class="top">
   <div class="wrap">
+    <a class="sdlogo" href="#" aria-label="Spatial Director, back to the top">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="sdlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22406e"/><stop offset="1" stop-color="#0b6b66"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#sdlg)"/>
+<polygon points="12,40 32,29 32,11 12,22" fill="#ffffff" fill-opacity=".16"/>
+<polygon points="32,29 52,40 52,22 32,11" fill="#ffffff" fill-opacity=".08"/>
+<polygon points="12,40 32,29 52,40 32,51" fill="#ffffff" fill-opacity=".26"/>
+<path d="M12 22 L32 11 L52 22 M32 11 V29 M12 22 V40 L32 51 L52 40 V22 M12 40 L32 29 L52 40" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="35" cy="42" rx="6.5" ry="3.6" fill="none" stroke="#8fb8e8" stroke-width="2.4"/>
+<path d="M35 42 V31" stroke="#8fb8e8" stroke-width="2" stroke-linecap="round"/>
+<circle cx="35" cy="30" r="2.6" fill="#8fb8e8"/>
+<path d="M50 6 L51.6 10.4 L56 12 L51.6 13.6 L50 18 L48.4 13.6 L44 12 L48.4 10.4 Z" fill="#c9bdf2"/>
+</svg>
+      <span class="word" aria-hidden="true"><span>SPATIAL</span><span>DIRECTOR</span></span>
+    </a>
     <div class="brand">
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
