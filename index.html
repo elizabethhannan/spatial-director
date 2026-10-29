@@ -326,6 +326,50 @@ ul.plain li { margin-bottom: 6px; font-size: .9375rem; }
 .ctxmenu .sw-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .ctxmenu .sw-row button { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0; }
 .ctxmenu .danger { color: var(--crit); }
+
+/* Home page */
+.home .hero { position: relative; overflow: hidden; color: #eef3f8; background: radial-gradient(120% 90% at 85% 10%, #3b2f7a 0%, rgba(59,47,122,0) 55%), radial-gradient(90% 80% at 75% 100%, #0b4f4b 0%, rgba(11,79,75,0) 60%), linear-gradient(135deg, #0d1b33 0%, #15284d 55%, #16234a 100%); }
+.home .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: center; padding-block: 56px 64px; }
+.hero-icon { width: 4.5rem; height: 4.5rem; display: block; filter: drop-shadow(0 10px 24px rgba(0,0,0,.35)); }
+.hero-eyebrow { margin: 18px 0 8px; font-family: var(--font-display); font-weight: 700; letter-spacing: .16em; text-transform: uppercase; font-size: .9375rem; color: #b9adf2; }
+.home .hero h2 { font-size: clamp(2.1rem, 5.2vw, 3.6rem); line-height: 1.05; letter-spacing: -.02em; color: #fff; max-width: 16ch; }
+.hero-lead { margin: 18px 0 8px; font-size: 1.125rem; color: #dfe7f0; max-width: 46ch; }
+.hero-sub { margin: 0 0 22px; color: #a9b8c8; max-width: 56ch; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+.hero-ctas .btn { min-height: 48px; padding-inline: 18px; font-weight: 700; }
+.home .hero-ctas .btn.primary { background: #2a63c4 !important; color: #fff !important; border: 1px solid #2a63c4 !important; }
+.home .hero-ctas .btn.ghost { background: rgba(255,255,255,.04) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.4) !important; box-shadow: none !important; }
+.home .hero-ctas .btn.ghost:hover { background: rgba(255,255,255,.12) !important; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.hero-chips span { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.08); color: #dfe7f0; font-weight: 700; font-size: .875rem; }
+.hero-cards { position: relative; display: grid; padding-top: 1.4rem; }
+.hc { position: relative; background: #ffffff; color: #0f1a2b; border-radius: 16px; padding: 18px 20px; box-shadow: 0 24px 50px rgba(0,0,0,.35); }
+.hc p { margin: 0 0 6px; }
+.hc-main { justify-self: end; width: min(31rem, 100%); transform: rotate(-2deg); border-left: 5px solid #5b47b8; }
+.hc-stop { justify-self: start; margin-top: -1.6rem; z-index: 1; width: min(22rem, 92%); transform: rotate(1.5deg); border-left: 5px solid #2f7d4a; }
+.hc-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.hc-eyebrow { font-family: var(--font-display); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .75rem; color: #5b47b8; }
+.hc-eyebrow.okc { color: #2f7d4a; }
+.hc-title { font-weight: 700; font-size: 1rem; }
+.hc dl { margin: 8px 0 10px; display: grid; gap: 2px; font-size: .875rem; }
+.hc dt { font-weight: 700; color: #4a5563; font-size: .75rem; margin-top: 6px; }
+.hc dd { margin: 0; }
+.hc-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.hc .b { display: inline-block; padding: 6px 12px; border-radius: 8px; border: 1px solid #c9d1da; font-weight: 700; font-size: .8125rem; }
+.hc .b.pri { background: #2a63c4; border-color: #2a63c4; color: #fff; }
+.hc .b.stopb { background: #b42a22; border-color: #b42a22; color: #fff; margin-top: 4px; }
+.hc-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-weight: 700; font-size: .75rem; }
+.hc-pill.ai { background: #ece8fb; color: #5b47b8; }
+.hc-pill.good { position: absolute; top: 0; right: 1.2rem; z-index: 2; background: #e6f4ea; color: #1f6b3a; }
+.hc .b, .hc-pill { pointer-events: none; }
+.home-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding-block: 28px 36px; }
+.home-steps .step { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.home-steps .step b { font-family: var(--font-display); }
+.home-steps .step p { margin: 6px 0 0; color: var(--ink-2); font-size: .9375rem; }
+@media (max-width: 900px) { .home .hero-grid { grid-template-columns: 1fr; } .hero-cards { min-height: 0; display: grid; gap: 14px; } .hc, .hc-pill.good { position: static; transform: none; width: auto; margin-top: 0; } .hc-pill.good { justify-self: start; } .home-steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .home-steps { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .hc-main { animation: hcIn .7s ease-out both; } .hc-stop { animation: hcIn .7s .15s ease-out both; } }
+@keyframes hcIn { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
 .textsize { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; }
 .textsize span { font-size: .8125rem; font-weight: 700; color: var(--ink-2); min-width: 3.2em; text-align: center; }
 .textsize .btn { min-width: 40px; }
@@ -640,7 +684,7 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
       <h1>Spatial Director</h1>
       <p>Design executive offices, lobbies and corporate dining rooms by pointing and speaking. A team of agents takes the room from an idea to a buildable plan, with real products from approved vendors and a sustainable option for each. You see what they understood, and approve anything that changes the room or the shopping list.</p>
     </div>
-    <div class="tags"><span class="tag">Shipped client work · rebuilt under NDA</span><span class="tag">Version 2.9</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
+    <div class="tags"><span class="tag">Shipped client work · rebuilt under NDA</span><span class="tag">Version 3.0</span><span class="tag">Simulated office</span><span class="tag">Nothing leaves your browser</span></div>
   </div>
 </header>
 <div class="clientband" role="note" aria-label="About the client">
@@ -649,7 +693,8 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
 
 <nav class="tabbar" aria-label="Views">
   <div class="wrap tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-room" aria-selected="true" aria-controls="view-room">Room</button>
+    <button class="tab" role="tab" id="tab-home" aria-selected="true" aria-controls="view-home">Home</button>
+    <button class="tab" role="tab" id="tab-room" aria-selected="false" aria-controls="view-room">Room</button>
     <button class="tab" role="tab" id="tab-build" aria-selected="false" aria-controls="view-build">Build it for real</button>
     <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="view-about">How it works</button>
     <button class="tab" role="tab" id="tab-budget" aria-selected="false" aria-controls="view-budget">Build &amp; Budget</button>
@@ -660,7 +705,63 @@ table.src .links { display: flex; gap: 10px; margin-top: 4px; }
   </div>
 </nav>
 
-<main id="view-room" class="view wrap layout" role="tabpanel" aria-labelledby="tab-room">
+<main id="view-home" class="view home" role="tabpanel" aria-labelledby="tab-home">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <svg class="hero-icon" viewBox="0 0 64 64" role="img" aria-label="Spatial Director"><defs><linearGradient id="sdhg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22406e"/><stop offset="1" stop-color="#0b6b66"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#sdhg)"/>
+<polygon points="12,40 32,29 32,11 12,22" fill="#ffffff" fill-opacity=".16"/>
+<polygon points="32,29 52,40 52,22 32,11" fill="#ffffff" fill-opacity=".08"/>
+<polygon points="12,40 32,29 52,40 32,51" fill="#ffffff" fill-opacity=".26"/>
+<path d="M12 22 L32 11 L52 22 M32 11 V29 M12 22 V40 L32 51 L52 40 V22 M12 40 L32 29 L52 40" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="35" cy="42" rx="6.5" ry="3.6" fill="none" stroke="#8fb8e8" stroke-width="2.4"/>
+<path d="M35 42 V31" stroke="#8fb8e8" stroke-width="2" stroke-linecap="round"/>
+<circle cx="35" cy="30" r="2.6" fill="#8fb8e8"/>
+<path d="M50 6 L51.6 10.4 L56 12 L51.6 13.6 L50 18 L48.4 13.6 L44 12 L48.4 10.4 Z" fill="#c9bdf2"/>
+</svg>
+        <p class="hero-eyebrow">Spatial Director</p>
+        <h2 id="hero-h">Point, speak, and a team of agents builds the room</h2>
+        <p class="hero-lead">Humans set intent, agents do the work, design earns the trust between them.</p>
+        <p class="hero-sub">A spatial design app for executive spaces: point at the room and say what you want, and 23 agents take it from an idea to a buildable plan, with real products, artists and a budget, and a person approving every change.</p>
+        <div class="hero-ctas">
+          <button class="btn primary" type="button" data-go="room">Open the room</button>
+          <button class="btn ghost" type="button" data-go="budget">Build &amp; Budget</button>
+          <button class="btn ghost" type="button" data-go="about">How the agents work</button>
+        </div>
+        <div class="hero-chips"><span>Simulated office</span><span>Elizabeth Hannan · 2026</span></div>
+      </div>
+      <div class="hero-cards" aria-label="What the agents show you">
+        <span class="hc-pill good">High confidence</span>
+        <article class="hc hc-main">
+          <div class="hc-top"><p class="hc-eyebrow">Here's what I understood</p><span class="hc-pill ai">Preview</span></div>
+          <p class="hc-title">"Hang a glass chandelier over the lounge"</p>
+          <dl>
+            <dt>Action</dt><dd>Add a glass chandelier by Bocci</dd>
+            <dt>Where</dt><dd>Above the coffee table, 2.2 m from the glass wall</dd>
+            <dt>What I checked</dt><dd>The 36-inch accessible route stays clear; it adds a "by quote" line to the invoice.</dd>
+            <dt>If you do nothing</dt><dd>It previews for 1.6 seconds, then applies. Undo takes it back.</dd>
+          </dl>
+          <div class="hc-btns"><span class="b pri">Apply now</span><span class="b">Change</span><span class="b">Cancel</span></div>
+        </article>
+        <article class="hc hc-stop">
+          <p class="hc-eyebrow okc">You stay in control</p>
+          <p class="hc-title">23 agents working</p>
+          <p>Nothing changes the room, the shopping list or the budget without you. Removals and the agents' own ideas wait for your OK.</p>
+          <span class="b stopb">Stop everything (Esc)</span>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="wrap home-steps" aria-label="How it works in four steps">
+    <div class="step"><b>1 · Point and speak</b><p>Click the floor and pick what goes there, or say "put a lamp next to the sofa".</p></div>
+    <div class="step"><b>2 · Agents plan</b><p>Language, spatial and layout agents show what they understood before anything moves.</p></div>
+    <div class="step"><b>3 · You decide</b><p>Apply, change or undo. Inspiration from tech headquarters and artists, installed in 3D.</p></div>
+    <div class="step"><b>4 · Build it</b><p>Parts, warranties, an invoice, designers and trades, with a sustainable option for every part.</p></div>
+  </section>
+</main>
+
+<main id="view-room" class="view wrap layout" role="tabpanel" aria-labelledby="tab-room" hidden>
   <section class="stage" aria-label="3D room">
 
     <div class="studio-bar" role="group" aria-label="Project setup">
@@ -2306,10 +2407,13 @@ document.addEventListener("keydown", e => {
   else if (e.key === "Enter" && S.pending && !S.pending.timer && document.activeElement !== $("#cmd") && !(document.activeElement && document.activeElement.tagName === "BUTTON")) { confirm(); e.preventDefault(); }
 });
 function showTab(name) {
-  for (const [t, v] of [["room", "#view-room"], ["build", "#view-build"], ["about", "#view-about"], ["budget", "#view-budget"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
+  for (const [t, v] of [["home", "#view-home"], ["room", "#view-room"], ["build", "#view-build"], ["about", "#view-about"], ["budget", "#view-budget"]]) { $("#tab-" + t).setAttribute("aria-selected", String(t === name)); $(v).hidden = t !== name; }
   if (name === "room") resize();
 }
 $("#tab-room").addEventListener("click", () => showTab("room"));
+$("#tab-home").addEventListener("click", () => showTab("home"));
+document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (!b) return; showTab(b.dataset.go); try { history.replaceState(null, "", "#" + b.dataset.go); } catch (x) {} window.scrollTo({ top: document.querySelector(".tabbar").offsetTop, behavior: "smooth" }); });
+{ const h = (location.hash || "").slice(1); if (["room", "build", "about", "budget"].includes(h)) setTimeout(() => showTab(h), 0); }
 $("#tab-about").addEventListener("click", () => showTab("about"));
 $("#tab-build").addEventListener("click", () => showTab("build"));
 $("#tab-budget").addEventListener("click", () => showTab("budget"));

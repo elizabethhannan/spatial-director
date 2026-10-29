@@ -67,6 +67,10 @@ Every preview shows what was understood (action, object, place in meters from th
 
 Text opens at 150% for readability. The A− / A+ control beside the tabs sets it from 100% to 250%, and the page remembers the choice.
 
+## Version 3.0: Home page
+
+- A Home tab opens first: the logo, "Point, speak, and a team of agents builds the room", the line "Humans set intent, agents do the work, design earns the trust between them", buttons into the room, Build & Budget and How the agents work, and two cards showing what the agents hand back to you (what they understood, and Stop everything). Four steps below: point and speak, agents plan, you decide, build it. Links ending in #room, #build, #about or #budget open that tab directly. Nothing was removed.
+
 ## Logo and icon
 
 The Spatial Director mark is a small isometric room with the blue "there" pointer and a lavender spark for the agents, on a navy-to-teal tile. It sits at the top right of the page and is the browser tab icon. Files: `brand/icon.svg`, `brand/logo.svg`, `brand/icon-512.png`, `brand/apple-touch-icon.png`.
